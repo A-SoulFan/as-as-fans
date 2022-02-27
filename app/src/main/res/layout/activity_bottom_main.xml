@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--主页面，视频、枝网切换的页面-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs_bottom"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            app:tabBackground="@drawable/checkbox_selector"
+            app:tabIndicatorHeight="0dp"
+            app:tabMode="fixed"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            app:tabRippleColor="@android:color/transparent"/>
+    </androidx.viewpager.widget.ViewPager>
+
+</LinearLayout>

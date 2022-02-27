@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/btn_normal_delete" android:state_pressed="false"/>
+    <!-- Button按下时的背景 -->
+    <item android:drawable="@drawable/btn_pressed_delete" android:state_pressed="true"/>
+</selector>

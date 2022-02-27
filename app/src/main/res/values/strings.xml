@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">AsAsFans</string>
+    <string name="tab_text_1">AU热门</string>
+    <string name="tab_text_2">最新发布</string>
+    <string name="tab_text_3">历史推荐</string>
+    <string name="tab_text_4">热门二创</string>
+    <string name="tab_text_5">热门切片</string>
+
+
+    <string name="tab_bottom_1">视频</string>
+    <string name="tab_bottom_2">枝网查重</string>
+    <string name="tab_bottom_3">暂时没活</string>
+</resources>

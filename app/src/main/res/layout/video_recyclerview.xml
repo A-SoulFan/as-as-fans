@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--RecyclerView滚动布局每个item的布局设计-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/videoLayout"
+    android:orientation="horizontal"
+    android:background="@drawable/recycler_view_card"
+    android:layout_height="100dp">
+
+    <com.example.asasfans.ui.customcomponent.MyImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="fitStart"
+        android:adjustViewBounds="true"
+        android:layout_weight="1"
+        android:maxHeight="100dp"
+        android:src="@mipmap/loading"
+        android:id="@+id/videoPic"/>
+
+
+    <RelativeLayout
+        android:id="@+id/everyVideoData"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/videoTitle"
+            android:text="标题"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:lines="2"
+            android:layout_alignParentRight="true"
+            android:ellipsize="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/videoTname"
+            android:text="分区"
+            android:textSize="10sp"
+            android:layout_below="@+id/videoTitle"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/videoDuration"
+            android:text="时长"
+            android:textSize="10sp"
+            android:layout_below="@+id/videoTname"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/videoAuthor"
+            android:text="作者"
+            android:textSize="10sp"
+            android:layout_gravity="right"
+            android:layout_below="@+id/videoDuration"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/videoView"
+            android:text="播放"
+            android:textSize="10sp"
+            android:layout_below="@+id/videoAuthor"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/videoLike"
+            android:text="点赞"
+            android:textSize="10sp"
+            android:layout_below="@+id/videoView"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>
+
+
