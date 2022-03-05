@@ -9,35 +9,44 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.asasfans.R;
+import com.example.asasfans.TestActivity;
+import com.example.asasfans.data.TabData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author akarinini
  * @description 底部的Fragment适配器，控制{视频，枝网查重，...}等页面，
+ *              2022/3/03 修改该底部导航栏可以动态改变标签
  */
 
 public class BottomPagerAdapter extends FragmentPagerAdapter {
-    @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_bottom_1, R.string.tab_bottom_2, R.string.tab_bottom_3};
     private final Context mContext;
+    private FragmentManager mFragmentManager;
+    private List<TabData> mFragmentList = new ArrayList<>();
     private Object currentFragment;
 
-    public BottomPagerAdapter(Context context, FragmentManager fm) {
+    public BottomPagerAdapter(Context context, FragmentManager fm, List<TabData> fragmentList) {
         super(fm);
+        mFragmentManager = fm;
         mContext = context;
+        updateFragmentList(fragmentList);
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return mContext.getResources().getString(TAB_TITLES[position]);
+        return mFragmentList.get(position).getName();
     }
 
     @Override
     public int getCount() {
         // Show 3 total pages.
-        return TAB_TITLES.length;
+        return mFragmentList.size();
     }
 
     /**
@@ -48,16 +57,17 @@ public class BottomPagerAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        switch (position){
-            case 0:
-                return MainFragment.newInstance();
-            case 1:
-                return WebFragment.newInstance();
-            case 2:
-                return NullFragment.newInstance();
-            default:
-        }
-        return AUHotFragment.newInstance();
+//        switch (position){
+//            case 0:
+//                return MainFragment.newInstance();
+//            case 1:
+//                return WebFragment.newInstance();
+//            case 2:
+//                return NullFragment.newInstance();
+//            default:
+//        }
+//        return AUHotFragment.newInstance();
+        return mFragmentList.get(position).getFragment();
     }
 
     /**
@@ -82,5 +92,58 @@ public class BottomPagerAdapter extends FragmentPagerAdapter {
      */
     public Object getCurrentFragment() {
         return currentFragment;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mFragmentList.get(position).getFragment().hashCode();
+    }
+
+    public void updateFragmentList(List<TabData> fragmentList) {
+        if (!mFragmentList.isEmpty()) {
+            mFragmentList.clear();
+        }
+        mFragmentList.addAll(fragmentList);
+        notifyDataSetChanged();
+
+    }
+
+    @NonNull
+    @Override
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        Fragment instantiateItemFragment = (Fragment) super.instantiateItem(container, position);
+        Fragment itemFragment = mFragmentList.get(position).getFragment();
+        //如果集合中对应下标的fragment和fragmentManager中的对应下标的fragment对象一致，则直接返回该fragment
+        if (instantiateItemFragment == itemFragment) {
+            return instantiateItemFragment;
+        } else {
+            //如果集合中对应下标的fragment和fragmentManager中的对应下标的fragment对象不一致，那么就是新添加的，所以自己add进入；
+            mFragmentManager.beginTransaction().add(container.getId(), itemFragment).commit();
+            return itemFragment;
+        }
+    }
+
+//    @Override
+//    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+//        Fragment fragment = (Fragment) object;
+//        //如果getItemPosition中的值为PagerAdapter.POSITION_NONE，就执行该方法。
+//        if (mFragmentList.contains(fragment)) {
+//            super.destroyItem(container, position, object);
+//            return;
+//        }
+//        //自己执行移除。因为mFragments在删除的时候就把某个fragment对象移除了，所以一般都得自己移除在fragmentManager中的该对象。
+//        if (!fragment.getParentFragmentManager().isStateSaved()) {
+//            mFragmentManager.beginTransaction().remove(fragment).commit();
+//        }
+//    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        //如果fragment还没有添加过，或者没有包含在里面，则返回没有找到
+        if (!((Fragment) object).isAdded() || !mFragmentList.contains(object)) {
+            return POSITION_NONE;
+        }
+        //否则就返回列表中的位置
+        return mFragmentList.indexOf(object);
     }
 }

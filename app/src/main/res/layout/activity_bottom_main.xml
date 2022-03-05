@@ -15,11 +15,12 @@
             android:id="@+id/tabs_bottom"
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            app:tabBackground="@drawable/checkbox_selector"
             app:tabIndicatorHeight="0dp"
+            app:tabIndicatorGravity="stretch"
+            app:tabTextAppearance="@style/TextStyle"
+            android:clipToPadding="false"
             app:tabMode="fixed"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
             app:tabRippleColor="@android:color/transparent"/>
     </androidx.viewpager.widget.ViewPager>
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -57,7 +58,7 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     @NonNull
     @Override
     public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(mContext, R.layout.video_recyclerview, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.video_recyclerview, parent,false);
         final VideoViewHolder videoViewHolder = new VideoViewHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override

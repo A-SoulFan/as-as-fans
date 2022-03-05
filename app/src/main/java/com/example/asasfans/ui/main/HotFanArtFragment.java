@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.asasfans.R;
 import com.example.asasfans.TestActivity;
+import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.video.PubdateVideoAdapter;
 import com.example.asasfans.ui.video.PubdateVideoBean;
 import com.google.gson.Gson;
@@ -97,8 +98,9 @@ public class HotFanArtFragment extends Fragment {
                         pubdateVideoAdapter.setHasStableIds(true);
                         recyclerView.setAdapter(pubdateVideoAdapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-                        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
+//                        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
 //                        pubdateVideoAdapter.notifyItemRangeChanged(PastSize, hVideosBvid.size());
+                        recyclerView.addItemDecoration(new RecyclerViewDecoration(12, 12));
                         break;
                     case NETWORK_ERROR:
 

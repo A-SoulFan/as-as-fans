@@ -17,10 +17,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.asasfans.R;
 import com.example.asasfans.TestActivity;
+import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.video.SingleVideo;
 import com.example.asasfans.ui.video.VideoAdapter;
 import com.example.asasfans.ui.video.VideoBean;
 import com.google.gson.Gson;
+import com.scwang.smart.refresh.header.BezierRadarHeader;
+import com.scwang.smart.refresh.header.FalsifyFooter;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +33,11 @@ import java.util.List;
 /**
  * @author akarinini
  * @description AU热门的Fragment，属于SectionsPagerAdapter
+ *              2022/3/4 更换原生刷新header和footer为SmartRefreshLayout
  */
 
 public class AUHotFragment extends Fragment {
+    boolean hasLoad = false;
 
     public static AUHotFragment newInstance() {
         AUHotFragment fragment = new AUHotFragment();
@@ -49,21 +56,16 @@ public class AUHotFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
-        SwipeRefreshLayout mSwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-//        mSwipeRefreshLayout.setEnabled(false);
-        //下拉刷新Fragment，未实现实际功能，只有动画
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        RefreshLayout refreshLayout = (RefreshLayout)view.findViewById(R.id.refreshLayout);
+        refreshLayout.setRefreshHeader(new BezierRadarHeader(getActivity()));
+        refreshLayout.setRefreshFooter(new FalsifyFooter(getActivity()));
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() {
-                //模拟网络请求需要300毫秒，请求完成，设置setRefreshing 为false
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 300);
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishRefresh(1000/*,false*/);
             }
         });
+
 
         Gson gson =new Gson();
         //解析由LaunchActivity传来的AU热门Top30视频的JSON
@@ -93,7 +95,8 @@ public class AUHotFragment extends Fragment {
         mVideoAdapter.setHasStableIds(true);
         recyclerView.setAdapter(mVideoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new RecyclerViewDecoration(12, 12));
         return view;
     }
 

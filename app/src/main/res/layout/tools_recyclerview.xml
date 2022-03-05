@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/tools_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/recycler_view_card"
+    android:layout_marginRight="10dp">
+    <com.example.asasfans.ui.customcomponent.MyImageView
+        android:id="@+id/web_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/web_desc"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:scaleType="fitStart"
+        android:src="@mipmap/asoul_cloud"/>
+
+    <TextView
+        android:id="@+id/web_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/web_icon"
+        app:layout_constraintRight_toLeftOf="@+id/web_check_box"
+        android:text="111111"
+        android:textSize="20dp"/>
+
+    <CheckBox
+        android:id="@+id/web_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/web_desc"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

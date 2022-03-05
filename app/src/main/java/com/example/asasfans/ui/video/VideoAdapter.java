@@ -49,7 +49,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     @NonNull
     @Override
     public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(mContext, R.layout.video_recyclerview, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.video_recyclerview, parent,false);
         final VideoViewHolder videoViewHolder = new VideoViewHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
