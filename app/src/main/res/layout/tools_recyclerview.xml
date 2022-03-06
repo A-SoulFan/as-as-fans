@@ -24,14 +24,16 @@
         android:id="@+id/web_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/cardBlack"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/web_icon"
         app:layout_constraintRight_toLeftOf="@+id/web_check_box"
         android:text="111111"
-        android:textSize="20dp"/>
+        android:textSize="15dp"/>
 
     <CheckBox
+        android:theme="@style/MyCheckBox"
         android:id="@+id/web_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

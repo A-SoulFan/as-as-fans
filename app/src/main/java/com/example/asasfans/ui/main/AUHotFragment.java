@@ -96,7 +96,7 @@ public class AUHotFragment extends Fragment {
         recyclerView.setAdapter(mVideoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
 //        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
-        recyclerView.addItemDecoration(new RecyclerViewDecoration(12, 12));
+        recyclerView.addItemDecoration(new RecyclerViewDecoration(20, 20));
         return view;
     }
 

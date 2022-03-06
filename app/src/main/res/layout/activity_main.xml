@@ -4,14 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/lightGray"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
+        android:theme="@style/AppTheme"
+        >
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -19,6 +20,8 @@
             android:gravity="center"
             app:layout_scrollFlags="scroll"
             android:minHeight="?actionBarSize"
+            android:textColor="@color/cardWhite"
+            android:background="@color/tab_text_normal"
             android:padding="@dimen/appbar_padding"
             android:text="@string/app_name"
             android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
@@ -26,13 +29,17 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             app:tabRippleColor="@android:color/transparent"
+            android:background="@color/tab_text_normal"
+            app:tabSelectedTextColor="@color/cardWhite"
+            app:tabIndicatorColor="@color/cardWhite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
-        android:background="@color/backgroundGray"
+        android:layout_marginTop="8dp"
+        android:background="@color/lightGray"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

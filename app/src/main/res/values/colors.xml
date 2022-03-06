@@ -10,6 +10,7 @@
     <color name="cardGray">#6a6a6a</color>
     <color name="cardButtonDeepBlue">#2c63a3</color>
     <color name="backgroundGray">#F4F4F4</color>
+    <color name="lightGray">#E3E3E3</color>
     <color name="cardWhite">#ffffff</color>
 
     <color name="tab_text_selected">#0084e8</color>

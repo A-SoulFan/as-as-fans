@@ -2,6 +2,7 @@ package com.example.asasfans.ui.main;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
     public static final List<String> iconUrl
             = Arrays.asList("https://asoul.cloud",
                             "https://asoulcnki.asia",
-                            "https://asoulfan.com");
+                            "https://tools.asoulfan.com/zhijiangDict");
     public final List<String> iconFileName
             = Arrays.asList("icon_asoul_cloud",
                             "icon_zwcc",
@@ -49,11 +50,11 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
     public final List<String> desc
             = Arrays.asList("A-SOUL Fans Art - 一个魂的二创",
                             "枝网查重",
-                            "ASOUL FAN");
+                            "方言词典");
     public final List<String> name
             = Arrays.asList("图片",
                             "枝网查重",
-                            "ASOUL FAN");
+                            "方言词典");
     //是否显示选框,默认false
     private boolean isShowBox = false;
     // 存储勾选框状态的map集合
@@ -71,20 +72,13 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
 
     //初始化map集合,默认为不选中
     private void initMapAndCheckBox() {
-        if (context.getSharedPreferences("ToolsData", MODE_PRIVATE) == null){
-            userInfo = context.getSharedPreferences("ToolsData", MODE_PRIVATE);
-            editor = userInfo.edit();
-            for (int i = 0; i < iconUrl.size(); i++) {
-                editor.putBoolean(iconUrl.get(i), false);
-                editor.commit();
-                map.put(i, false);
-            }
-        }else {
-            userInfo = context.getSharedPreferences("ToolsData", MODE_PRIVATE);
-            editor = userInfo.edit();
-            for (int i = 0; i < iconUrl.size(); i++) {
-                map.put(i, userInfo.getBoolean(iconUrl.get(i), false));
-            }
+
+        userInfo = context.getSharedPreferences("ToolsData", MODE_PRIVATE);
+        editor = userInfo.edit();
+        tmp = userInfo.getAll();
+        Log.i("initMapAndCheckBox", tmp.toString());
+        for (int i = 0; i < iconUrl.size(); i++) {
+            map.put(i, userInfo.getBoolean(iconUrl.get(i), false));
         }
 
     }
@@ -122,19 +116,19 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //用map集合保存
-//                for (int i = 0; i < iconUrl.size(); i++) {
-//                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
-//                }
+                for (int i = 0; i < iconUrl.size(); i++) {
+                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
+                }
                 map.put(position, isChecked);
                 editor.putBoolean(iconUrl.get(position), isChecked);
                 editor.commit();
                 int count = 0;
                 for (int i = 0; i < iconUrl.size(); i++) {
-//                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
+                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
                     if (userInfo.getBoolean(iconUrl.get(i), false))
                         count++;
                 }
-//                System.out.println(count);
+                System.out.println(count);
                 if (count == CHECK_MAX_LIMIT){
                     Toast.makeText(context, "已达到选择上限", Toast.LENGTH_SHORT).show();
                     buttonView.setChecked(false);
@@ -142,10 +136,10 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                     editor.putBoolean(iconUrl.get(position), false);
                     editor.commit();
                 }
-//                System.out.println("---------------------");
-//                for (int i = 0; i < iconUrl.size(); i++) {
-//                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
-//                }
+                System.out.println("---------------------");
+                for (int i = 0; i < iconUrl.size(); i++) {
+                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
+                }
             }
         });
         // 设置CheckBox的状态
@@ -155,7 +149,6 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
             editor.commit();
         }
         Boolean initState = userInfo.getBoolean(iconUrl.get(position), false);
-        System.out.println(initState);
         holder.checkBox.setChecked(initState);
 
     }

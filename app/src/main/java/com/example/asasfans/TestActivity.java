@@ -1,11 +1,13 @@
 package com.example.asasfans;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -64,6 +66,15 @@ public class TestActivity extends AppCompatActivity {
         tabs = findViewById(R.id.tabs_bottom);
         tabs.setupWithViewPager(viewPager);
 
+
+
+        //设置分割线
+//        LinearLayout linearLayout = (LinearLayout) tabs.getChildAt(0);
+//        linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+//        linearLayout.setDividerDrawable(ContextCompat.getDrawable(this,
+//                R.drawable.divider)); //设置分割线的样式
+//        linearLayout.setDividerPadding(20); //设置分割线间隔
+
         Intent mIntent =getIntent();
         Bundle mBundle =mIntent.getExtras();
         top30 = mBundle.getString("top30");
@@ -80,10 +91,21 @@ public class TestActivity extends AppCompatActivity {
      */
     private void initTab() {
         //这里初始化TabLayout
+//        Log.i("initTab", String.valueOf((getSharedPreferences("ToolsData", MODE_PRIVATE)).contains(ToolsAdapter.iconUrl.get(0))));
+        //判断是否为第一次加载
+        if (!((getSharedPreferences("ToolsData", MODE_PRIVATE)).contains(ToolsAdapter.iconUrl.get(0)))) {
+            userInfo = getSharedPreferences("ToolsData", MODE_PRIVATE);
+            editor = userInfo.edit();
+            for (int i = 0; i < ToolsAdapter.iconUrl.size(); i++) {
+                editor.putBoolean(ToolsAdapter.iconUrl.get(i), false);
+                editor.commit();
+            }
+        }
         mFragmentList.add(new TabData("视频", MainFragment.newInstance()));
         if (getSharedPreferences("ToolsData", MODE_PRIVATE) != null){
             userInfo = getSharedPreferences("ToolsData", MODE_PRIVATE);
             tmp = userInfo.getAll();
+            Log.i("initTab", tmp.toString());
             for (int i = 0 ; i < tmp.size() ; i++){
                 if (userInfo.getBoolean(ToolsAdapter.iconUrl.get(i), false)) {
                     switch (i) {

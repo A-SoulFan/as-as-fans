@@ -63,5 +63,5 @@ dependencies {
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5' //加载图片开源库
 
     // debugImplementation because LeakCanary should only run in debug builds.
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
 }

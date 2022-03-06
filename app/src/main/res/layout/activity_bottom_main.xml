@@ -16,10 +16,12 @@
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
             app:tabIndicatorHeight="0dp"
-            app:tabIndicatorGravity="stretch"
-            app:tabTextAppearance="@style/TextStyle"
             android:clipToPadding="false"
+            app:tabIndicatorColor="@color/tab_text_normal"
             app:tabMode="fixed"
+            app:tabIndicatorGravity="stretch"
+            app:tabSelectedTextColor="@color/cardWhite"
+            app:tabTextAppearance="@style/TextStyle"
             android:layout_height="wrap_content"
             app:tabRippleColor="@android:color/transparent"/>
     </androidx.viewpager.widget.ViewPager>

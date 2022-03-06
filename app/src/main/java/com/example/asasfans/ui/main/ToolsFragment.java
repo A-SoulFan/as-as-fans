@@ -68,14 +68,15 @@ public class ToolsFragment extends Fragment {
                     new MyDialog(getActivity(), R.style.mdialog, new MyDialog.OncloseListener() {
                         @Override
                         public void onClick(boolean confirm) {
-                            if (confirm){
-                                Intent intent = getActivity().getPackageManager()
-                                        .getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
-                                PendingIntent restartIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, intent, 0);
-                                AlarmManager mgr = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-                                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, restartIntent); // 1秒钟后重启应用
-                                System.exit(0);
-                            }
+                            //设置重启后生效，但是自动重启速度慢，如果用户在自动重启的过程中之间点开应用会有神奇的bug
+//                            if (confirm){
+//                                Intent intent = getActivity().getPackageManager()
+//                                        .getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
+//                                PendingIntent restartIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, intent, 0);
+//                                AlarmManager mgr = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+//                                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, restartIntent); // 1秒钟后重启应用
+//                                System.exit(0);
+//                            }
                         }
                     }).show();
                 }

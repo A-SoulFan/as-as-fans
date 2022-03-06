@@ -13,9 +13,9 @@
         <Button
             android:id="@+id/tools_button"
             android:layout_width="wrap_content"
-            android:background="@drawable/recycler_view_card"
+            android:background="@drawable/ic_more"
             android:layout_gravity="right"
-            android:text="Manager"
+
             android:layout_height="wrap_content"/>
     </com.google.android.material.appbar.AppBarLayout>
 
