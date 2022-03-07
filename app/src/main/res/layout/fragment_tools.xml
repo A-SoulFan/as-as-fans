@@ -12,11 +12,11 @@
         android:theme="@style/AppTheme.PopupOverlay">
         <Button
             android:id="@+id/tools_button"
-            android:layout_width="wrap_content"
-            android:background="@drawable/ic_more"
+            android:layout_width="60dp"
             android:layout_gravity="right"
-
-            android:layout_height="wrap_content"/>
+            android:background="@color/tab_text_normal"
+            android:text="管理"
+            android:layout_height="50dp"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView

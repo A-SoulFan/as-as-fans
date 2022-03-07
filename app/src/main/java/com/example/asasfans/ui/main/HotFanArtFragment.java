@@ -63,6 +63,8 @@ public class HotFanArtFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pubdate_video, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerviewPubdate);
+        recyclerView.setHasFixedSize(true);
+
         SwipeRefreshLayout mSwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayoutPubdate);
 //        mSwipeRefreshLayout.setEnabled(false);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -100,7 +102,7 @@ public class HotFanArtFragment extends Fragment {
                         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
 //                        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
 //                        pubdateVideoAdapter.notifyItemRangeChanged(PastSize, hVideosBvid.size());
-                        recyclerView.addItemDecoration(new RecyclerViewDecoration(12, 12));
+                        recyclerView.addItemDecoration(new RecyclerViewDecoration(20, 20));
                         break;
                     case NETWORK_ERROR:
 
@@ -140,23 +142,6 @@ public class HotFanArtFragment extends Fragment {
         };
 
         new Thread(networkTask).start();
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if(!recyclerView.canScrollVertically(1)){
-                    Toast.makeText(getActivity(), "到底了哦", Toast.LENGTH_SHORT).show();
-                }
-                if(!recyclerView.canScrollVertically(-1)){
-//                    Toast.makeText(getActivity(), "到顶了", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
 
         return view;
     }

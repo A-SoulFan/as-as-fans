@@ -45,7 +45,7 @@
             android:gravity="center"
             android:text="取消"
             android:textStyle="bold"
-            android:textColor="#4848f5"
+            android:textColor="@color/tab_text_normal"
             android:textSize="16sp" />
 
         <View
@@ -61,7 +61,7 @@
             android:gravity="center"
             android:text="确定"
             android:textStyle="bold"
-            android:textColor="#4848f5"
+            android:textColor="@color/tab_text_normal"
             android:textSize="16sp" />
     </LinearLayout>
 

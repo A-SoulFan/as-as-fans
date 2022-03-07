@@ -22,6 +22,7 @@ import com.example.asasfans.ui.video.SingleVideo;
 import com.example.asasfans.ui.video.VideoAdapter;
 import com.example.asasfans.ui.video.VideoBean;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.scwang.smart.refresh.header.BezierRadarHeader;
 import com.scwang.smart.refresh.header.FalsifyFooter;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -38,6 +39,7 @@ import java.util.List;
 
 public class AUHotFragment extends Fragment {
     boolean hasLoad = false;
+
 
     public static AUHotFragment newInstance() {
         AUHotFragment fragment = new AUHotFragment();
@@ -93,8 +95,11 @@ public class AUHotFragment extends Fragment {
 
         final VideoAdapter mVideoAdapter = new VideoAdapter(getActivity(), mVideoBean.getData().getNumResults(), singleVideos);
         mVideoAdapter.setHasStableIds(true);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mVideoAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+//        linearLayoutManager.setInitialPrefetchItemCount(2);
+        recyclerView.setLayoutManager(linearLayoutManager);
 //        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new RecyclerViewDecoration(20, 20));
         return view;

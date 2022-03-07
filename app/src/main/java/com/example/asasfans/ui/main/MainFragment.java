@@ -18,6 +18,7 @@ import com.google.android.material.tabs.TabLayout;
 /**
  * @author akarinini
  * @description 视频页Fragment，嵌套在BottomPagerAdapter中
+ *              修改了预加载页面数量，全部预加载
  */
 
 public class MainFragment extends Fragment {
@@ -40,6 +41,7 @@ public class MainFragment extends Fragment {
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getContext(), getChildFragmentManager());
         ViewPager viewPager = view.findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.setOffscreenPageLimit(5);
         TabLayout tabs = view.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 

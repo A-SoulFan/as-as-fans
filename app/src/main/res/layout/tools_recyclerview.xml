@@ -8,7 +8,7 @@
     android:layout_marginTop="10dp"
     android:background="@drawable/recycler_view_card"
     android:layout_marginRight="10dp">
-    <com.example.asasfans.ui.customcomponent.MyImageView
+    <ImageView
         android:id="@+id/web_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"

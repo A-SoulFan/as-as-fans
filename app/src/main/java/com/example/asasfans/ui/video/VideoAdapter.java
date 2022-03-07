@@ -4,9 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +13,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.R;
-import com.example.asasfans.ui.customcomponent.MyImageView;
-import com.example.asasfans.util.OkHttp;
-import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +30,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     private int PageSize;
     private List<SingleVideo> singleVideos;
     private final String PackageName = "tv.danmaku.bili";
+    private ImageLoader imageLoader = ImageLoader.getInstance();
 
     public VideoAdapter(){
 
@@ -90,9 +84,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
 
         Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fadein);
-        holder.myImageView.startAnimation(fadeIn);
+        holder.imageView.startAnimation(fadeIn);
 
-        holder.myImageView.setImageURL(singleVideos.get(position).getPicUrl());
+//        holder.imageView.setImageURL(singleVideos.get(position).getPicUrl());
+        imageLoader.displayImage(singleVideos.get(position).getPicUrl(), holder.imageView);
         holder.videoAuthor.setText(singleVideos.get(position).getAuthor());
         holder.videoDuration.setText(secondsToTime(singleVideos.get(position).getDuration()));
         holder.videoTitle.setText(singleVideos.get(position).getTitle());

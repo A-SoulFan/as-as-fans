@@ -10,7 +10,7 @@
     android:background="@drawable/recycler_view_card"
     android:layout_height="110dp">
 
-    <com.example.asasfans.ui.customcomponent.MyImageView
+    <ImageView
         android:layout_width="160dp"
         android:layout_height="100dp"
         android:scaleType="fitCenter"
@@ -93,7 +93,7 @@
             android:text="点赞"
             android:textSize="12sp"
             android:paddingTop="2dp"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.7"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

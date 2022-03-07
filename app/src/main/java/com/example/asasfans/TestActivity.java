@@ -1,9 +1,14 @@
 package com.example.asasfans;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,6 +36,11 @@ import java.util.Map;
  * @author akarinini
  * @description 测试用页面，目前作为主页面
  *              2022/3/03 修改底部导航栏可以动态改变标签
+ *              2022/3/7 更新了图片加载方式。之前是自己写的一个根据url加载图片的imageview，
+ *                       问题在于它把全部的图片放在了内存中，浏览几百个视频就oom然后crash掉了，
+ *                       现在换成了开源库imageloader，它的方式是把图片下载到存储里，
+ *                       遇到相同的url直接从存储中加载。
+ *                       修改了预加载页面数量，全部预加载。
  */
 
 public class TestActivity extends AppCompatActivity {
@@ -53,20 +63,28 @@ public class TestActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;//获取Editor
     private Map<String, ?> tmp;
 
+    /*
+    权限相关
+     */
+    String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.INTERNET, Manifest.permission.READ_EXTERNAL_STORAGE};
+    List<String> mPermissionList = new ArrayList<>();
+    private static final int PERMISSION_REQUEST = 1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkPermission();
         setContentView(R.layout.activity_bottom_main);
+
         initTab();
 
         bottomPagerAdapter = new BottomPagerAdapter(this, getSupportFragmentManager(), mFragmentList);
         mCurrentFragment = bottomPagerAdapter.getCurrentFragment();
         viewPager = findViewById(R.id.view_pager_main);
         viewPager.setAdapter(bottomPagerAdapter);
+        viewPager.setOffscreenPageLimit(5);
         tabs = findViewById(R.id.tabs_bottom);
         tabs.setupWithViewPager(viewPager);
-
-
 
         //设置分割线
 //        LinearLayout linearLayout = (LinearLayout) tabs.getChildAt(0);
@@ -190,6 +208,38 @@ public class TestActivity extends AppCompatActivity {
         } else {
             finish();
             System.exit(0);
+        }
+    }
+    private void checkPermission() {
+        mPermissionList.clear();
+        //判断哪些权限未授予
+        for (int i = 0; i < permissions.length; i++) {
+            if (ContextCompat.checkSelfPermission(this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+                mPermissionList.add(permissions[i]);
+            }
+        }
+        /**
+         * 判断是否为空
+         */
+        if (mPermissionList.isEmpty()) {//未授予的权限为空，表示都授予了
+        } else {//请求权限方法
+            String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组
+            ActivityCompat.requestPermissions(TestActivity.this, permissions, PERMISSION_REQUEST);
+        }
+    }
+    /**
+     * 响应授权
+     * 这里不管用户是否拒绝，都进入首页，不再重复申请权限
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_REQUEST:
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
         }
     }
 }

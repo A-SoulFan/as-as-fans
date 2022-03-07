@@ -23,6 +23,7 @@ import com.example.asasfans.LaunchActivity;
 import com.example.asasfans.R;
 import com.example.asasfans.TestActivity;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
 import java.util.List;
@@ -97,7 +98,7 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
         Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fadein);
-        holder.myImageView.startAnimation(fadeIn);
+        holder.imageView.startAnimation(fadeIn);
 
         holder.videoTitle.setText(VideosBvid.get(position).get(0));
         Handler handler = new Handler() {
@@ -115,7 +116,8 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                     case GET_DATA_SUCCESS:
                         if (singleVideoBean.getData() != null) {
                             holder.videoTitle.setText(singleVideoBean.getData().getTitle());
-                            holder.myImageView.setImageURL(singleVideoBean.getData().getPic());
+//                            holder.myImageView.setImageURL(singleVideoBean.getData().getPic());
+                            ImageLoader.getInstance().displayImage(singleVideoBean.getData().getPic(), holder.imageView);
                             holder.videoAuthor.setText(singleVideoBean.getData().getOwner().getName());
                             holder.videoDuration.setText(secondsToTime(singleVideoBean.getData().getDuration()));
                             holder.videoLike.setText(viewNumFormat(singleVideoBean.getData().getStat().getLike()) + " 点赞");

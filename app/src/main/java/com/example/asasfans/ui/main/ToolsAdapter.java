@@ -6,8 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -18,13 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.R;
-import com.example.asasfans.TestActivity;
-import com.example.asasfans.data.TabData;
-import com.example.asasfans.data.ToolsData;
-import com.example.asasfans.ui.customcomponent.MyImageView;
-import com.example.asasfans.ui.video.VideoViewHolder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -187,7 +179,7 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
     public class ToolsViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
         private CheckBox checkBox;
-        private MyImageView imageView;
+        private ImageView imageView;
 
         public ToolsViewHolder(@NonNull View itemView) {
             super(itemView);
