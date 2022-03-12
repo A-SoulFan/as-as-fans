@@ -10,4 +10,6 @@
     <string name="tab_bottom_1">视频</string>
     <string name="tab_bottom_2">枝网查重</string>
     <string name="tab_bottom_3">暂时没活</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

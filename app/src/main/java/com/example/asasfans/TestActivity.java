@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -31,7 +34,7 @@ import java.util.Map;
  *              2022/3/03 修改底部导航栏可以动态改变标签
  */
 
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends AppCompatActivity{
     /** 上次点击返回键的时间 */
     private long lastBackPressed;
     /** 两次点击的间隔时间 */
@@ -69,6 +72,21 @@ public class TestActivity extends AppCompatActivity {
         top30 = mBundle.getString("top30");
         pubdate = mBundle.getString("pubdate");
         most = mBundle.getString("most");
+
+        /**
+         * @description 单击标题“AsAsFans”跳转到LiveDataActivity
+         * @author zyxdb
+         * @time 2022/3/8 14:22
+         */
+        View view=LayoutInflater.from(TestActivity.this).inflate(R.layout.activity_main, null);
+        Button btn=(Button) view.findViewById(R.id.btnTitle);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TestActivity.this, LiveDataActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -168,6 +186,22 @@ public class TestActivity extends AppCompatActivity {
         } else {
             finish();
             System.exit(0);
+        }
+    }
+
+    /**
+     * @description 单击标题“AsAsFans”跳转到LiveDataActivity
+     * @author zyxdb
+     * @time 2022/3/8 14:22
+     */
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btnTitle:
+                //监听到点击button点击事件的具体操作
+                Intent intent = new Intent(TestActivity.this, LiveDataActivity.class);
+//                intent.putExtras(data);
+                startActivity(intent);
+                break;
         }
     }
 }

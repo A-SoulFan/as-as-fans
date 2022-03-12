@@ -31,5 +31,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <!--同接页面成员卡片样式-->
+    <style name="members_item_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/cardBlack</item>
+    </style>
+
 
 </resources>
