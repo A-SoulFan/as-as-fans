@@ -11,11 +11,5 @@
         android:layout_height="match_parent">
 
     </com.loopeer.cardstack.CardStackView>
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="fragment_vtb_data" />
-
 
 </FrameLayout>

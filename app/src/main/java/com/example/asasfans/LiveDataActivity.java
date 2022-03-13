@@ -22,5 +22,7 @@ public class LiveDataActivity extends AppCompatActivity {
 
         VTBDataFragment vtbDataFragment = VTBDataFragment.newInstance();
         getSupportFragmentManager().beginTransaction().replace(R.id.vtbDataFragment, vtbDataFragment).commit();
+
+
     }
 }

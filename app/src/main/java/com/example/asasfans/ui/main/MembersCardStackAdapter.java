@@ -47,8 +47,8 @@ public class MembersCardStackAdapter extends StackAdapter<Integer> {
     @Override
     public int getItemViewType(int position) {
         System.out.println("getItemViewType");
-        return super.getItemViewType(position);
-//        return R.layout.item_memberscard;
+//        return super.getItemViewType(position);
+        return R.layout.item_memberscard;
     }
 
     /**
@@ -58,7 +58,8 @@ public class MembersCardStackAdapter extends StackAdapter<Integer> {
      */
     @Override
     protected CardStackView.ViewHolder onCreateView(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_memberscard,parent,false);
+//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_memberscard,parent,false);
+        View view = getLayoutInflater().inflate(R.layout.item_memberscard, parent, false);
         CardViewHolder holder = new CardViewHolder(view);
         System.out.println("onCreateView");
         return holder;
@@ -109,11 +110,14 @@ public class MembersCardStackAdapter extends StackAdapter<Integer> {
         FrameLayout cardTitle;          //布局头部
         RecyclerView members_list;      //布局头部下方的RecyclerView
         TextView titleText;             //布局头部
+
+        /**
+         * @description 在创建ViewHolder时对控件进行绑定
+         * @author zyxdb
+         * @time 2022/3/13 11:29
+         */
         public CardViewHolder(View view)
         {
-            /*
-                在创建ViewHolder是 对控件进行绑定
-            */
             super(view);
             root = view;
             cardTitle = (FrameLayout)view.findViewById(R.id.card_title);
@@ -128,6 +132,7 @@ public class MembersCardStackAdapter extends StackAdapter<Integer> {
                 该方法是在bindView调用时被调用的，因为可能有不同的布局，因而有不同的ViewHolder，将bindView实现的操作放在了ViewHolder中的onBind方法中，会使代码看来起更简洁，易懂。
             */
             cardTitle.getBackground().setColorFilter(ContextCompat.getColor(getContext(),backgroundColorId), PorterDuff.Mode.SRC_IN);
+
             MembersListAdapter adapter = new MembersListAdapter(dataList.get(position));
             members_list.setLayoutManager(new LinearLayoutManager(getContext()));
             members_list.setAdapter(adapter);

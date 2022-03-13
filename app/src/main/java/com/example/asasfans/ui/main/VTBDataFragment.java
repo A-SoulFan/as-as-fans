@@ -81,20 +81,20 @@ public class VTBDataFragment extends Fragment implements CardStackView.ItemExpen
             lists.add(list);
         }
 
-        new Handler().postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.updateData(Arrays.asList(color));
-                    }
-                }
-                , 200
-        );
-//        adapter.updateData(Arrays.asList(color),lists);
+//        new Handler().postDelayed(
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        adapter.updateData(Arrays.asList(color),lists);
+//                    }
+//                }
+//                , 200
+//        );
+        adapter.updateData(Arrays.asList(color),lists);
 
-        mCardStack.setAnimatorAdapter(new AllMoveDownAnimatorAdapter(mCardStack));
+//        mCardStack.setAnimatorAdapter(new AllMoveDownAnimatorAdapter(mCardStack));
 //        mCardStack.setAnimatorAdapter(new UpDownAnimatorAdapter(mCardStack));
-//        mCardStack.setAnimatorAdapter(new UpDownStackAnimatorAdapter(mCardStack));
+        mCardStack.setAnimatorAdapter(new UpDownStackAnimatorAdapter(mCardStack));
     }
 
     @Override
