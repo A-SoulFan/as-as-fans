@@ -1,4 +1,4 @@
-package com.example.asasfans.ui.main;
+package com.example.asasfans.ui.main.adapter;
 
 import android.content.Context;
 import android.view.ViewGroup;
@@ -57,16 +57,6 @@ public class BottomPagerAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-//        switch (position){
-//            case 0:
-//                return MainFragment.newInstance();
-//            case 1:
-//                return WebFragment.newInstance();
-//            case 2:
-//                return NullFragment.newInstance();
-//            default:
-//        }
-//        return AUHotFragment.newInstance();
         return mFragmentList.get(position).getFragment();
     }
 
@@ -123,19 +113,6 @@ public class BottomPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-//    @Override
-//    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-//        Fragment fragment = (Fragment) object;
-//        //如果getItemPosition中的值为PagerAdapter.POSITION_NONE，就执行该方法。
-//        if (mFragmentList.contains(fragment)) {
-//            super.destroyItem(container, position, object);
-//            return;
-//        }
-//        //自己执行移除。因为mFragments在删除的时候就把某个fragment对象移除了，所以一般都得自己移除在fragmentManager中的该对象。
-//        if (!fragment.getParentFragmentManager().isStateSaved()) {
-//            mFragmentManager.beginTransaction().remove(fragment).commit();
-//        }
-//    }
 
     @Override
     public int getItemPosition(@NonNull Object object) {

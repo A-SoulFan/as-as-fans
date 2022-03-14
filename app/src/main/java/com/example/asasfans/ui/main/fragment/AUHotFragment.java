@@ -1,8 +1,6 @@
-package com.example.asasfans.ui.main;
+package com.example.asasfans.ui.main.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +8,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.asasfans.R;
 import com.example.asasfans.TestActivity;
 import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
-import com.example.asasfans.ui.video.SingleVideo;
-import com.example.asasfans.ui.video.VideoAdapter;
-import com.example.asasfans.ui.video.VideoBean;
+import com.example.asasfans.data.SingleVideo;
+import com.example.asasfans.ui.main.adapter.VideoAdapter;
+import com.example.asasfans.data.VideoBean;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.scwang.smart.refresh.header.BezierRadarHeader;
 import com.scwang.smart.refresh.header.FalsifyFooter;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -64,7 +59,7 @@ public class AUHotFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                refreshLayout.finishRefresh(1000/*,false*/);
+                refreshLayout.finishRefresh(100/*,false*/);
             }
         });
 

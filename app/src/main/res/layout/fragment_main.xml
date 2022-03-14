@@ -13,9 +13,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:srlPrimaryColor="@color/lightGray"
+        app:srlAccentColor="@color/tab_text_normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.scwang.smart.refresh.header.BezierRadarHeader
+            app:srlPrimaryColor="@color/lightGray"
+            app:srlAccentColor="@color/tab_text_normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <androidx.recyclerview.widget.RecyclerView
@@ -28,6 +32,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
         <com.scwang.smart.refresh.footer.BallPulseFooter
+            app:srlAnimatingColor="@color/tab_text_normal"
+            app:srlNormalColor="@color/tab_text_normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>

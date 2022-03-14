@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            app:layout_scrollFlags="scroll"
+            app:layout_scrollFlags="scroll|enterAlways"
             android:minHeight="?actionBarSize"
             android:textColor="@color/cardWhite"
             android:background="@color/tab_text_normal"
@@ -37,7 +37,6 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
-        android:layout_marginTop="8dp"
         android:background="@color/lightGray"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

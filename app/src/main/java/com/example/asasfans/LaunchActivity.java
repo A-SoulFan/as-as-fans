@@ -3,6 +3,7 @@ package com.example.asasfans;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -17,6 +18,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
 import java.io.File;
@@ -42,14 +45,23 @@ public class LaunchActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.i("APATH", getApplicationContext().getFilesDir().getAbsolutePath());
+        Log.i("BPATH", String.valueOf(Environment.getExternalStorageDirectory()));
+        String dirname = String.valueOf(Environment.getExternalStorageDirectory()) + "/com.example.asasfans/tmp/pic";
+        File d = new File(dirname);
+        d.mkdirs();
+        // 现在创建目录
+
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheInMemory(false) //设置下载的图片是否缓存在内存中
                 .cacheOnDisc(true)//设置下载的图片是否缓存在SD卡中
-                .showImageOnLoading(R.mipmap.loading)
+//                .showImageOnLoading(R.mipmap.load_failure)
                 .showImageOnFail(R.mipmap.load_failure)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .considerExifParams(true)//是否考虑JPEG图像EXIF参数（旋转，翻转）
                 .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
+                .displayer(new RoundedBitmapDisplayer(40))
+//                .displayer(new FadeInBitmapDisplayer(2000))
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .memoryCacheExtraOptions(480, 800) // max width, max height，即保存的每个缓存文件的最大长宽
@@ -62,9 +74,9 @@ public class LaunchActivity extends AppCompatActivity {
                 .diskCacheSize(500 * 1024 * 1024)  // 50 Mb sd卡(本地)缓存的最大值
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .defaultDisplayImageOptions(options)// 由原先的discCache -> diskCache
-                .diskCache(new UnlimitedDiskCache(new File("/storage/emulated/0/Android/data/com.example.asasfans/tmp/pic")))//自定义缓存路径
+                .diskCache(new UnlimitedDiskCache(new File(dirname)))//自定义缓存路径
                 .imageDownloader(new BaseImageDownloader(this, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
-                .writeDebugLogs() // Remove for release app
+//                .writeDebugLogs() // Remove for release app
                 .build();
         ImageLoader.getInstance().init(config);//全局初始化此配置
 
@@ -98,49 +110,6 @@ public class LaunchActivity extends AppCompatActivity {
             Bundle data = new Bundle();
             // TODO
             // 在这里进行 http request.网络请求相关操作
-            OkHttpClient client = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
-            Request request = new Request.Builder().url("http://124.223.8.236:5200/AsoulRT-top30")
-                    .get().build();
-            Call call = client.newCall(request);
-            Response response = null;
-            try {
-                response = call.execute();
-                String tmp = response.body().string();
-                data.putString("top30", tmp);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // TODO
-            // 在这里进行 http request.网络请求相关操作
-            client = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
-            request = new Request.Builder().url("http://124.223.8.236:5200/AsoulPudateVedio?page=1")
-                    .get().build();
-            call = client.newCall(request);
-            response = null;
-            try {
-                response = call.execute();
-                String tmp = response.body().string();
-                data.putString("pubdate", tmp);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // TODO
-            // 在这里进行 http request.网络请求相关操作
-            client = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
-            request = new Request.Builder().url("http://124.223.8.236:5200/AsoulMostViewVedio?page=1")
-                    .get().build();
-            call = client.newCall(request);
-            response = null;
-            try {
-                response = call.execute();
-                String tmp = response.body().string();
-                data.putString("most", tmp);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             msg.setData(data);
             handler.sendMessage(msg);
         }

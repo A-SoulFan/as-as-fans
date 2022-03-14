@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="image_order">
+        <item>最新发布</item>
+        <item>热门</item>
+    </string-array>
+    <string-array name="image_tag">
+        <item>全部</item>
+        <item>A-SOUL</item>
+        <item>向晚AvA</item>
+        <item>贝拉Bella</item>
+        <item>珈乐Carol</item>
+        <item>嘉然Diana</item>
+        <item>乃琳Queen</item>
+        <item>贝贝珈</item>
+        <item>乃贝</item>
+        <item>嘉晚饭</item>
+        <item>琳狼</item>
+        <item>珈特琳</item>
+        <item>果丹皮</item>
+        <item>琳嘉女孩</item>
+    </string-array>
+</resources>

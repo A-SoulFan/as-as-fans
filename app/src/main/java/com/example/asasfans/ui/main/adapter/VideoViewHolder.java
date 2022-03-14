@@ -1,4 +1,4 @@
-package com.example.asasfans.ui.video;
+package com.example.asasfans.ui.main.adapter;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -33,6 +33,4 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         videoLike = itemView.findViewById(R.id.videoLike);
         videoTname = itemView.findViewById(R.id.videoTname);
     }
-
-
 }

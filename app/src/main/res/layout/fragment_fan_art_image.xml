@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/appBar"
+        android:theme="@style/AppTheme.PopupOverlay">
+        <LinearLayout
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:orientation="horizontal"
+            android:background="@color/tab_text_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:layout_weight="1"
+                android:id="@+id/fragment_fan_art_spinner_order"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:popupBackground="@drawable/shape_for_custom_spinner"
+                android:background="@drawable/selector_for_custom_spinner"
+                android:layout_height="40dp"
+                android:dropDownVerticalOffset="45dp"
+                android:spinnerMode="dropdown"
+                android:entries="@array/image_order"
+                />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/cardWhite" />
+            <Spinner
+                android:layout_weight="1"
+                android:id="@+id/fragment_fan_art_spinner_date"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:dropDownVerticalOffset="45dp"
+                android:popupBackground="@drawable/shape_for_custom_spinner"
+                android:background="@drawable/selector_for_custom_spinner"
+                android:spinnerMode="dropdown"
+                android:entries="@array/image_order"
+                />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/cardWhite" />
+            <Spinner
+                android:layout_weight="1"
+                android:id="@+id/fragment_fan_art_spinner_tag"
+                android:layout_width="wrap_content"
+                android:popupBackground="@drawable/shape_for_custom_spinner"
+                android:background="@drawable/selector_for_custom_spinner"
+                android:layout_height="40dp"
+                android:dropDownVerticalOffset="45dp"
+                android:spinnerMode="dropdown"
+                android:entries="@array/image_tag"
+                />
+        </LinearLayout>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundGray"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            app:srlPrimaryColor="@color/lightGray"
+            app:srlAccentColor="@color/tab_text_normal"
+            android:id="@+id/fan_art_image_refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.scwang.smart.refresh.header.BezierRadarHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fan_art_image_recyclerview"
+                android:background="@color/backgroundGray"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <com.scwang.smart.refresh.footer.BallPulseFooter
+                app:srlAnimatingColor="@color/tab_text_normal"
+                app:srlNormalColor="@color/tab_text_normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

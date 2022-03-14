@@ -1,26 +1,25 @@
-package com.example.asasfans.ui.main;
+package com.example.asasfans.ui.main.fragment;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.R;
 import com.example.asasfans.ui.customcomponent.MyDialog;
 import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
+import com.example.asasfans.ui.main.adapter.ToolsAdapter;
 
 /**
  * @author: akari
@@ -47,7 +46,7 @@ public class ToolsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tools, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.tools_recyclerview);
-        Button button = view.findViewById(R.id.tools_button);
+        TextView textView = view.findViewById(R.id.tools_button);
 
         ToolsAdapter toolsAdapter = new ToolsAdapter(getActivity());
         toolsAdapter.setHasStableIds(true);
@@ -59,7 +58,7 @@ public class ToolsFragment extends Fragment {
             }
         });
         recyclerView.addItemDecoration(new RecyclerViewDecoration(8, 8));
-        button.setOnClickListener(new View.OnClickListener() {
+        textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toolsAdapter.setShowBox();
@@ -69,16 +68,22 @@ public class ToolsFragment extends Fragment {
                         @Override
                         public void onClick(boolean confirm) {
                             //设置重启后生效，但是自动重启速度慢，如果用户在自动重启的过程中之间点开应用会有神奇的bug
-//                            if (confirm){
-//                                Intent intent = getActivity().getPackageManager()
-//                                        .getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
-//                                PendingIntent restartIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, intent, 0);
-//                                AlarmManager mgr = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-//                                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, restartIntent); // 1秒钟后重启应用
-//                                System.exit(0);
-//                            }
+                            if (confirm){
+                                Intent intent = getActivity().getPackageManager()
+                                        .getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
+                                PendingIntent restartIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, intent, 0);
+                                AlarmManager mgr = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+                                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, restartIntent); // 1秒钟后重启应用
+                                System.exit(0);
+                            }
                         }
                     }).show();
+//                    Toast.makeText(getContext(),"手动重启以变更底部栏哦",Toast.LENGTH_SHORT).show();
+                    textView.setBackgroundColor(getContext().getResources().getColor(R.color.tab_text_normal));
+                    textView.setTextColor(getContext().getResources().getColor(R.color.cardWhite));
+                }else {
+                    textView.setBackgroundColor(getContext().getResources().getColor(R.color.backgroundGray));
+                    textView.setTextColor(getContext().getResources().getColor(R.color.cardBlack));
                 }
             }
         });

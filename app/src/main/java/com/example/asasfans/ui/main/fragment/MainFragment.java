@@ -1,18 +1,17 @@
-package com.example.asasfans.ui.main;
+package com.example.asasfans.ui.main.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.asasfans.R;
+import com.example.asasfans.ui.main.adapter.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 /**
@@ -41,7 +40,7 @@ public class MainFragment extends Fragment {
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getContext(), getChildFragmentManager());
         ViewPager viewPager = view.findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
-        viewPager.setOffscreenPageLimit(5);
+//        viewPager.setOffscreenPageLimit(5);
         TabLayout tabs = view.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 

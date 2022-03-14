@@ -61,7 +61,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
 
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5' //加载图片开源库
-
+//    implementation ("com.github.bumptech.glide:glide:4.11.0") {
+//        exclude group: "com.android.support"
+//    }
+//    implementation "com.android.support:support-fragment:26.1.0"
     // debugImplementation because LeakCanary should only run in debug builds.
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
 }

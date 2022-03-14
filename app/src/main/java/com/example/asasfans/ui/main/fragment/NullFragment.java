@@ -1,4 +1,4 @@
-package com.example.asasfans.ui.main;
+package com.example.asasfans.ui.main.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

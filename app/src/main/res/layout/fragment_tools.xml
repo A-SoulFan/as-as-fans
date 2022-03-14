@@ -10,13 +10,17 @@
         android:layout_height="wrap_content"
         android:id="@+id/appBar"
         android:theme="@style/AppTheme.PopupOverlay">
-        <Button
+        <TextView
             android:id="@+id/tools_button"
             android:layout_width="60dp"
+            android:gravity="center"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_gravity="right"
-            android:background="@color/tab_text_normal"
+            android:textColor="@color/cardWhite"
             android:text="管理"
-            android:layout_height="50dp"/>
+            android:layout_height="40dp"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView

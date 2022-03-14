@@ -3,7 +3,6 @@ package com.example.asasfans;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -20,12 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.asasfans.data.TabData;
-import com.example.asasfans.ui.main.BottomPagerAdapter;
-import com.example.asasfans.ui.main.MainFragment;
-import com.example.asasfans.ui.main.NullFragment;
-import com.example.asasfans.ui.main.ToolsAdapter;
-import com.example.asasfans.ui.main.ToolsFragment;
-import com.example.asasfans.ui.main.WebFragment;
+import com.example.asasfans.ui.main.adapter.BottomPagerAdapter;
+import com.example.asasfans.ui.main.fragment.ImageFanArtFragment;
+import com.example.asasfans.ui.main.fragment.MainFragment;
+import com.example.asasfans.ui.main.adapter.ToolsAdapter;
+import com.example.asasfans.ui.main.fragment.ToolsFragment;
+import com.example.asasfans.ui.main.fragment.WebFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -66,7 +64,11 @@ public class TestActivity extends AppCompatActivity {
     /*
     权限相关
      */
-    String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.INTERNET, Manifest.permission.READ_EXTERNAL_STORAGE};
+    String[] permissions = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.INTERNET,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_NETWORK_STATE};
     List<String> mPermissionList = new ArrayList<>();
     private static final int PERMISSION_REQUEST = 1;
 
@@ -123,26 +125,28 @@ public class TestActivity extends AppCompatActivity {
         if (getSharedPreferences("ToolsData", MODE_PRIVATE) != null){
             userInfo = getSharedPreferences("ToolsData", MODE_PRIVATE);
             tmp = userInfo.getAll();
+            if (tmp.size() < ToolsAdapter.iconUrl.size()){
+                editor = userInfo.edit();
+                for (int i = tmp.size(); i < ToolsAdapter.iconUrl.size(); i++) {
+                    editor.putBoolean(ToolsAdapter.iconUrl.get(i), false);
+                    editor.commit();
+                }
+            }
             Log.i("initTab", tmp.toString());
             for (int i = 0 ; i < tmp.size() ; i++){
                 if (userInfo.getBoolean(ToolsAdapter.iconUrl.get(i), false)) {
-                    switch (i) {
+                    switch (i){
                         case 0:
-                            mFragmentList.add(new TabData("图片", NullFragment.newInstance()));
-                            break;
-                        case 1:
-                            mFragmentList.add(new TabData("枝网查重", WebFragment.newInstance()));
-                            break;
-                        case 2:
-                            mFragmentList.add(new TabData("ASOUL FAN", NullFragment.newInstance()));
+                            mFragmentList.add(new TabData("二创图片", ImageFanArtFragment.newInstance()));
                             break;
                         default:
-                            mFragmentList.add(new TabData("bug", NullFragment.newInstance()));
+                            mFragmentList.add(new TabData(ToolsAdapter.name.get(i), WebFragment.newInstance(ToolsAdapter.iconUrl.get(i))));
+                            break;
                     }
                 }
             }
         }
-        mFragmentList.add(new TabData("全收录", ToolsFragment.newInstance()));
+        mFragmentList.add(new TabData("工具", ToolsFragment.newInstance()));
     }
 
     public static void updateTabs(List<TabData> FragmentList){

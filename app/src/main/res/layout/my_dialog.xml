@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
-        android:text="重启以更改底部导航栏"
+        android:text="重启以更改底部导航栏\n（如果自动重启有问题手动关闭重启即可）"
         android:textSize="15sp"
         android:textColor="#666666"/>
 

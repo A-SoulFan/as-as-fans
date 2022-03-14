@@ -1,4 +1,4 @@
-package com.example.asasfans.ui.video;
+package com.example.asasfans.ui.main.adapter;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -19,14 +19,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.asasfans.LaunchActivity;
 import com.example.asasfans.R;
-import com.example.asasfans.TestActivity;
+import com.example.asasfans.data.SingleVideoBean;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -49,6 +50,7 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     private int PageSize;
     private List<List<String>> VideosBvid;
     private final String PackageName = "tv.danmaku.bili";
+    private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
     public PubdateVideoAdapter(Context context, int pageSize, List<List<String>> videosBvid) {
         this.mContext = context;
@@ -117,7 +119,7 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                         if (singleVideoBean.getData() != null) {
                             holder.videoTitle.setText(singleVideoBean.getData().getTitle());
 //                            holder.myImageView.setImageURL(singleVideoBean.getData().getPic());
-                            ImageLoader.getInstance().displayImage(singleVideoBean.getData().getPic(), holder.imageView);
+                            ImageLoader.getInstance().displayImage(singleVideoBean.getData().getPic() + "@480w_300h_1e_1c.jpg", holder.imageView);
                             holder.videoAuthor.setText(singleVideoBean.getData().getOwner().getName());
                             holder.videoDuration.setText(secondsToTime(singleVideoBean.getData().getDuration()));
                             holder.videoLike.setText(viewNumFormat(singleVideoBean.getData().getStat().getLike()) + " 点赞");
@@ -163,7 +165,8 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
             }
         };
 
-        new Thread(networkTask).start();
+//        new Thread(networkTask).start();
+        cachedThreadPool.execute(networkTask);
 
     }
 
@@ -176,6 +179,10 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
         return position;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return VideosBvid.get(position).hashCode();
+    }
 
     /**
      * @description 视频时长为秒，更改显示

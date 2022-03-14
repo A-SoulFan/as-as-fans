@@ -1,4 +1,4 @@
-package com.example.asasfans.ui.main;
+package com.example.asasfans.ui.main.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -34,19 +34,35 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
     public static final List<String> iconUrl
             = Arrays.asList("https://asoul.cloud",
                             "https://asoulcnki.asia",
-                            "https://tools.asoulfan.com/zhijiangDict");
-    public final List<String> iconFileName
+                            "https://tools.asoulfan.com/zhijiangDict",
+                            "https://asoul.icu/",
+                            "https://asoul.asia/",
+                            "https://asoulwiki.com/"
+            );
+    public static final List<String> iconFileName
             = Arrays.asList("icon_asoul_cloud",
                             "icon_zwcc",
-                            "icon_asf");
-    public final List<String> desc
+                            "icon_asf",
+                            "icon_asoul",
+                            "icon_asoul",
+                            "icon_asoul"
+            );
+    public static final List<String> desc
             = Arrays.asList("A-SOUL Fans Art - 一个魂的二创",
                             "枝网查重",
-                            "方言词典");
-    public final List<String> name
+                            "方言词典",
+                            "小作文",
+                            "论坛管理群聊天记录公示",
+                            "一个魂维基 A-SOUL WIKI"
+            );
+    public static final List<String> name
             = Arrays.asList("图片",
                             "枝网查重",
-                            "方言词典");
+                            "方言词典",
+                            "小作文",
+                            "聊天公示",
+                            "一个魂维基"
+            );
     //是否显示选框,默认false
     private boolean isShowBox = false;
     // 存储勾选框状态的map集合

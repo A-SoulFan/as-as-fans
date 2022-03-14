@@ -1,4 +1,4 @@
-package com.example.asasfans.ui.video;
+package com.example.asasfans.data;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.asasfans.ui.main;
+package com.example.asasfans.ui.main.adapter;
 
 import android.content.Context;
 
@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.asasfans.R;
+import com.example.asasfans.ui.main.fragment.BiliVideoFragment;
+import com.example.asasfans.ui.main.fragment.NullFragment;
 
 /**
  * @author akarinini
@@ -17,7 +19,7 @@ import com.example.asasfans.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_4, R.string.tab_text_5, R.string.tab_text_2, R.string.tab_text_3};
+    private static final int[] TAB_TITLES = new int[]{ R.string.tab_text_4, R.string.tab_text_5, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -30,19 +32,19 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
         switch (position){
+//            case 0:
+//                return AUHotFragment.newInstance();
             case 0:
-                return AUHotFragment.newInstance();
+                return BiliVideoFragment.newInstance("http://124.223.8.236:5200/AsoulRT-FanArt?page=");
             case 1:
-                return HotFanArtFragment.newInstance();
+                return BiliVideoFragment.newInstance("http://124.223.8.236:5200/AsoulRT-Cut?page=");
             case 2:
-                return HotFanCutFragment.newInstance();
+                return BiliVideoFragment.newInstance("http://124.223.8.236:5200/AsoulPudateVedio?page=");
             case 3:
-                return PubdateFragment.newInstance();
-            case 4:
-                return RecommendFragment.newInstance();
+                return BiliVideoFragment.newInstance("http://124.223.8.236:5200/AsoulMostViewVedio?page=");
             default:
+                return NullFragment.newInstance();
         }
-        return AUHotFragment.newInstance();
     }
 
     @Nullable

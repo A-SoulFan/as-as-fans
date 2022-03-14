@@ -37,5 +37,13 @@
         <item name="colorControlActivated">@color/tab_text_normal</item>
     </style>
 
+    <style name="customTheme">
+        <item name="dropDownListViewStyle">@style/customSpinnerStyle</item>
+    </style>
+    <style name="customSpinnerStyle" parent="Widget.AppCompat.Light.ListView.DropDown">
+        <item name="android:textAlignment">center</item>
+        <item name="divider">@color/cardBlack</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
 
 </resources>

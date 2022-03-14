@@ -1,4 +1,4 @@
-package com.example.asasfans.ui.video;
+package com.example.asasfans.ui.main.adapter;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.R;
+import com.example.asasfans.data.SingleVideo;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -83,8 +84,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
 
-        Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fadein);
-        holder.imageView.startAnimation(fadeIn);
+//        Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fadein);
+//        holder.imageView.startAnimation(fadeIn);
 
 //        holder.imageView.setImageURL(singleVideos.get(position).getPicUrl());
         imageLoader.displayImage(singleVideos.get(position).getPicUrl(), holder.imageView);
