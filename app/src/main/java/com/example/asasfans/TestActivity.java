@@ -60,6 +60,7 @@ public class TestActivity extends AppCompatActivity {
     private SharedPreferences userInfo;
     private SharedPreferences.Editor editor;//获取Editor
     private Map<String, ?> tmp;
+    private boolean firstOnCreate = true;
 
     /*
     权限相关
@@ -78,8 +79,11 @@ public class TestActivity extends AppCompatActivity {
         checkPermission();
         setContentView(R.layout.activity_bottom_main);
 
-        initTab();
-
+        //恢复时会第二次添加底部导航栏
+        if (firstOnCreate) {
+            initTab();
+            firstOnCreate = false;
+        }
         bottomPagerAdapter = new BottomPagerAdapter(this, getSupportFragmentManager(), mFragmentList);
         mCurrentFragment = bottomPagerAdapter.getCurrentFragment();
         viewPager = findViewById(R.id.view_pager_main);

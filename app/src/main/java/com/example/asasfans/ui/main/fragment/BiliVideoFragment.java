@@ -53,6 +53,7 @@ public class BiliVideoFragment extends Fragment {
     private int page = 1;
     private RefreshLayout refreshLayout;
     private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+    private boolean firstOnCreateView = true;
 
     public static BiliVideoFragment newInstance(String url) {
 
@@ -77,7 +78,7 @@ public class BiliVideoFragment extends Fragment {
         refreshLayout = (RefreshLayout)view.findViewById(R.id.refreshLayout);
         refreshLayout.setRefreshHeader(new BezierRadarHeader(getActivity()));
         refreshLayout.setRefreshFooter(new BallPulseFooter(getActivity()));
-        refreshLayout.setEnableAutoLoadMore(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         pubdateVideoAdapter = new PubdateVideoAdapter(getActivity(), VideosBvid.size(), VideosBvid);
         recyclerView.setAdapter(pubdateVideoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
@@ -86,6 +87,7 @@ public class BiliVideoFragment extends Fragment {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 page = 1;
+                VideosBvid.clear();
                 cachedThreadPool.execute(networkTask.setParam(VideoUrl + page));
                 refreshLayout.finishRefresh(100/*,false*/);
             }
@@ -98,8 +100,10 @@ public class BiliVideoFragment extends Fragment {
 
             }
         });
-        cachedThreadPool.execute(networkTask.setParam(VideoUrl + page));
-
+        if (firstOnCreateView) {
+            cachedThreadPool.execute(networkTask.setParam(VideoUrl + page));
+            firstOnCreateView = false;
+        }
         return view;
     }
     private Handler handler = new Handler() {

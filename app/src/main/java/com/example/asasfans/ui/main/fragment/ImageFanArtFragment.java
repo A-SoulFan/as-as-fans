@@ -60,7 +60,7 @@ import static com.example.asasfans.ui.main.fragment.BiliVideoFragment.NETWORK_ER
 /**
  * @author: akari
  * @date: 2022/3/8
- * @description $
+ * @description 图片加载页面
  */
 public class ImageFanArtFragment extends Fragment {
     public static int divider = 15;
@@ -98,6 +98,9 @@ public class ImageFanArtFragment extends Fragment {
     }
 
     private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+    private boolean isFirstOrder = true;
+    private boolean isFirstDate = true;
+    private boolean isFirstTag = true;
 
 
     public static ImageFanArtFragment newInstance() {
@@ -127,11 +130,13 @@ public class ImageFanArtFragment extends Fragment {
         refreshLayout = (RefreshLayout)view.findViewById(R.id.fan_art_image_refreshLayout);
         refreshLayout.setRefreshHeader(new BezierRadarHeader(getActivity()));
         refreshLayout.setDragRate(1f);
+        refreshLayout.setEnableAutoLoadMore(true);
         refreshLayout.setHeaderTriggerRate((float) 0.3);
         refreshLayout.setRefreshFooter(new BallPulseFooter(getActivity()));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                imageRecyclerViewData.clear();
                 cachedThreadPool.execute(networkTask.setParam(imageUrl.getUrl()));
                 refreshLayout.finishRefresh();
             }
@@ -156,7 +161,6 @@ public class ImageFanArtFragment extends Fragment {
     private void initImageAdapter(){
         imageAdapter = new ImageAdapter(getActivity(), imageRecyclerViewData.size(), imageRecyclerViewData);
         recyclerView = view.findViewById(R.id.fan_art_image_recyclerview);
-
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         RecyclerView.ItemDecoration gridItemDecoration = new RecyclerView.ItemDecoration() {
             @Override
@@ -201,28 +205,33 @@ public class ImageFanArtFragment extends Fragment {
         date.setAdapter(starAdapterDate);
         tag.setAdapter(starAdapterTag);
         //设置下拉框默认的显示第一项
-        order.setSelection(0, true);
-        date.setSelection(0, true);
-        tag.setSelection(0, true);
+        order.setSelection(-1, true);
+        date.setSelection(-1, true);
+        tag.setSelection(-1, true);
+
         //给下拉框设置选择监听器，一旦用户选中某一项，就触发监听器的onItemSelected方法
         order.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        imageUrl.setPage(1);
-                        imageUrl.setSort(sort.pubdateImage.value());
-                        imageUrl.setCtime(0);
-                        break;
-                    case 1:
-                        imageUrl.setPage(1);
-                        imageUrl.setSort(sort.biliHotImage.value());
-                        imageUrl.setCtime(0);
-                        break;
+                if (isFirstOrder){
+                    isFirstOrder = false;
+                }else {
+                    switch (position){
+                        case 0:
+                            imageUrl.setPage(1);
+                            imageUrl.setSort(sort.pubdateImage.value());
+                            imageUrl.setCtime(0);
+                            break;
+                        case 1:
+                            imageUrl.setPage(1);
+                            imageUrl.setSort(sort.biliHotImage.value());
+                            imageUrl.setCtime(0);
+                            break;
+                    }
+                    imageRecyclerViewData.clear();
+                    imageAdapter.notifyDataSetChanged();
+                    cachedThreadPool.execute(networkTask.setParam(imageUrl.getUrl()));
                 }
-                imageRecyclerViewData.clear();
-                imageAdapter.notifyDataSetChanged();
-                cachedThreadPool.execute(networkTask.setParam(imageUrl.getUrl()));
             }
 
             @Override
@@ -233,29 +242,33 @@ public class ImageFanArtFragment extends Fragment {
         date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        imageUrl.setRank(0);
-                        imageUrl.setCtime(0);
-                        break;
-                    case 1:
-                        imageUrl.setRank(1);
-                        imageUrl.setCtime(System.currentTimeMillis());
-                        break;
-                    case 2:
-                        imageUrl.setRank(2);
-                        imageUrl.setSort(sort.biliHotImage.value());
-                        imageUrl.setCtime(0);
-                        break;
-                    case 3:
-                        imageUrl.setRank(3);
-                        imageUrl.setSort(sort.biliHotImage.value());
-                        imageUrl.setCtime(0);
-                        break;
+                if (isFirstDate){
+                    isFirstDate = false;
+                }else {
+                    switch (position) {
+                        case 0:
+                            imageUrl.setRank(0);
+                            imageUrl.setCtime(0);
+                            break;
+                        case 1:
+                            imageUrl.setRank(1);
+                            imageUrl.setCtime(System.currentTimeMillis());
+                            break;
+                        case 2:
+                            imageUrl.setRank(2);
+                            imageUrl.setSort(sort.biliHotImage.value());
+                            imageUrl.setCtime(0);
+                            break;
+                        case 3:
+                            imageUrl.setRank(3);
+                            imageUrl.setSort(sort.biliHotImage.value());
+                            imageUrl.setCtime(0);
+                            break;
+                    }
+                    imageRecyclerViewData.clear();
+                    imageAdapter.notifyDataSetChanged();
+                    cachedThreadPool.execute(networkTask.setParam(imageUrl.getUrl()));
                 }
-                imageRecyclerViewData.clear();
-                imageAdapter.notifyDataSetChanged();
-                cachedThreadPool.execute(networkTask.setParam(imageUrl.getUrl()));
             }
 
             @Override
@@ -266,53 +279,57 @@ public class ImageFanArtFragment extends Fragment {
         tag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        imageUrl.setPart(part.allTag.value());
-                        break;
-                    case 1:
-                        imageUrl.setPart(part.asoul.value());
-                        break;
-                    case 2:
-                        imageUrl.setPart(part.ava.value());
-                        break;
-                    case 3:
-                        imageUrl.setPart(part.bella.value());
-                        break;
-                    case 4:
-                        imageUrl.setPart(part.carol.value());
-                        break;
-                    case 5:
-                        imageUrl.setPart(part.diana.value());
-                        break;
-                    case 6:
-                        imageUrl.setPart(part.queen.value());
-                        break;
-                    case 7:
-                        imageUrl.setPart(part.bbj.value());
-                        break;
-                    case 8:
-                        imageUrl.setPart(part.nb.value());
-                        break;
-                    case 9:
-                        imageUrl.setPart(part.jwf.value());
-                        break;
-                    case 10:
-                        imageUrl.setPart(part.ll.value());
-                        break;
-                    case 11:
-                        imageUrl.setPart(part.jtl.value());
-                        break;
-                    case 12:
-                        imageUrl.setPart(part.gdp.value());
-                        break;
-                    case 13:
-                        imageUrl.setPart(part.ljnh.value());
-                        break;
+                if (isFirstTag){
+                    isFirstTag = false;
+                }else {
+                    switch (position) {
+                        case 0:
+                            imageUrl.setPart(part.allTag.value());
+                            break;
+                        case 1:
+                            imageUrl.setPart(part.asoul.value());
+                            break;
+                        case 2:
+                            imageUrl.setPart(part.ava.value());
+                            break;
+                        case 3:
+                            imageUrl.setPart(part.bella.value());
+                            break;
+                        case 4:
+                            imageUrl.setPart(part.carol.value());
+                            break;
+                        case 5:
+                            imageUrl.setPart(part.diana.value());
+                            break;
+                        case 6:
+                            imageUrl.setPart(part.queen.value());
+                            break;
+                        case 7:
+                            imageUrl.setPart(part.bbj.value());
+                            break;
+                        case 8:
+                            imageUrl.setPart(part.nb.value());
+                            break;
+                        case 9:
+                            imageUrl.setPart(part.jwf.value());
+                            break;
+                        case 10:
+                            imageUrl.setPart(part.ll.value());
+                            break;
+                        case 11:
+                            imageUrl.setPart(part.jtl.value());
+                            break;
+                        case 12:
+                            imageUrl.setPart(part.gdp.value());
+                            break;
+                        case 13:
+                            imageUrl.setPart(part.ljnh.value());
+                            break;
+                    }
+                    imageRecyclerViewData.clear();
+                    imageAdapter.notifyDataSetChanged();
+                    cachedThreadPool.execute(networkTask.setParam(imageUrl.getUrl()));
                 }
-                imageRecyclerViewData.clear();
-                imageAdapter.notifyDataSetChanged();
-                cachedThreadPool.execute(networkTask.setParam(imageUrl.getUrl()));
             }
 
             @Override
