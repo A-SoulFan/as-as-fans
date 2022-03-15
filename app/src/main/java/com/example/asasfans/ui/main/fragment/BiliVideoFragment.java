@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.R;
 import com.example.asasfans.data.PubdateVideoBean;
+import com.example.asasfans.data.VideoDataStoragedInMemory;
 import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.main.adapter.PubdateVideoAdapter;
 import com.google.gson.Gson;
@@ -47,7 +48,7 @@ public class BiliVideoFragment extends Fragment {
     private String VideoUrl;
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
-    private List<List<String>> VideosBvid = new ArrayList<>();
+    private List<VideoDataStoragedInMemory> videoDataStoragedInMemoryList = new ArrayList<>();
     private PubdateVideoAdapter pubdateVideoAdapter;
     private RecyclerView recyclerView;
     private int page = 1;
@@ -79,15 +80,17 @@ public class BiliVideoFragment extends Fragment {
         refreshLayout.setRefreshHeader(new BezierRadarHeader(getActivity()));
         refreshLayout.setRefreshFooter(new BallPulseFooter(getActivity()));
         refreshLayout.setEnableAutoLoadMore(true);
-        pubdateVideoAdapter = new PubdateVideoAdapter(getActivity(), VideosBvid.size(), VideosBvid);
+        pubdateVideoAdapter = new PubdateVideoAdapter(getActivity(), videoDataStoragedInMemoryList);
         recyclerView.setAdapter(pubdateVideoAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        linearLayoutManager.setInitialPrefetchItemCount(2);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new RecyclerViewDecoration(12, 12));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 page = 1;
-                VideosBvid.clear();
+                videoDataStoragedInMemoryList.clear();
                 cachedThreadPool.execute(networkTask.setParam(VideoUrl + page));
                 refreshLayout.finishRefresh(100/*,false*/);
             }
@@ -97,7 +100,6 @@ public class BiliVideoFragment extends Fragment {
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 page++;
                 cachedThreadPool.execute(networkTask.setParam(VideoUrl + page));
-
             }
         });
         if (firstOnCreateView) {
@@ -120,9 +122,12 @@ public class BiliVideoFragment extends Fragment {
                         PubdateVideoBean hPubdateVideoBean = gson.fromJson(val, PubdateVideoBean.class);
                         List<List<String>> hVideosBvid = new ArrayList<>();
                         hVideosBvid = hPubdateVideoBean.getData().getResult();
-                        int PastSize = VideosBvid.size();
-                        VideosBvid.addAll(hVideosBvid);
-                        Log.i("BiliVideoFragment:VideosBvid", VideosBvid.toString());
+                        int PastSize = videoDataStoragedInMemoryList.size();
+                        for (int i = 0; i < hVideosBvid.size(); i++){
+                            videoDataStoragedInMemoryList.add(new VideoDataStoragedInMemory("", "", 0, "", 0, 0, "", hVideosBvid.get(i).get(0), true));
+                        }
+//                        videoDataStoragedInMemoryList.addAll(hVideosBvid);
+                        Log.i("BiliVideoFragment:VideosBvid", videoDataStoragedInMemoryList.toString());
                         pubdateVideoAdapter.notifyItemRangeChanged(PastSize, hVideosBvid.size());
                         refreshLayout.finishLoadMore(100);
                     }else {

@@ -1,5 +1,6 @@
 package com.example.asasfans.ui.main.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -21,10 +22,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.R;
 import com.example.asasfans.data.SingleVideoBean;
+import com.example.asasfans.data.VideoDataStoragedInMemory;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,17 +48,14 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     public static final int NETWORK_ERROR = 2;
     public static final int SERVER_ERROR = 3;
     private String BVID_SEARCH_URL = "https://api.bilibili.com/x/web-interface/view?bvid=";
-    private int model;
     private Context mContext;
-    private int PageSize;
-    private List<List<String>> VideosBvid;
     private final String PackageName = "tv.danmaku.bili";
     private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+    private List<VideoDataStoragedInMemory> videoDataStoragedInMemoryList = new ArrayList<>();
 
-    public PubdateVideoAdapter(Context context, int pageSize, List<List<String>> videosBvid) {
+    public PubdateVideoAdapter(Context context, List<VideoDataStoragedInMemory> videosBvid) {
         this.mContext = context;
-        this.PageSize = pageSize;
-        this.VideosBvid = videosBvid;
+        this.videoDataStoragedInMemoryList = videosBvid;
     }
 
     @NonNull
@@ -69,7 +69,7 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 //                Toast.makeText(mContext,mResultBean.get(videoViewHolder.getBindingAdapterPosition()).getBvid(),Toast.LENGTH_SHORT).show();
                 //获取剪贴板管理器：
                 ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData mClipData = ClipData.newPlainText("bvid", VideosBvid.get(videoViewHolder.getBindingAdapterPosition()).get(0));
+                ClipData mClipData = ClipData.newPlainText("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
                 cm.setPrimaryClip(mClipData);
 
                 PackageManager packageManager = mContext.getPackageManager();
@@ -85,10 +85,10 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(mContext,VideosBvid.get(videoViewHolder.getBindingAdapterPosition()).get(0) + "已复制到剪贴板",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid() + "已复制到剪贴板",Toast.LENGTH_SHORT).show();
                 //获取剪贴板管理器：
                 ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData mClipData = ClipData.newPlainText("bvid", VideosBvid.get(videoViewHolder.getBindingAdapterPosition()).get(0));
+                ClipData mClipData = ClipData.newPlainText("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
                 cm.setPrimaryClip(mClipData);
                 return true;
             }
@@ -98,39 +98,44 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
-        Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fadein);
-        holder.imageView.startAnimation(fadeIn);
+    public void onBindViewHolder(@NonNull VideoViewHolder holder, @SuppressLint("RecyclerView") int position) {
+//        Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fadein);
+//        holder.imageView.startAnimation(fadeIn);
 
-        holder.videoTitle.setText(VideosBvid.get(position).get(0));
         Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 Bundle data = msg.getData();
                 String val = data.getString("singleVideoData");
-                Log.i("singleVideoData", "请求结果为-->" + val);
+//                Log.i("singleVideoData", "请求结果为-->" + val);
                 Gson gson =new Gson();
                 SingleVideoBean singleVideoBean = gson.fromJson(val, SingleVideoBean.class);
 //                if (singleVideoBean.getCode() == 62002)
-
                 switch (msg.what){
                     case GET_DATA_SUCCESS:
                         if (singleVideoBean.getData() != null) {
                             holder.videoTitle.setText(singleVideoBean.getData().getTitle());
-//                            holder.myImageView.setImageURL(singleVideoBean.getData().getPic());
+                            videoDataStoragedInMemoryList.get(position).setTitle(singleVideoBean.getData().getTitle());
                             ImageLoader.getInstance().displayImage(singleVideoBean.getData().getPic() + "@480w_300h_1e_1c.jpg", holder.imageView);
+                            videoDataStoragedInMemoryList.get(position).setPicUrl(singleVideoBean.getData().getPic() + "@480w_300h_1e_1c.jpg");
                             holder.videoAuthor.setText(singleVideoBean.getData().getOwner().getName());
+                            videoDataStoragedInMemoryList.get(position).setAuthor(singleVideoBean.getData().getOwner().getName());
                             holder.videoDuration.setText(secondsToTime(singleVideoBean.getData().getDuration()));
+                            videoDataStoragedInMemoryList.get(position).setDuration(singleVideoBean.getData().getDuration());
                             holder.videoLike.setText(viewNumFormat(singleVideoBean.getData().getStat().getLike()) + " 点赞");
+                            videoDataStoragedInMemoryList.get(position).setLike(singleVideoBean.getData().getStat().getLike());
                             holder.videoView.setText(viewNumFormat(singleVideoBean.getData().getStat().getView()) + " 播放");
+                            videoDataStoragedInMemoryList.get(position).setView(singleVideoBean.getData().getStat().getView());
                             holder.videoTname.setText(singleVideoBean.getData().getTname());
+                            videoDataStoragedInMemoryList.get(position).setTname(singleVideoBean.getData().getTname());
+                            videoDataStoragedInMemoryList.get(position).setFirstLoad(false);
                         }else {
                             holder.videoTitle.setText(val);
                         }
                         break;
                     case NETWORK_ERROR:
-                        holder.videoAuthor.setText("NETWORK_ERROR");
+                        holder.videoTitle.setText("NETWORK_ERROR");
                 }
                 // TODO
                 // UI界面的更新等相关操作
@@ -145,7 +150,7 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                 // TODO
                 // 在这里进行 http request.网络请求相关操作
                 OkHttpClient client = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
-                Request request = new Request.Builder().url(BVID_SEARCH_URL + VideosBvid.get(position).get(0))
+                Request request = new Request.Builder().url(BVID_SEARCH_URL + videoDataStoragedInMemoryList.get(position).getBvid())
                         .get().build();
                 Call call = client.newCall(request);
                 Response response = null;
@@ -166,13 +171,24 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
         };
 
 //        new Thread(networkTask).start();
-        cachedThreadPool.execute(networkTask);
+        if ((videoDataStoragedInMemoryList.get(position).getFirstLoad())) {
+            cachedThreadPool.execute(networkTask);
+        }else {
+            holder.videoTitle.setText(videoDataStoragedInMemoryList.get(position).getTitle());
+            ImageLoader.getInstance().displayImage(videoDataStoragedInMemoryList.get(position).getPicUrl(), holder.imageView);
+            holder.videoAuthor.setText(videoDataStoragedInMemoryList.get(position).getAuthor());
+            holder.videoDuration.setText(secondsToTime(videoDataStoragedInMemoryList.get(position).getDuration()));
+            holder.videoLike.setText(viewNumFormat(videoDataStoragedInMemoryList.get(position).getLike()) + " 点赞");
+            holder.videoView.setText(viewNumFormat(videoDataStoragedInMemoryList.get(position).getView()) + " 播放");
+            holder.videoTname.setText(videoDataStoragedInMemoryList.get(position).getTname());
+            Log.i("getFirstLoad:false", String.valueOf(position));
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return VideosBvid.size();
+        return videoDataStoragedInMemoryList.size();
     }
     @Override
     public int getItemViewType(int position) {
@@ -181,8 +197,9 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 
     @Override
     public long getItemId(int position) {
-        return VideosBvid.get(position).hashCode();
+        return videoDataStoragedInMemoryList.get(position).hashCode();
     }
+
 
     /**
      * @description 视频时长为秒，更改显示

@@ -5,9 +5,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +23,8 @@ import com.example.asasfans.R;
 import com.example.asasfans.ui.customcomponent.MyDialog;
 import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.main.adapter.ToolsAdapter;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.ViewHolder;
 
 /**
  * @author: akari
@@ -47,6 +52,8 @@ public class ToolsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tools, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.tools_recyclerview);
         TextView textView = view.findViewById(R.id.tools_button);
+        ImageView imageView = view.findViewById(R.id.image_why);
+
 
         ToolsAdapter toolsAdapter = new ToolsAdapter(getActivity());
         toolsAdapter.setHasStableIds(true);
@@ -54,10 +61,23 @@ public class ToolsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false){
             @Override
             public boolean canScrollVertically() {
-                return false;
+                return true;
             }
         });
         recyclerView.addItemDecoration(new RecyclerViewDecoration(8, 8));
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogPlus dialog = DialogPlus.newDialog(getActivity())
+                        .setContentHolder(new ViewHolder(R.layout.dialog_why))
+                        .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .setContentWidth(ViewGroup.LayoutParams.MATCH_PARENT)
+                        .setCancelable(true)
+                        .setGravity(Gravity.TOP)
+                        .create();
+                dialog.show();
+            }
+        });
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +110,4 @@ public class ToolsFragment extends Fragment {
         return view;
     }
 
-    private void init(){
-
-    }
 }

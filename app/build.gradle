@@ -67,4 +67,5 @@ dependencies {
 //    implementation "com.android.support:support-fragment:26.1.0"
     // debugImplementation because LeakCanary should only run in debug builds.
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
+    implementation 'com.orhanobut:dialogplus:1.11@aar'
 }

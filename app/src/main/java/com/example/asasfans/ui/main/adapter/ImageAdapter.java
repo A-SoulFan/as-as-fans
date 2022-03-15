@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,6 +59,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+//        Animation fadeIn = AnimationUtils.loadAnimation(context, R.anim.fadein);
+//        holder.fan_art_image.startAnimation(fadeIn);
+//        holder.fan_art_author.startAnimation(fadeIn);
+
         ImageLoader.getInstance().displayImage(imageDataBean.get(position).getFace() + "@64w_64h_1e_1c.jpg", holder.fan_art_author);
         holder.fan_art_author_name.setText(imageDataBean.get(position).getName());
         double widthImage, heightImage;

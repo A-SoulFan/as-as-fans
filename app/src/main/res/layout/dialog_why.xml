@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:text="本页说明"
+        android:textStyle="bold"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textColor="#353535"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/dialog_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="1. 右侧管理底部栏按钮可以改变底部导航栏\n2. 长按每个条目可以复制原网址\n3. 单击条目可以在app内打开\n4. 如果打开页面为空白说明网页不兼容，请复制网址到浏览器打开"
+        android:textSize="15sp"
+        android:textColor="#666666"/>
+
+</LinearLayout>

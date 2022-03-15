@@ -7,25 +7,50 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:id="@+id/appBar"
         android:theme="@style/AppTheme.PopupOverlay">
-        <TextView
-            android:id="@+id/tools_button"
-            android:layout_width="60dp"
-            android:gravity="center"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_gravity="right"
-            android:textColor="@color/cardWhite"
-            android:text="管理"
-            android:layout_height="40dp"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@mipmap/icon_why"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/tools_button"
+                android:id="@+id/image_why"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                android:layout_marginLeft="8dp"
+                android:scaleType="fitCenter"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+            <TextView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/image_why"
+                android:id="@+id/tools_button"
+                android:layout_width="80dp"
+                android:gravity="center"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/cardWhite"
+                android:text="管理底部栏"
+                android:layout_height="40dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+
         android:background="@color/backgroundGray"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <androidx.recyclerview.widget.RecyclerView

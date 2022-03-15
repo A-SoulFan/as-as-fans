@@ -54,14 +54,14 @@ public class LaunchActivity extends AppCompatActivity {
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheInMemory(false) //设置下载的图片是否缓存在内存中
-                .cacheOnDisc(true)//设置下载的图片是否缓存在SD卡中
+//                .cacheOnDisc(true)//设置下载的图片是否缓存在SD卡中
 //                .showImageOnLoading(R.mipmap.load_failure)
                 .showImageOnFail(R.mipmap.load_failure)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .considerExifParams(true)//是否考虑JPEG图像EXIF参数（旋转，翻转）
                 .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
                 .displayer(new RoundedBitmapDisplayer(40))
-//                .displayer(new FadeInBitmapDisplayer(2000))
+                .displayer(new FadeInBitmapDisplayer(1000))
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .memoryCacheExtraOptions(480, 800) // max width, max height，即保存的每个缓存文件的最大长宽

@@ -1,7 +1,12 @@
 package com.example.asasfans.ui.main.adapter;
 
+import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +20,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.asasfans.LaunchActivity;
 import com.example.asasfans.R;
+import com.example.asasfans.TestActivity;
+import com.example.asasfans.ui.main.ClickJumpActivity;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -99,7 +107,22 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Bundle data = new Bundle();
+                data.putString("WebUrl", iconUrl.get(toolsViewHolder.getBindingAdapterPosition()));
+                Intent intent = new Intent(context, ClickJumpActivity.class);
+                intent.putExtras(data);
+                context.startActivity(intent);
+            }
+        });
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(context,"网址 " + iconUrl.get(toolsViewHolder.getBindingAdapterPosition()) + " 复制好了",Toast.LENGTH_SHORT).show();
+                //获取剪贴板管理器：
+                ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData mClipData = ClipData.newPlainText("Url", iconUrl.get(toolsViewHolder.getBindingAdapterPosition()));
+                cm.setPrimaryClip(mClipData);
+                return true;
             }
         });
         return toolsViewHolder;
@@ -107,7 +130,7 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
 
 
     @Override
-    public void onBindViewHolder(@NonNull ToolsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ToolsViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.imageView.setImageResource(getResource(iconFileName.get(position)));
         holder.textView.setText(desc.get(position));
         if (isShowBox) {

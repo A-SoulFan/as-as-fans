@@ -1,11 +1,6 @@
 package com.example.asasfans.data;
 
-/**
- * @author akarinini
- * @description 从json中提取视频信息，构建统一的单个视频数据，目前仅在AUHot中使用
- */
-
-public class SingleVideo {
+public class VideoDataStoragedInMemory {
     private String PicUrl;
     private String Title;
     private int Duration;
@@ -14,8 +9,9 @@ public class SingleVideo {
     private int Like;
     private String Tname;
     private String Bvid;
+    private Boolean firstLoad;
 
-    public SingleVideo(String picUrl, String title, int duration, String author, int view, int like, String tname, String bvid) {
+    public VideoDataStoragedInMemory(String picUrl, String title, int duration, String author, int view, int like, String tname, String bvid, Boolean firstLoad) {
         PicUrl = picUrl;
         Title = title;
         Duration = duration;
@@ -24,25 +20,7 @@ public class SingleVideo {
         Like = like;
         Tname = tname;
         Bvid = bvid;
-    }
-
-    public SingleVideo() {
-    }
-
-    public String getBvid() {
-        return Bvid;
-    }
-
-    public void setBvid(String bvid) {
-        Bvid = bvid;
-    }
-
-    public String getTname() {
-        return Tname;
-    }
-
-    public void setTname(String tname) {
-        Tname = tname;
+        this.firstLoad = firstLoad;
     }
 
     public String getPicUrl() {
@@ -91,5 +69,29 @@ public class SingleVideo {
 
     public void setLike(int like) {
         Like = like;
+    }
+
+    public String getTname() {
+        return Tname;
+    }
+
+    public void setTname(String tname) {
+        Tname = tname;
+    }
+
+    public String getBvid() {
+        return Bvid;
+    }
+
+    public void setBvid(String bvid) {
+        Bvid = bvid;
+    }
+
+    public Boolean getFirstLoad() {
+        return firstLoad;
+    }
+
+    public void setFirstLoad(Boolean firstLoad) {
+        this.firstLoad = firstLoad;
     }
 }
