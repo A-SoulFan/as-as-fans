@@ -26,11 +26,12 @@ public class ClickJumpActivity extends AppCompatActivity {
         Log.i("WebUrl", data.getString("WebUrl"));
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
-        if (data.getString("WebUrl").equals(ToolsAdapter.iconUrl.get(0))){
-            transaction.replace(R.id.click_jump, ImageFanArtFragment.newInstance());
-        }else {
-            transaction.replace(R.id.click_jump, WebFragment.newInstance(data.getString("WebUrl")));
-        }
+//        if (data.getString("WebUrl").equals(ToolsAdapter.iconUrl.get(0))){
+//            transaction.replace(R.id.click_jump, ImageFanArtFragment.newInstance());
+//        }else {
+//            transaction.replace(R.id.click_jump, WebFragment.newInstance(data.getString("WebUrl")));
+//        }
+        transaction.replace(R.id.click_jump, WebFragment.newInstance(data.getString("WebUrl")));
         transaction.commit();
     }
 }

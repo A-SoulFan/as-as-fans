@@ -45,7 +45,10 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                             "https://tools.asoulfan.com/zhijiangDict",
                             "https://asoul.icu/",
                             "https://asoul.asia/",
-                            "https://asoulwiki.com/"
+                            "https://asoulwiki.com/",
+                            "http://asoul.infedg.xyz/",
+                            "https://studio.asf.ink",
+                            "https://nf.asoul-rec.com"
             );
     public static final List<String> iconFileName
             = Arrays.asList("icon_asoul_cloud",
@@ -53,6 +56,9 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                             "icon_asf",
                             "icon_asoul",
                             "icon_asoul",
+                            "icon_asoul",
+                            "icon_asoul",
+                            "icon_asf",
                             "icon_asoul"
             );
     public static final List<String> desc
@@ -61,7 +67,10 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                             "方言词典",
                             "小作文",
                             "论坛管理群聊天记录公示",
-                            "一个魂维基 A-SOUL WIKI"
+                            "一个魂维基 A-SOUL WIKI",
+                            "使用GPT-2模型训练的小作文生成器",
+                            "收录A-SOUL几乎全部Solo以及合唱歌曲",
+                            "A-SOUL原画录播站"
             );
     public static final List<String> name
             = Arrays.asList("图片",
@@ -69,7 +78,10 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                             "方言词典",
                             "小作文",
                             "聊天公示",
-                            "一个魂维基"
+                            "魂维基",
+                            "作文生成",
+                            "录音棚",
+                            "录播站"
             );
     //是否显示选框,默认false
     private boolean isShowBox = false;

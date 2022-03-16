@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -130,6 +132,26 @@ public class WebFragment extends Fragment {
             }
         });
         webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
+                return super.shouldOverrideKeyEvent(view, event);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                Log.i("WebResourceRequest:getUrl", request.getUrl().toString());
+                Log.i("WebResourceRequest:getMethod", request.getMethod());
+                if (request.getUrl().toString().startsWith("http")) {
+                    return super.shouldOverrideUrlLoading(view, request);
+                }else {
+                    Intent it = new Intent();
+                    it.setAction(Intent.ACTION_VIEW);
+                    it.setData(Uri.parse(request.getUrl().toString()));
+                    getActivity().startActivity(it);
+                    return true;
+                }
+            }
+
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);

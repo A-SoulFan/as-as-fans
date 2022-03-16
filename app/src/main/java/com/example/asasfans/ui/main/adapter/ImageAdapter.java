@@ -49,7 +49,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://t.bilibili.com/" + imageDataBean.get(imageViewHolder.getBindingAdapterPosition()).getDy_id());
+                Uri uri = Uri.parse("bilibili://following/detail/" + imageDataBean.get(imageViewHolder.getBindingAdapterPosition()).getDy_id());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 context.startActivity(intent);
             }

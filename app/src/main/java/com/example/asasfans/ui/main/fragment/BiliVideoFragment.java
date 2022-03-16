@@ -91,6 +91,7 @@ public class BiliVideoFragment extends Fragment {
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 page = 1;
                 videoDataStoragedInMemoryList.clear();
+                pubdateVideoAdapter.notifyDataSetChanged();
                 cachedThreadPool.execute(networkTask.setParam(VideoUrl + page));
                 refreshLayout.finishRefresh(100/*,false*/);
             }

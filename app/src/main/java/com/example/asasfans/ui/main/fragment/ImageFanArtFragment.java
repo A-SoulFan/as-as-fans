@@ -137,6 +137,7 @@ public class ImageFanArtFragment extends Fragment {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 imageRecyclerViewData.clear();
+                imageAdapter.notifyDataSetChanged();
                 cachedThreadPool.execute(networkTask.setParam(imageUrl.getUrl()));
                 refreshLayout.finishRefresh();
             }
