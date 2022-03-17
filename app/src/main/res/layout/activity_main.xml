@@ -10,20 +10,40 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme"
-        >
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+        android:theme="@style/AppTheme">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             app:layout_scrollFlags="scroll|enterAlways"
-            android:minHeight="?actionBarSize"
-            android:textColor="@color/cardWhite"
-            android:background="@color/tab_text_normal"
-            android:padding="@dimen/appbar_padding"
-            android:text="@string/app_name"
-            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:minHeight="?actionBarSize"
+                android:textColor="@color/cardWhite"
+                android:background="@color/tab_text_normal"
+                android:padding="@dimen/appbar_padding"
+                android:text="@string/app_name"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:id="@+id/video_black_list"
+                android:src="@drawable/black_list"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginRight="8dp"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"

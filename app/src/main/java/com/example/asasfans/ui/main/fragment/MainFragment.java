@@ -1,16 +1,21 @@
 package com.example.asasfans.ui.main.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.asasfans.LaunchActivity;
 import com.example.asasfans.R;
+import com.example.asasfans.TestActivity;
+import com.example.asasfans.ui.main.BlackListActivity;
 import com.example.asasfans.ui.main.adapter.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
@@ -43,6 +48,14 @@ public class MainFragment extends Fragment {
         viewPager.setOffscreenPageLimit(4);
         TabLayout tabs = view.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+        ImageView imageView = view.findViewById(R.id.video_black_list);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), BlackListActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

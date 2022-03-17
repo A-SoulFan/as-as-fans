@@ -28,7 +28,7 @@ public class BottomPagerAdapter extends FragmentPagerAdapter {
     private final Context mContext;
     private FragmentManager mFragmentManager;
     private List<TabData> mFragmentList = new ArrayList<>();
-    private Object currentFragment;
+    private static Object currentFragment;
 
     public BottomPagerAdapter(Context context, FragmentManager fm, List<TabData> fragmentList) {
         super(fm);
@@ -80,7 +80,7 @@ public class BottomPagerAdapter extends FragmentPagerAdapter {
      * @author akari
      * @time 2022/2/27 10:07
      */
-    public Object getCurrentFragment() {
+    public static Object getCurrentFragment() {
         return currentFragment;
     }
 

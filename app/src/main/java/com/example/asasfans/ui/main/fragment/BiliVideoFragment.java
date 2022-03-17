@@ -1,5 +1,7 @@
 package com.example.asasfans.ui.main.fragment;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.R;
+import com.example.asasfans.data.DBOpenHelper;
 import com.example.asasfans.data.PubdateVideoBean;
 import com.example.asasfans.data.VideoDataStoragedInMemory;
 import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
@@ -49,7 +52,7 @@ public class BiliVideoFragment extends Fragment {
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
     private List<VideoDataStoragedInMemory> videoDataStoragedInMemoryList = new ArrayList<>();
-    private PubdateVideoAdapter pubdateVideoAdapter;
+    public PubdateVideoAdapter pubdateVideoAdapter;
     private RecyclerView recyclerView;
     private int page = 1;
     private RefreshLayout refreshLayout;
@@ -124,10 +127,16 @@ public class BiliVideoFragment extends Fragment {
                         List<List<String>> hVideosBvid = new ArrayList<>();
                         hVideosBvid = hPubdateVideoBean.getData().getResult();
                         int PastSize = videoDataStoragedInMemoryList.size();
+                        DBOpenHelper dbOpenHelper = new DBOpenHelper(getActivity(),
+                                "blackList.db", null, 1);
+                        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
                         for (int i = 0; i < hVideosBvid.size(); i++){
-                            videoDataStoragedInMemoryList.add(new VideoDataStoragedInMemory("", "", 0, "", 0, 0, "", hVideosBvid.get(i).get(0), true));
+                            if (!searchBvid(db, hVideosBvid.get(i).get(0))) {
+                                videoDataStoragedInMemoryList.add(new VideoDataStoragedInMemory("", "", 0, "", 0, 0, "", hVideosBvid.get(i).get(0), true));
+                            }
                         }
-//                        videoDataStoragedInMemoryList.addAll(hVideosBvid);
+                        db.close();
+                        dbOpenHelper.close();
                         Log.i("BiliVideoFragment:VideosBvid", videoDataStoragedInMemoryList.toString());
                         pubdateVideoAdapter.notifyItemRangeChanged(PastSize, hVideosBvid.size());
                         refreshLayout.finishLoadMore(100);
@@ -185,4 +194,16 @@ public class BiliVideoFragment extends Fragment {
             handler.sendMessage(msg);
         }
     };
+    private boolean searchBvid(SQLiteDatabase db, String str) {
+
+        Cursor cursor = db.rawQuery(
+                "select * from   blackBvid  where   bvid=? ",
+                new String[] { str });
+        while (cursor.moveToNext()) {
+            Log.i(" bvid:", str + "在数据库已存在,return true");
+            return true;// //有城市在数据库已存在，返回true
+        }
+        Log.i(" bvid:", str + "在数据库不存在，return false");
+        return false;// //在数据库以前存在 false
+    }
 }

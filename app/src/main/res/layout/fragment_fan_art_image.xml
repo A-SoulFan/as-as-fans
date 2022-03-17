@@ -11,6 +11,8 @@
         android:id="@+id/appBar"
         android:theme="@style/AppTheme.PopupOverlay">
         <LinearLayout
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
             app:layout_scrollFlags="scroll|enterAlways"
             android:orientation="horizontal"
             android:background="@color/tab_text_normal"
@@ -32,7 +34,7 @@
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/cardWhite" />
+                android:background="@color/tab_text_normal" />
             <Spinner
                 android:layout_weight="1"
                 android:id="@+id/fragment_fan_art_spinner_date"
@@ -47,7 +49,7 @@
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/cardWhite" />
+                android:background="@color/tab_text_normal" />
             <Spinner
                 android:layout_weight="1"
                 android:id="@+id/fragment_fan_art_spinner_tag"

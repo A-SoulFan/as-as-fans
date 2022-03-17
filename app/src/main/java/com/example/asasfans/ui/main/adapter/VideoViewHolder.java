@@ -15,13 +15,14 @@ import com.example.asasfans.R;
  */
 
 public class VideoViewHolder extends RecyclerView.ViewHolder {
-    final ImageView imageView;
+    ImageView imageView;
     TextView videoTitle;
     TextView videoDuration;
     TextView videoAuthor;
     TextView videoView;
     TextView videoLike;
     TextView videoTname;
+    ImageView videoMore;
 
     public VideoViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -32,5 +33,6 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         videoView = itemView.findViewById(R.id.videoView);
         videoLike = itemView.findViewById(R.id.videoLike);
         videoTname = itemView.findViewById(R.id.videoTname);
+        videoMore = itemView.findViewById(R.id.video_more);
     }
 }

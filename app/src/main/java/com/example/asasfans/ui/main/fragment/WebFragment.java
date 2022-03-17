@@ -1,11 +1,28 @@
 package com.example.asasfans.ui.main.fragment;
 
+import static android.app.Notification.CATEGORY_MESSAGE;
+import static android.app.Notification.DEFAULT_ALL;
+import static android.app.Notification.FLAG_ONGOING_EVENT;
+import static android.content.Context.DOWNLOAD_SERVICE;
+
+import static androidx.core.app.NotificationCompat.PRIORITY_MAX;
+import static com.example.asasfans.receiver.XMPlayerReceiver.PLAY_NEXT;
+import static com.example.asasfans.receiver.XMPlayerReceiver.PLAY_PAUSE;
+import static com.example.asasfans.receiver.XMPlayerReceiver.PLAY_PLAY;
+import static com.example.asasfans.receiver.XMPlayerReceiver.PLAY_PRE;
+
 import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,18 +42,21 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.asasfans.R;
+import com.example.asasfans.TestActivity;
+import com.example.asasfans.receiver.XMPlayerReceiver;
 import com.scwang.smart.refresh.header.BezierRadarHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
-import static android.content.Context.DOWNLOAD_SERVICE;
 
 /**
  * @author akarinini
@@ -44,7 +64,7 @@ import static android.content.Context.DOWNLOAD_SERVICE;
  */
 
 public class WebFragment extends Fragment {
-    private WebView webView;
+    private static WebView webView;
     private ProgressBar progressBar;
     private long exitTime = 0;
     private String url = "https://asoulcnki.asia/";
@@ -66,6 +86,21 @@ public class WebFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.url = getArguments().getString("WebUrl");
+        // This callback will only be called when MyFragment is at least Started.
+//        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                // Handle the back button event
+//                if (webView.canGoBack()) {
+//                    webView.goBack();
+//                }else {
+//                    getActivity().onBackPressed();
+//                }
+//            }
+//        };
+//        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+
+        // The callback can be enabled or disabled here or in handleOnBackPressed()
     }
 
     @Override
@@ -168,22 +203,106 @@ public class WebFragment extends Fragment {
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                downloadByBrowser(url);
-//                downloadBySystem(url, contentDisposition, mimetype);
-//                // 使用
-//                DownloadCompleteReceiver receiver = new DownloadCompleteReceiver();
-//                IntentFilter intentFilter = new IntentFilter();
-//                intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-//                getActivity().registerReceiver(receiver, intentFilter);
+//                downloadByBrowser(url);
+                if (url.startsWith("http")) {
+                    downloadBySystem(url, contentDisposition, mimetype);
+                    // 使用
+                    DownloadCompleteReceiver receiver = new DownloadCompleteReceiver();
+                    IntentFilter intentFilter = new IntentFilter();
+                    intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+                    getActivity().registerReceiver(receiver, intentFilter);
+                }else {
+                    Toast.makeText(getActivity(), "下载链接不是http协议", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
+
+//        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+//        String channelId = "notification";
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//适配一下高版本
+//            NotificationChannel channel = new NotificationChannel(channelId,
+//                    "listen",
+//                    NotificationManager.IMPORTANCE_DEFAULT);
+//            channel.enableLights(false); //是否在桌面icon展示小红点
+//            channel.setLightColor(Color.RED); //小红点颜色
+//            channel.setSound(null, null);//关了通知默认提示音
+//            channel.setShowBadge(false); //是否在久按桌面图标时显示此渠道的通知
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), channelId)
+//                .setSmallIcon(R.mipmap.ic_launcher)//这玩意在通知栏上显示一个logo
+//                .setCategory(CATEGORY_MESSAGE)
+//                .setDefaults(DEFAULT_ALL)
+//                .setOngoing(true);
+//        //点击通知栏跳转的activity
+//        Intent intent = new Intent(getActivity(), TestActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent,
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+//        builder.setAutoCancel(false);//点击不让消失
+//        builder.setSound(null);//关了通知默认提示音
+//        builder.setPriority(PRIORITY_MAX);//咱们通知很重要
+//        builder.setVibrate(null);//关了车震
+//        builder.setContentIntent(pendingIntent);//整个点击跳转activity安排上
+//        builder.setOnlyAlertOnce(false);
+//        RemoteViews remoteViews = initNotifyView();
+//        builder.setContent(remoteViews);//把自定义view放上
+//        builder.setCustomBigContentView(remoteViews);//把自定义view放上
+//        Notification notification = builder.build();
+//        notification.flags |= FLAG_ONGOING_EVENT;
+//        notification.flags |= Notification.FLAG_NO_CLEAR;//不让手动清除 通知栏常驻
+//        notification.sound = null;//关了通知默认提示音
+//        notificationManager.notify(1, notification);
 
         webView.loadUrl(url);
 //        webView.loadUrl("https://asoul.cloud/pic");
 //        webView.loadUrl("https://liulanmi.com/labs/core.html");
-
         return view;
     }
+
+//    private RemoteViews initNotifyView() {
+//        String packageName = getActivity().getPackageName();
+//        RemoteViews remoteView = new RemoteViews(packageName, R.layout.song_player);
+//        remoteView.setImageViewResource(R.id.widget_album, R.drawable.icon_asoul);
+//        remoteView.setTextViewText(R.id.widget_title, "标题内容");
+//        remoteView.setTextViewText(R.id.widget_artist, "小标题内容");
+//
+//        Intent prv = new Intent(getActivity(), XMPlayerReceiver.class);//播放上一首
+//        prv.setAction(PLAY_PRE);
+//        PendingIntent intent_prev = PendingIntent.getBroadcast(getActivity(), 1, prv,
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+//        remoteView.setOnClickPendingIntent(R.id.widget_prev, intent_prev);
+//
+//
+//        Intent next = new Intent(getActivity(), XMPlayerReceiver.class);//播放下一首
+//        next.setAction(PLAY_NEXT);
+//        PendingIntent intent_next = PendingIntent.getBroadcast(getActivity(), 2, next,
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+//        remoteView.setOnClickPendingIntent(R.id.widget_next, intent_next);
+//
+//
+//        Intent startpause = new Intent(getActivity(), XMPlayerReceiver.class);//暂停
+//        startpause.setAction(PLAY_PAUSE);
+//        PendingIntent intent_pause = PendingIntent.getBroadcast(getActivity(), 3, startpause,
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+//        remoteView.setOnClickPendingIntent(R.id.widget_play, intent_pause);
+//
+//        Intent startplay = new Intent(getActivity(), XMPlayerReceiver.class);//播放
+//        startplay.setAction(PLAY_PLAY);
+//        PendingIntent intent_play = PendingIntent.getBroadcast(getActivity(), 4, startplay,
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+//        remoteView.setOnClickPendingIntent(R.id.widget_play, intent_play);
+//        return remoteView;
+//    }
+//
+//    public static void clickPreviousSong(){
+//        if (webView == null){
+//            Log.i("clickPreviousSong", "clickPreviousSong: ");
+//        }else {
+//            webView.loadUrl("javascript:document.getElementsByClassName(\"prevButton playButtons\").click();");
+//        }
+//
+//    }
 
     public void onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
@@ -195,9 +314,19 @@ public class WebFragment extends Fragment {
                 exitTime = System.currentTimeMillis();
             } else {
                 getActivity().finish();
+                System.exit(0);
             }
         }
     }
+    public void onKeyDownInClick(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+            webView.goBack();
+        }
+        else if ((keyCode == KeyEvent.KEYCODE_BACK) && (!webView.canGoBack())) {
+            getActivity().finish();
+        }
+    }
+
 
     private void downloadByBrowser(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -263,5 +392,4 @@ public class WebFragment extends Fragment {
             }
         }
     }
-
 }

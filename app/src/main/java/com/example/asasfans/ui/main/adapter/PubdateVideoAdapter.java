@@ -3,28 +3,35 @@ package com.example.asasfans.ui.main.adapter;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.R;
+import com.example.asasfans.data.DBOpenHelper;
 import com.example.asasfans.data.SingleVideoBean;
 import com.example.asasfans.data.VideoDataStoragedInMemory;
+import com.example.asasfans.ui.main.fragment.BiliVideoFragment;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.OnItemClickListener;
+import com.orhanobut.dialogplus.ViewHolder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,16 +53,31 @@ import okhttp3.Response;
 public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
-    public static final int SERVER_ERROR = 3;
+
     private String BVID_SEARCH_URL = "https://api.bilibili.com/x/web-interface/view?bvid=";
     private Context mContext;
     private final String PackageName = "tv.danmaku.bili";
     private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
     private List<VideoDataStoragedInMemory> videoDataStoragedInMemoryList = new ArrayList<>();
+    private DialogPlus dialog;
+    private View dialogView;
 
     public PubdateVideoAdapter(Context context, List<VideoDataStoragedInMemory> videosBvid) {
         this.mContext = context;
         this.videoDataStoragedInMemoryList = videosBvid;
+
+        initDialog();
+    }
+
+    void initDialog(){
+        dialog = DialogPlus.newDialog(mContext)
+                .setContentHolder(new ViewHolder(R.layout.dialog_video_more))
+                .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setContentWidth(ViewGroup.LayoutParams.MATCH_PARENT)
+                .setCancelable(true)
+                .setGravity(Gravity.BOTTOM)
+                .create();
+        dialogView = dialog.getHolderView();
     }
 
     @NonNull
@@ -63,6 +85,46 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.video_recyclerview, parent,false);
         final VideoViewHolder videoViewHolder = new VideoViewHolder(view);
+        videoViewHolder.videoMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("videoMore", "onClick");
+
+                AppCompatButton appCompatButton =  dialogView.findViewById(R.id.dialog_black_list);
+                appCompatButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.i("appCompatButton", "onClick");
+                        try {
+                            DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext,"blackList.db",null,1);
+                            SQLiteDatabase sqliteDatabase = dbOpenHelper.getWritableDatabase();
+                            ContentValues values = new ContentValues();
+                            values.put("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+                            values.put("PicUrl", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getPicUrl());
+                            values.put("Title", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getTitle());
+                            values.put("Duration", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getDuration());
+                            values.put("Author", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getAuthor());
+                            values.put("ViewNum", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getView());
+                            values.put("LikeNum", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getLike());
+                            values.put("Tname", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getTname());
+                            sqliteDatabase.insert("blackBvid", null, values);
+                            sqliteDatabase.close();
+                            dbOpenHelper.close();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        videoDataStoragedInMemoryList.remove(videoViewHolder.getBindingAdapterPosition());
+                        notifyItemRemoved(videoViewHolder.getBindingAdapterPosition());
+                        notifyDataSetChanged();
+                        Toast.makeText(mContext,"屏蔽视频成功",Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,6 +194,9 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                             videoDataStoragedInMemoryList.get(position).setFirstLoad(false);
                         }else {
                             holder.videoTitle.setText(val);
+                            Log.i("GET_DATA_SUCCESS:null", val);
+//                            BiliVideoFragment.pubdateVideoAdapter.notifyItemRemoved(position);
+//                            BiliVideoFragment.pubdateVideoAdapter.notifyItemRangeChanged(position, BiliVideoFragment.pubdateVideoAdapter.getItemCount());
                         }
                         break;
                     case NETWORK_ERROR:

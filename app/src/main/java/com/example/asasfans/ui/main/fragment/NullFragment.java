@@ -43,9 +43,9 @@ public class NullFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentList.add(new TabData("Null" ,NullFragment.newInstance()));
-                TestActivity.updateTabs(mFragmentList);
-                mFragmentList.clear();
+//                mFragmentList.add(new TabData("Null" ,NullFragment.newInstance()));
+//                TestActivity.updateTabs(mFragmentList);
+//                mFragmentList.clear();
             }
         });
         return view;

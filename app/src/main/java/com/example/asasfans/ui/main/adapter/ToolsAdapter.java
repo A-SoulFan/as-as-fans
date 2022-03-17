@@ -48,7 +48,9 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                             "https://asoulwiki.com/",
                             "http://asoul.infedg.xyz/",
                             "https://studio.asf.ink",
-                            "https://nf.asoul-rec.com"
+                            "https://nf.asoul-rec.com",
+                            "https://tools.asoulfan.com/ingredientChecking",
+                            "http://asoulfan.xyz/"
             );
     public static final List<String> iconFileName
             = Arrays.asList("icon_asoul_cloud",
@@ -59,7 +61,9 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                             "icon_asoul",
                             "icon_asoul",
                             "icon_asf",
-                            "icon_asoul"
+                            "icon_asoul",
+                            "icon_asf",
+                            "icon_asf"
             );
     public static final List<String> desc
             = Arrays.asList("A-SOUL Fans Art - 一个魂的二创",
@@ -70,7 +74,9 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                             "一个魂维基 A-SOUL WIKI",
                             "使用GPT-2模型训练的小作文生成器",
                             "收录A-SOUL几乎全部Solo以及合唱歌曲",
-                            "A-SOUL原画录播站"
+                            "A-SOUL原画录播站",
+                            "成分姬",
+                            "羊驼打过的太极/QA查询"
             );
     public static final List<String> name
             = Arrays.asList("图片",
@@ -81,7 +87,9 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                             "魂维基",
                             "作文生成",
                             "录音棚",
-                            "录播站"
+                            "录播站",
+                            "成分姬",
+                            "查QA"
             );
     //是否显示选框,默认false
     private boolean isShowBox = false;
@@ -160,18 +168,18 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //用map集合保存
                 for (int i = 0; i < iconUrl.size(); i++) {
-                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
+//                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
                 }
                 map.put(position, isChecked);
                 editor.putBoolean(iconUrl.get(position), isChecked);
                 editor.commit();
                 int count = 0;
                 for (int i = 0; i < iconUrl.size(); i++) {
-                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
+//                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
                     if (userInfo.getBoolean(iconUrl.get(i), false))
                         count++;
                 }
-                System.out.println(count);
+//                System.out.println(count);
                 if (count == CHECK_MAX_LIMIT){
                     Toast.makeText(context, "已达到选择上限", Toast.LENGTH_SHORT).show();
                     buttonView.setChecked(false);
@@ -179,10 +187,10 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                     editor.putBoolean(iconUrl.get(position), false);
                     editor.commit();
                 }
-                System.out.println("---------------------");
-                for (int i = 0; i < iconUrl.size(); i++) {
-                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
-                }
+//                System.out.println("---------------------");
+//                for (int i = 0; i < iconUrl.size(); i++) {
+//                    System.out.println(userInfo.getBoolean(iconUrl.get(i), false));
+//                }
             }
         });
         // 设置CheckBox的状态

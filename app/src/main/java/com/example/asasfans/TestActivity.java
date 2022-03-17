@@ -8,13 +8,16 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.asasfans.data.TabData;
@@ -25,7 +28,18 @@ import com.example.asasfans.ui.main.adapter.ToolsAdapter;
 import com.example.asasfans.ui.main.fragment.ToolsFragment;
 import com.example.asasfans.ui.main.fragment.WebFragment;
 import com.google.android.material.tabs.TabLayout;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +60,10 @@ public class TestActivity extends AppCompatActivity {
     private long lastBackPressed;
     /** 两次点击的间隔时间 */
     private static final int QUIT_INTERVAL = 3000;
-    private static String top30;
-    private static String pubdate;
-    private static String most;
+
     private TabLayout tabs;
-    //设置成静态变量在fragment中调用改变，有内存泄漏，可能有更好的方案，但是我不知道
-    private static ViewPager viewPager;
-    private static List<TabData> mFragmentList = new ArrayList<>();
+    private ViewPager viewPager;
+    public List<TabData> mFragmentList = new ArrayList<>();
 
     private BottomPagerAdapter bottomPagerAdapter;
     private Object mCurrentFragment;
@@ -62,10 +73,11 @@ public class TestActivity extends AppCompatActivity {
     private Map<String, ?> tmp;
     private boolean firstOnCreate = true;
 
+
     /*
     权限相关
      */
-    String[] permissions = new String[]{
+    public String[] permissions = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.INTERNET,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -77,10 +89,12 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initImageLoader();
         checkPermission();
         setContentView(R.layout.activity_bottom_main);
 
         //恢复时会第二次添加底部导航栏
+        mFragmentList.clear();
         if (firstOnCreate) {
             initTab();
             firstOnCreate = false;
@@ -102,9 +116,43 @@ public class TestActivity extends AppCompatActivity {
 
         Intent mIntent =getIntent();
         Bundle mBundle =mIntent.getExtras();
-        top30 = mBundle.getString("top30");
-        pubdate = mBundle.getString("pubdate");
-        most = mBundle.getString("most");
+    }
+
+    private void initImageLoader(){
+        Log.i("APATH", getApplicationContext().getFilesDir().getAbsolutePath());
+        Log.i("BPATH", String.valueOf(Environment.getExternalStorageDirectory()));
+        String dirname = String.valueOf(Environment.getExternalStorageDirectory()) + "/com.example.asasfans/tmp/pic";
+        File d = new File(dirname);
+        d.mkdirs();
+        // 现在创建目录
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheInMemory(false) //设置下载的图片是否缓存在内存中
+                .cacheOnDisc(true)//设置下载的图片是否缓存在SD卡中
+//                .showImageOnLoading(R.mipmap.loading_black)
+                .showImageOnFail(R.mipmap.load_failure)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .considerExifParams(true)//是否考虑JPEG图像EXIF参数（旋转，翻转）
+                .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
+                .displayer(new RoundedBitmapDisplayer(80))
+                .displayer(new FadeInBitmapDisplayer(1000))
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .memoryCacheExtraOptions(480, 800) // max width, max height，即保存的每个缓存文件的最大长宽
+                .threadPoolSize(3) //线程池内加载的数量
+                .threadPriority(Thread.NORM_PRIORITY - 2)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(new Md5FileNameGenerator()) //将保存的时候的URI名称用MD5 加密
+                .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // You can pass your own memory cache implementation/你可以通过自己的内存缓存实现
+                .memoryCacheSize(20 * 1024 * 1024) // 内存缓存的最大值
+                .diskCacheSize(500 * 1024 * 1024)  // 50 Mb sd卡(本地)缓存的最大值
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .defaultDisplayImageOptions(options)// 由原先的discCache -> diskCache
+                .diskCache(new UnlimitedDiskCache(new File(dirname)))//自定义缓存路径
+                .imageDownloader(new BaseImageDownloader(this, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
+                .writeDebugLogs() // Remove for release app
+                .build();
+        ImageLoader.getInstance().init(config);//全局初始化此配置
     }
 
     /**
@@ -154,25 +202,11 @@ public class TestActivity extends AppCompatActivity {
         mFragmentList.add(new TabData("工具", ToolsFragment.newInstance()));
     }
 
-    public static void updateTabs(List<TabData> FragmentList){
-
-        mFragmentList.addAll(1, FragmentList);
-        if (viewPager.getAdapter() instanceof BottomPagerAdapter)
-            ((BottomPagerAdapter)viewPager.getAdapter()).updateFragmentList(mFragmentList);
-
-    }
-
-    public static String getTop30(){
-        return top30;
-    }
-
-    public static String getPubdate() {
-        return pubdate;
-    }
-
-    public static String getMost(){
-        return most;
-    }
+//    public static void updateTabs(List<TabData> FragmentList){
+//        mFragmentList.addAll(1, FragmentList);
+//        if (viewPager.getAdapter() instanceof BottomPagerAdapter)
+//            ((BottomPagerAdapter)viewPager.getAdapter()).updateFragmentList(mFragmentList);
+//    }
 
     /**
      * @description Override实现两次退出
@@ -183,6 +217,10 @@ public class TestActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         mCurrentFragment = bottomPagerAdapter.getCurrentFragment();
         Log.i("instanceof", String.valueOf(mCurrentFragment instanceof WebFragment));
+        //解决音量键的监听被webview劫持无法使用的问题
+        if (!(keyCode==KeyEvent.KEYCODE_BACK)){
+            return super.onKeyDown(keyCode, event);
+        }
         if(mCurrentFragment instanceof WebFragment){
             ((WebFragment)mCurrentFragment).onKeyDown(keyCode, event);
             return true;
@@ -198,27 +236,8 @@ public class TestActivity extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-
     }
 
-    /**
-     * @description Override实现两次退出
-     * @author akari
-     * @time 2022/2/27 11:47
-     */
-    @Override
-    public void onBackPressed() {
-        long backPressed = System.currentTimeMillis();
-        super.onBackPressed();
-        if (backPressed - lastBackPressed > QUIT_INTERVAL) {
-            lastBackPressed = backPressed;
-            Toast.makeText(this,"再按一次退出",Toast.LENGTH_LONG).show();
-
-        } else {
-            finish();
-            System.exit(0);
-        }
-    }
     private void checkPermission() {
         mPermissionList.clear();
         //判断哪些权限未授予
