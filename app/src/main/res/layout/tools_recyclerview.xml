@@ -18,7 +18,7 @@
         app:layout_constraintRight_toLeftOf="@+id/web_desc"
         app:layout_constraintLeft_toLeftOf="parent"
         android:scaleType="fitStart"
-        android:src="@mipmap/asoul_cloud"/>
+        android:src="@drawable/icon_asoul_cloud"/>
 
     <TextView
         android:id="@+id/web_desc"
