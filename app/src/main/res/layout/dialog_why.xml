@@ -23,7 +23,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:text="1. 右侧管理底部栏按钮可以改变底部导航栏\n2. 长按每个条目可以复制原网址\n3. 单击条目可以在app内打开\n4. 如果打开页面为空白说明网页不兼容，请复制网址到浏览器打开"
+        android:text="1. 右侧管理底部栏按钮可以改变底部导航栏\n2. 长按每个条目可以复制原网址\n3. 单击条目可以在app内打开\n4. 如果打开页面为空白说明网页不兼容，请复制网址到浏览器打开\n5. 有些页面第一次加载较慢，请稍微等一会或者复制到浏览器打开"
         android:textSize="15sp"
         android:textColor="#666666"/>
 

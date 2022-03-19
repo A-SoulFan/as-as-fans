@@ -15,17 +15,19 @@
             android:layout_width="match_parent"
             app:layout_scrollFlags="scroll|enterAlways"
             android:layout_height="wrap_content">
-            <TextView
+            <ImageView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:gravity="center"
                 app:layout_scrollFlags="scroll|enterAlways"
                 android:minHeight="?actionBarSize"
                 android:textColor="@color/cardWhite"
                 android:background="@color/tab_text_normal"
-                android:padding="@dimen/appbar_padding"
+
                 android:text="@string/app_name"
+                android:scaleType="fitStart"
+                android:src="@drawable/icon_asasfans"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

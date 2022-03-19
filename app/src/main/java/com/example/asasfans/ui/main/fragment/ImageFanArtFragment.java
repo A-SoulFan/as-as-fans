@@ -195,7 +195,7 @@ public class ImageFanArtFragment extends Fragment {
         ArrayAdapter<String> starAdapterTag = new ArrayAdapter<String>(this.getActivity(), R.layout.item_for_custom_spinner, tag);
         //设置数组适配器的布局样式
 //        starAdapter.setDropDownViewResource(R.layout.spinner_item_select);
-        //从布局文件中获取名叫sp_dialog的下拉框
+        //从布局文件中获取下拉框
         Spinner order = view.findViewById(R.id.fragment_fan_art_spinner_order);
         Spinner date = view.findViewById(R.id.fragment_fan_art_spinner_date);
         Spinner tag = view.findViewById(R.id.fragment_fan_art_spinner_tag);

@@ -135,6 +135,7 @@ public class WebFragment extends Fragment {
         webSettings.setAppCacheEnabled(true);//是否使用缓存
         webSettings.setDomStorageEnabled(true);//开启本地DOM存储
         webSettings.setLoadsImagesAutomatically(true); // 加载图片
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
