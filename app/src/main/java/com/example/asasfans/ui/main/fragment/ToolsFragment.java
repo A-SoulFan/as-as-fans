@@ -2,8 +2,11 @@ package com.example.asasfans.ui.main.fragment;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -12,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +36,8 @@ import com.orhanobut.dialogplus.ViewHolder;
  * @description 工具页面
  */
 public class ToolsFragment extends Fragment {
+    private DialogPlus dialog;
+    private View dialogView;
 
     public static ToolsFragment newInstance() {
 //        Bundle args = new Bundle();
@@ -44,6 +50,14 @@ public class ToolsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dialog = DialogPlus.newDialog(getActivity())
+                .setContentHolder(new ViewHolder(R.layout.dialog_why))
+                .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setContentWidth(ViewGroup.LayoutParams.MATCH_PARENT)
+                .setCancelable(true)
+                .setGravity(Gravity.TOP)
+                .create();
+        dialogView = dialog.getHolderView();
     }
 
     @Nullable
@@ -68,13 +82,29 @@ public class ToolsFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogPlus dialog = DialogPlus.newDialog(getActivity())
-                        .setContentHolder(new ViewHolder(R.layout.dialog_why))
-                        .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-                        .setContentWidth(ViewGroup.LayoutParams.MATCH_PARENT)
-                        .setCancelable(true)
-                        .setGravity(Gravity.TOP)
-                        .create();
+                TextView contact = dialogView.findViewById(R.id.dialog_why_contact);
+                TextView email = dialogView.findViewById(R.id.dialog_why_email);
+                contact.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setAction("android.intent.action.VIEW");
+                        Uri content_url = Uri.parse("https://gitee.com/akarinini/as-as-fans/issues");
+                        intent.setData(content_url);
+                        startActivity(intent);
+                    }
+                });
+                email.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getActivity(), "邮箱已复制到剪贴板",Toast.LENGTH_SHORT).show();
+                        //获取剪贴板管理器：
+                        ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData mClipData = ClipData.newPlainText("Email", "2435743108@qq.com");
+                        cm.setPrimaryClip(mClipData);
+                    }
+                });
+
                 dialog.show();
             }
         });

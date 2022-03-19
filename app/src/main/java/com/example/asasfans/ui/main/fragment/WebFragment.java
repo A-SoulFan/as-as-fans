@@ -213,7 +213,7 @@ public class WebFragment extends Fragment {
                     intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
                     getActivity().registerReceiver(receiver, intentFilter);
                 }else {
-                    Toast.makeText(getActivity(), "下载链接不是http协议", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "下载链接不是http/https协议", Toast.LENGTH_SHORT).show();
                 }
 
             }

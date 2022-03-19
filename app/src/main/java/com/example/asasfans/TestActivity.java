@@ -71,7 +71,6 @@ public class TestActivity extends AppCompatActivity {
     private SharedPreferences userInfo;
     private SharedPreferences.Editor editor;//获取Editor
     private Map<String, ?> tmp;
-    private boolean firstOnCreate = true;
 
 
     /*
@@ -95,15 +94,14 @@ public class TestActivity extends AppCompatActivity {
 
         //恢复时会第二次添加底部导航栏
         mFragmentList.clear();
-        if (firstOnCreate) {
-            initTab();
-            firstOnCreate = false;
-        }
+        initTab();
+
+
         bottomPagerAdapter = new BottomPagerAdapter(this, getSupportFragmentManager(), mFragmentList);
         mCurrentFragment = bottomPagerAdapter.getCurrentFragment();
         viewPager = findViewById(R.id.view_pager_main);
         viewPager.setAdapter(bottomPagerAdapter);
-        viewPager.setOffscreenPageLimit(5);
+        viewPager.setOffscreenPageLimit(4);
         tabs = findViewById(R.id.tabs_bottom);
         tabs.setupWithViewPager(viewPager);
 
@@ -120,10 +118,9 @@ public class TestActivity extends AppCompatActivity {
 
     private void initImageLoader(){
         Log.i("APATH", getApplicationContext().getFilesDir().getAbsolutePath());
-        Log.i("BPATH", String.valueOf(Environment.getExternalStorageDirectory()));
-        String dirname = String.valueOf(Environment.getExternalStorageDirectory()) + "/com.example.asasfans/tmp/pic";
-        File d = new File(dirname);
-        d.mkdirs();
+        Log.i("BPATH", getExternalCacheDir().getPath());
+        String dirname = getExternalCacheDir().getPath() + "/pic";
+
         // 现在创建目录
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -139,7 +136,7 @@ public class TestActivity extends AppCompatActivity {
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .memoryCacheExtraOptions(480, 800) // max width, max height，即保存的每个缓存文件的最大长宽
-                .threadPoolSize(3) //线程池内加载的数量
+                .threadPoolSize(6) //线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator()) //将保存的时候的URI名称用MD5 加密

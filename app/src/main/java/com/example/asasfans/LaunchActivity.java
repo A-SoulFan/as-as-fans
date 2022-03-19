@@ -39,6 +39,7 @@ import okhttp3.Response;
  *              http://124.223.8.236:5200/AsoulPudateVedio?page=1，
  *              http://124.223.8.236:5200/AsoulMostViewVedio?page=1，
  *              成功后才能进入app，实际上并没有必要这么设计，但是也无关紧要
+ *              2022/3/19 启动页面现在什么也不干
  */
 
 public class LaunchActivity extends AppCompatActivity {
