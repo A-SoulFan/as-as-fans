@@ -1,5 +1,10 @@
 package com.example.asasfans.ui.main;
 
+/**
+ * @author: zyxdb
+ * @date: 2022/3/13
+ * @description vtb数据类
+ */
 public class VTBData {
     String memberName;
     String memberFansNum;

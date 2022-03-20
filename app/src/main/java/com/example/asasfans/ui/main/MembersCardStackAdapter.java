@@ -1,6 +1,7 @@
 package com.example.asasfans.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.example.asasfans.LiveDataActivity;
 import com.example.asasfans.R;
+import com.example.asasfans.TestActivity;
 import com.loopeer.cardstack.CardStackView;
 import com.loopeer.cardstack.StackAdapter;
 
@@ -132,6 +135,25 @@ public class MembersCardStackAdapter extends StackAdapter<Integer> {
                 该方法是在bindView调用时被调用的，因为可能有不同的布局，因而有不同的ViewHolder，将bindView实现的操作放在了ViewHolder中的onBind方法中，会使代码看来起更简洁，易懂。
             */
             cardTitle.getBackground().setColorFilter(ContextCompat.getColor(getContext(),backgroundColorId), PorterDuff.Mode.SRC_IN);
+            String membername = new String();
+            switch (position) {
+                case 0:
+                    membername = "向晚大魔王";
+                    break;
+                case 1:
+                    membername = "贝拉kira";
+                    break;
+                case 2:
+                    membername = "珈乐Carol";
+                    break;
+                case 3:
+                    membername = "嘉然今天吃什么";
+                    break;
+                case 4:
+                    membername = "乃琳Queen";
+                    break;
+            }
+            titleText.setText(membername);
 
             MembersListAdapter adapter = new MembersListAdapter(dataList.get(position));
             members_list.setLayoutManager(new LinearLayoutManager(getContext()));

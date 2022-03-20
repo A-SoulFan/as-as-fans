@@ -9,7 +9,7 @@ import android.os.Bundle;
 import com.example.asasfans.ui.main.VTBDataFragment;
 
 /**
- * @description 点击AsAsFans Buttom打开的页面
+ * @description 点击AsAsFans Buttom打开的页面,通过这个activity打开fragment
  * @author zyxdb
  * @time 2022/3/10 22:13
  */

@@ -30,9 +30,6 @@ public class VTBDataFragment extends Fragment implements CardStackView.ItemExpen
     private CardStackView mStackView;
     private LinearLayout mActionButtonContainer;
 
-//    private static Integer[] item = new Integer[]{R.color.team1,R.color.team2,R.color.team3,
-//            R.color.team4,R.color.team5,R.color.team6,R.color.team7,R.color.team8};
-
     //颜色数组
     Integer[] color = {
             R.color.cardBlue,
@@ -65,13 +62,14 @@ public class VTBDataFragment extends Fragment implements CardStackView.ItemExpen
     }
 
     private void initWight(View view) {
+        /* 创建Adapter，并将它和Adapter绑定 */
         CardStackView mCardStack = (CardStackView) view.findViewById(R.id.cardStackView);
         MembersCardStackAdapter adapter = new MembersCardStackAdapter(getContext());
         mCardStack.setAdapter(adapter);
         mCardStack.setItemExpendListener(this);
 
         List<List<VTBData>> lists = new LinkedList<>();
-        for(int i = 0;i<4;i++)
+        for(int i = 0;i<5;i++)
         {
             List<VTBData> list = new LinkedList<>();
             for(int j = 0;j<6;j++)
@@ -81,16 +79,16 @@ public class VTBDataFragment extends Fragment implements CardStackView.ItemExpen
             lists.add(list);
         }
 
-//        new Handler().postDelayed(
-//                new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        adapter.updateData(Arrays.asList(color),lists);
-//                    }
-//                }
-//                , 200
-//        );
-        adapter.updateData(Arrays.asList(color),lists);
+        new Handler().postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.updateData(Arrays.asList(color),lists);
+                    }
+                }
+                , 200
+        );
+//        adapter.updateData(Arrays.asList(color),lists);
 
 //        mCardStack.setAnimatorAdapter(new AllMoveDownAnimatorAdapter(mCardStack));
 //        mCardStack.setAnimatorAdapter(new UpDownAnimatorAdapter(mCardStack));
@@ -101,20 +99,4 @@ public class VTBDataFragment extends Fragment implements CardStackView.ItemExpen
     public void onItemExpend(boolean expend) {
 
     }
-
-//    void init(View view)
-//    {
-
-//        cardStackView = (CardStackView) view.findViewById(R.id.cardStackView);
-//        membersCardStackAdapter = new MembersCardStackAdapter(getContext());
-//        cardStackView.setAdapter(membersCardStackAdapter);
-//        cardStackView.setItemExpendListener(this);
-//
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                membersCardStackAdapter.updateData(Arrays.asList(item));
-//            }
-//        },200);
-//    }
 }

@@ -5,26 +5,49 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:stackHeaderHeight="160dp"
     android:padding="16dp"
-    app:stackHeaderHeight="100dp"
     >
 
     <FrameLayout
         android:id="@+id/card_title"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:background="@color/colorPrimary"
+        android:layout_height="160dp"
+        android:background="@drawable/shape_rectangle_with_radius"
         >
         <TextView
             android:id="@+id/card_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="15dp"
             android:text="成员名字"
-            android:layout_margin="16dp"
-            android:textSize="20sp"
+            android:textColor="@color/cardBlack"
             android:textStyle="bold"
-            android:textColor="#ffffff"
+            android:textSize="16sp"
             />
+
+        <TextView
+            android:id="@+id/item_member_slogan"
+            style="@style/members_item_style"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="50dp"
+            android:text="个性签名" />
+        <!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="成员名字"-->
+<!--            android:layout_margin="20dp"-->
+<!--            android:textSize="35sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="#ffffff"-->
+
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/member_ava" />
     </FrameLayout>
     <FrameLayout
         android:layout_width="match_parent"
