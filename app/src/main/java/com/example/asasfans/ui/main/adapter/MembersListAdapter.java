@@ -1,6 +1,5 @@
-package com.example.asasfans.ui.main;
+package com.example.asasfans.ui.main.adapter;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.asasfans.R;
+import com.example.asasfans.data.VTBData;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +47,10 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
     @Override
     public void onBindViewHolder(VTBViewHolder holder, int position) {
         holder.member_name.setText(VTBData_list.get(position).getMemberName());
+        holder.member_slogan.setText(VTBData_list.get(position).getMembersign());
         holder.member_followed.setText(VTBData_list.get(position).getMemberFansNum());
+        holder.dayIncrease.setText(VTBData_list.get(position).getMemberFansNumRise());
+        holder.CaptainNum.setText(VTBData_list.get(position).getMemberGuardNum());
     }
 
     @Override

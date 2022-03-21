@@ -33,15 +33,41 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="150dp"
             android:layout_marginTop="50dp"
+            android:textSize="14sp"
             android:text="个性签名" />
-        <!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="成员名字"-->
-<!--            android:layout_margin="20dp"-->
-<!--            android:textSize="35sp"-->
-<!--            android:textStyle="bold"-->
-<!--            android:textColor="#ffffff"-->
 
+        <TextView
+            android:id="@+id/item_member_followed"
+            style="@style/members_item_style"
+            android:layout_width="58dp"
+            android:layout_marginStart="280dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="70dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="14sp"
+            android:text="关注：" />
+
+        <TextView
+            android:id="@+id/item_member_dayIncrease"
+            style="@style/members_item_style"
+            android:layout_width="58dp"
+            android:layout_marginStart="280dp"
+            android:layout_marginTop="65dp"
+            android:layout_marginEnd="70dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="14sp"
+            android:text="日增：" />
+
+        <TextView
+            android:id="@+id/MemberCaptainNum"
+            style="@style/members_item_style"
+            android:layout_width="58dp"
+            android:layout_marginStart="280dp"
+            android:layout_marginTop="115dp"
+            android:layout_marginEnd="70dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="14sp"
+            android:text="舰团：" />
         <ImageView
             android:layout_width="130dp"
             android:layout_height="130dp"

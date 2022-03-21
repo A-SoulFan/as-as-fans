@@ -1,4 +1,4 @@
-package com.example.asasfans.ui.main;
+package com.example.asasfans.ui.main.fragment;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -10,15 +10,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.asasfans.R;
-import com.loopeer.cardstack.AllMoveDownAnimatorAdapter;
+import com.example.asasfans.data.VTBData;
+import com.example.asasfans.ui.main.adapter.MembersCardStackAdapter;
 import com.loopeer.cardstack.CardStackView;
-import com.loopeer.cardstack.UpDownAnimatorAdapter;
 import com.loopeer.cardstack.UpDownStackAnimatorAdapter;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * @author zyxdb
@@ -38,8 +37,8 @@ public class VTBDataFragment extends Fragment implements CardStackView.ItemExpen
             R.color.cardGray
     };
 
-    String[] name = {"数据结构","计算机网络","编译原理","C语言","算法设计","FPGA编程"};
-    String[] fansnum = {"77","87","65","98","74","80"};
+    String[] name = {"这里应该是个折线图，还没做好"};
+    String[] fansnum = {"1"};
 
     public static VTBDataFragment newInstance() {
         VTBDataFragment fragment = new VTBDataFragment();
@@ -68,22 +67,17 @@ public class VTBDataFragment extends Fragment implements CardStackView.ItemExpen
         mCardStack.setAdapter(adapter);
         mCardStack.setItemExpendListener(this);
 
-        List<List<VTBData>> lists = new LinkedList<>();
+        List<VTBData> list = new LinkedList<>();
         for(int i = 0;i<5;i++)
         {
-            List<VTBData> list = new LinkedList<>();
-            for(int j = 0;j<6;j++)
-            {
-                list.add(new VTBData(name[j],fansnum[j]));
-            }
-            lists.add(list);
+            list.add(new VTBData(true));
         }
 
         new Handler().postDelayed(
                 new Runnable() {
                     @Override
                     public void run() {
-                        adapter.updateData(Arrays.asList(color),lists);
+                        adapter.updateData(Arrays.asList(color),list);
                     }
                 }
                 , 200
