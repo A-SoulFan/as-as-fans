@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -61,12 +62,19 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     private List<VideoDataStoragedInMemory> videoDataStoragedInMemoryList = new ArrayList<>();
     private DialogPlus dialog;
     private View dialogView;
+    DBOpenHelper dbOpenHelper;
+    SQLiteDatabase db;
 
     public PubdateVideoAdapter(Context context, List<VideoDataStoragedInMemory> videosBvid) {
         this.mContext = context;
         this.videoDataStoragedInMemoryList = videosBvid;
-
+        dbOpenHelper = new DBOpenHelper(context, "blackList.db", null, 1);
+        db = dbOpenHelper.getWritableDatabase();
         initDialog();
+    }
+    public void closeSQL(){
+        db.close();
+        dbOpenHelper.close();
     }
 
     void initDialog(){
@@ -88,10 +96,9 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
         videoViewHolder.videoMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("videoMore", "onClick");
-
-                AppCompatButton appCompatButton =  dialogView.findViewById(R.id.dialog_black_list);
-                appCompatButton.setOnClickListener(new View.OnClickListener() {
+                AppCompatButton blacklistVideo =  dialogView.findViewById(R.id.dialog_black_list);
+//                AppCompatButton blacklistAuthor =  dialogView.findViewById(R.id.dialog_black_list_author);
+                blacklistVideo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Log.i("appCompatButton", "onClick");
@@ -114,14 +121,36 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                             e.printStackTrace();
                             Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
                         }
-
                         videoDataStoragedInMemoryList.remove(videoViewHolder.getBindingAdapterPosition());
                         notifyItemRemoved(videoViewHolder.getBindingAdapterPosition());
-                        notifyDataSetChanged();
+                        notifyItemRangeChanged(videoViewHolder.getBindingAdapterPosition(), getItemCount());
                         Toast.makeText(mContext,"屏蔽视频成功",Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
+//                blacklistAuthor.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        try {
+//                            DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext,"blackList.db",null,1);
+//                            SQLiteDatabase sqliteDatabase = dbOpenHelper.getWritableDatabase();
+//                            ContentValues values = new ContentValues();
+//                            values.put("name", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getAuthor());
+//                            sqliteDatabase.insert("blackAuthor", null, values);
+//                            sqliteDatabase.close();
+//                            dbOpenHelper.close();
+//                        }catch (Exception e){
+//                            e.printStackTrace();
+//                            Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        videoDataStoragedInMemoryList.remove(videoViewHolder.getBindingAdapterPosition());
+//                        notifyItemRemoved(videoViewHolder.getBindingAdapterPosition());
+//                        notifyDataSetChanged();
+//                        Toast.makeText(mContext,"屏蔽作者成功",Toast.LENGTH_SHORT).show();
+//                        dialog.dismiss();
+//                    }
+//                });
                 dialog.show();
             }
         });
@@ -130,14 +159,17 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
             public void onClick(View v) {
 //                Toast.makeText(mContext,mResultBean.get(videoViewHolder.getBindingAdapterPosition()).getBvid(),Toast.LENGTH_SHORT).show();
                 //获取剪贴板管理器：
-                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData mClipData = ClipData.newPlainText("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
-                cm.setPrimaryClip(mClipData);
+//                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+//                ClipData mClipData = ClipData.newPlainText("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+//                cm.setPrimaryClip(mClipData);
 
                 PackageManager packageManager = mContext.getPackageManager();
+                Intent it = new Intent();
                 Intent intent = packageManager.getLaunchIntentForPackage(PackageName);
                 if (intent != null) {
-                    mContext.startActivity(intent);
+                    it.setAction(Intent.ACTION_VIEW);
+                    it.setData(Uri.parse("bilibili://video/" + videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid()));
+                    mContext.startActivity(it);
                 }else {
                     Toast.makeText(mContext,"没有bilibili，已复制bv号",Toast.LENGTH_SHORT).show();
                 }
@@ -176,7 +208,7 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 //                if (singleVideoBean.getCode() == 62002)
                 switch (msg.what){
                     case GET_DATA_SUCCESS:
-                        if (singleVideoBean.getData() != null) {
+                        if ((singleVideoBean.getData() != null)) {
                             holder.videoTitle.setText(singleVideoBean.getData().getTitle());
                             videoDataStoragedInMemoryList.get(position).setTitle(singleVideoBean.getData().getTitle());
                             ImageLoader.getInstance().displayImage(singleVideoBean.getData().getPic() + "@480w_300h_1e_1c.jpg", holder.imageView);
@@ -194,7 +226,9 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                             videoDataStoragedInMemoryList.get(position).setFirstLoad(false);
                         }else {
                             holder.videoTitle.setText(val);
-                            Log.i("GET_DATA_SUCCESS:null", val);
+                            videoDataStoragedInMemoryList.remove(position);
+                            notifyItemRemoved(position);
+                            notifyDataSetChanged();
 //                            BiliVideoFragment.pubdateVideoAdapter.notifyItemRemoved(position);
 //                            BiliVideoFragment.pubdateVideoAdapter.notifyItemRangeChanged(position, BiliVideoFragment.pubdateVideoAdapter.getItemCount());
                         }
@@ -246,10 +280,11 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
             holder.videoLike.setText(viewNumFormat(videoDataStoragedInMemoryList.get(position).getLike()) + " 点赞");
             holder.videoView.setText(viewNumFormat(videoDataStoragedInMemoryList.get(position).getView()) + " 播放");
             holder.videoTname.setText(videoDataStoragedInMemoryList.get(position).getTname());
-            Log.i("getFirstLoad:false", String.valueOf(position));
+//            Log.i("getFirstLoad:false", String.valueOf(position));
         }
 
     }
+
 
     @Override
     public int getItemCount() {

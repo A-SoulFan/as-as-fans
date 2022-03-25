@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:paddingBottom="8dp"
+    android:background="@color/backgroundGray"
     android:layout_height="wrap_content">
 
     <TextView
@@ -28,5 +29,13 @@
         android:layout_height="wrap_content"
         android:text="屏蔽视频"
         android:background="@color/cardWhite"
+        android:layout_marginBottom="8dp"
         />
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/dialog_black_list_author"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="屏蔽作者"-->
+<!--        android:background="@color/cardWhite"-->
+<!--        />-->
 </LinearLayout>

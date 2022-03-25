@@ -23,6 +23,7 @@ import com.example.asasfans.data.PubdateVideoBean;
 import com.example.asasfans.data.VideoDataStoragedInMemory;
 import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.main.adapter.PubdateVideoAdapter;
+import com.example.asasfans.util.ACache;
 import com.google.gson.Gson;
 import com.scwang.smart.refresh.footer.BallPulseFooter;
 import com.scwang.smart.refresh.header.BezierRadarHeader;
@@ -131,13 +132,12 @@ public class BiliVideoFragment extends Fragment {
                                 "blackList.db", null, 1);
                         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
                         for (int i = 0; i < hVideosBvid.size(); i++){
-                            if (!searchBvid(db, hVideosBvid.get(i).get(0))) {
+                            if (!searchInSQL(db, hVideosBvid.get(i).get(0), "blackBvid", "bvid")) {
                                 videoDataStoragedInMemoryList.add(new VideoDataStoragedInMemory("", "", 0, "", 0, 0, "", hVideosBvid.get(i).get(0), true));
                             }
                         }
                         db.close();
                         dbOpenHelper.close();
-                        Log.i("BiliVideoFragment:VideosBvid", videoDataStoragedInMemoryList.toString());
                         pubdateVideoAdapter.notifyItemRangeChanged(PastSize, hVideosBvid.size());
                         refreshLayout.finishLoadMore(100);
                     }else {
@@ -172,38 +172,51 @@ public class BiliVideoFragment extends Fragment {
             // TODO
             // 在这里进行 http request.网络请求相关操作
 //            page++;
-
-            OkHttpClient client = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
-            Request request = new Request.Builder().url(url)
-                    .get().build();
-            Call call = client.newCall(request);
-            Response response = null;
-            String tmp;
-            try {
-                response = call.execute();
-                tmp = response.body().string();
-                msg.what = GET_DATA_SUCCESS;
-                data.putString("pubdateVideoBean", tmp);
-
-            } catch (IOException e) {
-                e.printStackTrace();
+            ACache aCache = ACache.get(getActivity());
+            String tmpACache = aCache.getAsString(url);
+            if (tmpACache == null) {
+                OkHttpClient client = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
+                Request request = new Request.Builder().url(url)
+                        .get().build();
+                Call call = client.newCall(request);
+                Response response = null;
+                String tmp;
+                try {
+                    response = call.execute();
+                    tmp = response.body().string();
+                    msg.what = GET_DATA_SUCCESS;
+                    data.putString("pubdateVideoBean", tmp);
+                    aCache.put(url, tmp, ACache.TIME_HOUR);
+                } catch (IOException e) {
+                    e.printStackTrace();
 //                page--;
-                handler.sendEmptyMessage(NETWORK_ERROR);
+                    handler.sendEmptyMessage(NETWORK_ERROR);
+                }
+            }else {
+                msg.what = GET_DATA_SUCCESS;
+                data.putString("pubdateVideoBean", aCache.getAsString(url));
+                Log.i("ACache:pubdateVideoBean", aCache.getAsString(url));
             }
             msg.setData(data);
             handler.sendMessage(msg);
         }
     };
-    private boolean searchBvid(SQLiteDatabase db, String str) {
+    public static boolean searchInSQL(SQLiteDatabase db, String str, String table, String col) {
 
         Cursor cursor = db.rawQuery(
-                "select * from   blackBvid  where   bvid=? ",
+                "select * from   " + table + "  where   " + col +"=? ",
                 new String[] { str });
         while (cursor.moveToNext()) {
-            Log.i(" bvid:", str + "在数据库已存在,return true");
-            return true;// //有城市在数据库已存在，返回true
+//            Log.i(" bvid:", str + "在数据库已存在,return true");
+            return true;
         }
-        Log.i(" bvid:", str + "在数据库不存在，return false");
-        return false;// //在数据库以前存在 false
+//        Log.i(" bvid:", str + "在数据库不存在，return false");
+        return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        pubdateVideoAdapter.closeSQL();
+        super.onDestroy();
     }
 }

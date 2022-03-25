@@ -14,6 +14,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String sql="create table blackBvid(bvid TEXT primary key NOT NULL UNIQUE, PicUrl TEXT, Title TEXT, Duration integer, Author TEXT, ViewNum integer, LikeNum integer, Tname TEXT)";
+//        String createAuthorTable="create table blackAuthor(name TEXT primary key NOT NULL UNIQUE)";
+//        sqLiteDatabase.execSQL(createAuthorTable);
         sqLiteDatabase.execSQL(sql);
     }
 

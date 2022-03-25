@@ -1,6 +1,10 @@
 package com.example.asasfans;
 
+import static com.example.asasfans.ui.main.adapter.PubdateVideoAdapter.GET_DATA_SUCCESS;
+import static com.example.asasfans.ui.main.adapter.PubdateVideoAdapter.NETWORK_ERROR;
+
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.asasfans.data.DBOpenHelper;
+import com.example.asasfans.util.ACache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -43,6 +48,7 @@ import okhttp3.Response;
  */
 
 public class LaunchActivity extends AppCompatActivity {
+    private String latestVersion = "https://gitee.com/api/v5/repos/akarinini/as-as-fans/releases/latest";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,13 +60,13 @@ public class LaunchActivity extends AppCompatActivity {
     }
 
 
-    final Handler handler = new Handler() {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             Bundle data = msg.getData();
-            String val = data.getString("top30");
-            Log.i("LaunchActivity", "请求结果为-->" + val);
+            String val = data.getString("latestVersion");
+            Log.i("latestVersion", "请求结果为-->" + val);
             //跳转至 MainActivity
             Intent intent = new Intent(LaunchActivity.this, TestActivity.class);
             intent.putExtras(data);
@@ -77,8 +83,33 @@ public class LaunchActivity extends AppCompatActivity {
         public void run() {
             Message msg = new Message();
             Bundle data = new Bundle();
-            // TODO
-            // 在这里进行 http request.网络请求相关操作
+            ACache aCache = ACache.get(LaunchActivity.this);
+            String tmpACache =  aCache.getAsString("latestVersion");
+            if (tmpACache == null) {
+                // TODO
+                // 在这里进行 http request.网络请求相关操作
+                OkHttpClient client = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
+                Request request = new Request.Builder().url(latestVersion)
+                        .get().build();
+                Call call = client.newCall(request);
+                Response response = null;
+                String tmp;
+                try {
+                    response = call.execute();
+                    tmp = response.body().string();
+                    msg.what = GET_DATA_SUCCESS;
+                    data.putString("latestVersion", tmp);
+                    aCache.put("latestVersion", tmp, ACache.TIME_DAY);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    data.putString("latestVersion", "");
+                    handler.sendEmptyMessage(NETWORK_ERROR);
+                }
+            }else {
+                msg.what = GET_DATA_SUCCESS;
+                data.putString("latestVersion", aCache.getAsString("latestVersion"));
+                Log.i("ACache", aCache.getAsString("latestVersion"));
+            }
             msg.setData(data);
             handler.sendMessage(msg);
         }

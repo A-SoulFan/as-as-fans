@@ -82,29 +82,6 @@ public class ToolsFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView contact = dialogView.findViewById(R.id.dialog_why_contact);
-                TextView email = dialogView.findViewById(R.id.dialog_why_email);
-                contact.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent();
-                        intent.setAction("android.intent.action.VIEW");
-                        Uri content_url = Uri.parse("https://gitee.com/akarinini/as-as-fans/issues");
-                        intent.setData(content_url);
-                        startActivity(intent);
-                    }
-                });
-                email.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(getActivity(), "邮箱已复制到剪贴板",Toast.LENGTH_SHORT).show();
-                        //获取剪贴板管理器：
-                        ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData mClipData = ClipData.newPlainText("Email", "2435743108@qq.com");
-                        cm.setPrimaryClip(mClipData);
-                    }
-                });
-
                 dialog.show();
             }
         });

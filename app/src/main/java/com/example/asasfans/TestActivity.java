@@ -5,14 +5,21 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -20,6 +27,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.asasfans.data.GiteeVersionBean;
+import com.example.asasfans.data.SingleVideoBean;
 import com.example.asasfans.data.TabData;
 import com.example.asasfans.ui.main.adapter.BottomPagerAdapter;
 import com.example.asasfans.ui.main.fragment.ImageFanArtFragment;
@@ -28,6 +37,7 @@ import com.example.asasfans.ui.main.adapter.ToolsAdapter;
 import com.example.asasfans.ui.main.fragment.ToolsFragment;
 import com.example.asasfans.ui.main.fragment.WebFragment;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -38,6 +48,8 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.ViewHolder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,7 +83,8 @@ public class TestActivity extends AppCompatActivity {
     private SharedPreferences userInfo;
     private SharedPreferences.Editor editor;//获取Editor
     private Map<String, ?> tmp;
-
+    private DialogPlus dialog;
+    private View dialogView;
 
     /*
     权限相关
@@ -112,8 +125,57 @@ public class TestActivity extends AppCompatActivity {
 //                R.drawable.divider)); //设置分割线的样式
 //        linearLayout.setDividerPadding(20); //设置分割线间隔
 
-        Intent mIntent =getIntent();
-        Bundle mBundle =mIntent.getExtras();
+        Intent intent =getIntent();
+        Bundle bundle =intent.getExtras();
+        Gson gson = new Gson();
+        if (bundle.getString("latestVersion").equals("")){
+            Toast.makeText(TestActivity.this, "网络错误，版本号获取失败", Toast.LENGTH_SHORT).show();
+        }else {
+            if (bundle.getString("latestVersion").startsWith("{\"id\":")){
+                GiteeVersionBean giteeVersionBean = gson.fromJson(bundle.getString("latestVersion"), GiteeVersionBean.class);
+                String versionName = giteeVersionBean.getTag_name();
+
+                String[] tmp3 = versionName.split("v");
+                String[] versionCodeString = tmp3[1].split("\\.");
+                int versionCode = Integer.valueOf(versionCodeString[0]) * 100 + Integer.valueOf(versionCodeString[1]) * 10 + Integer.valueOf(versionCodeString[2]) * 1;
+                if (versionCode > getVersionCode(TestActivity.this)) {
+                    initDialog(TestActivity.this);
+                    TextView title = dialogView.findViewById(R.id.dialog_title);
+                    TextView content = dialogView.findViewById(R.id.dialog_content);
+                    TextView cancel = dialogView.findViewById(R.id.cancel);
+                    TextView confirm = dialogView.findViewById(R.id.confirm);
+                    title.setText("新版本提醒");
+                    content.setText(giteeVersionBean.getBody());
+                    confirm.setText("去下载");
+                    confirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(giteeVersionBean.getAssets().get(0).getBrowser_download_url()));
+                            startActivity(intent);
+                            dialog.dismiss();
+                        }
+                    });
+                    cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }
+            }
+        }
+    }
+
+    private void initDialog(Context context){
+        dialog = DialogPlus.newDialog(context)
+                .setContentHolder(new ViewHolder(R.layout.my_dialog))
+                .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setCancelable(true)
+                .setGravity(Gravity.CENTER)
+                .create();
+        dialogView = dialog.getHolderView();
     }
 
     private void initImageLoader(){
@@ -125,7 +187,7 @@ public class TestActivity extends AppCompatActivity {
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheInMemory(false) //设置下载的图片是否缓存在内存中
-                .cacheOnDisc(true)//设置下载的图片是否缓存在SD卡中
+                .cacheOnDisk(true)//设置下载的图片是否缓存在SD卡中
 //                .showImageOnLoading(R.mipmap.loading_black)
                 .showImageOnFail(R.mipmap.load_failure)
                 .bitmapConfig(Bitmap.Config.RGB_565)
@@ -147,7 +209,7 @@ public class TestActivity extends AppCompatActivity {
                 .defaultDisplayImageOptions(options)// 由原先的discCache -> diskCache
                 .diskCache(new UnlimitedDiskCache(new File(dirname)))//自定义缓存路径
                 .imageDownloader(new BaseImageDownloader(this, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
-                .writeDebugLogs() // Remove for release app
+//                .writeDebugLogs() // Remove for release app
                 .build();
         ImageLoader.getInstance().init(config);//全局初始化此配置
     }
@@ -205,6 +267,19 @@ public class TestActivity extends AppCompatActivity {
 //            ((BottomPagerAdapter)viewPager.getAdapter()).updateFragmentList(mFragmentList);
 //    }
 
+    public static int getVersionCode(Context mContext) {
+        int versionCode = 0;
+        try {
+                //获取软件版本号，对应AndroidManifest.xml下android:versionCode
+                versionCode = mContext.getPackageManager().
+                getPackageInfo(mContext.getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionCode;
+    }
+
+
     /**
      * @description Override实现两次退出
      * @author akari
@@ -214,6 +289,7 @@ public class TestActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         mCurrentFragment = bottomPagerAdapter.getCurrentFragment();
         Log.i("instanceof", String.valueOf(mCurrentFragment instanceof WebFragment));
+        Log.i("keyCode", String.valueOf(keyCode));
         //解决音量键的监听被webview劫持无法使用的问题
         if (!(keyCode==KeyEvent.KEYCODE_BACK)){
             return super.onKeyDown(keyCode, event);

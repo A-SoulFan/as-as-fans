@@ -16,6 +16,7 @@ import com.example.asasfans.LaunchActivity;
 import com.example.asasfans.R;
 import com.example.asasfans.TestActivity;
 import com.example.asasfans.ui.main.BlackListActivity;
+import com.example.asasfans.ui.main.ConfigActivity;
 import com.example.asasfans.ui.main.adapter.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
@@ -45,14 +46,14 @@ public class MainFragment extends Fragment {
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getContext(), getChildFragmentManager());
         ViewPager viewPager = view.findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
-        viewPager.setOffscreenPageLimit(4);
+//        viewPager.setOffscreenPageLimit(4);
         TabLayout tabs = view.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-        ImageView imageView = view.findViewById(R.id.video_black_list);
+        ImageView imageView = view.findViewById(R.id.video_config);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), BlackListActivity.class);
+                Intent intent = new Intent(getActivity(), ConfigActivity.class);
                 startActivity(intent);
             }
         });

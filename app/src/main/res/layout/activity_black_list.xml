@@ -16,7 +16,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="8dp"
-                android:src="@drawable/back"/>
+                android:src="@drawable/icon_back_white"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:text="黑名单"

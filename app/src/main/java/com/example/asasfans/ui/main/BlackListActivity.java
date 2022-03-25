@@ -36,7 +36,6 @@ import okhttp3.Response;
 
 public class BlackListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private int page = 1;
     private RefreshLayout refreshLayout;
     private List<VideoDataStoragedInMemory> videoDataStoragedInMemoryList = new ArrayList<>();
     private PubdateVideoAdapter pubdateVideoAdapter;
@@ -46,10 +45,6 @@ public class BlackListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_black_list);
         recyclerView = findViewById(R.id.black_list_recyclerview);
-//        refreshLayout = (RefreshLayout)findViewById(R.id.black_list_refreshLayout);
-//        refreshLayout.setRefreshHeader(new BezierRadarHeader(this));
-//        refreshLayout.setRefreshFooter(new BallPulseFooter(this));
-//        refreshLayout.setEnableAutoLoadMore(true);
         ImageView back = findViewById(R.id.activity_black_list_back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +67,7 @@ public class BlackListActivity extends AppCompatActivity {
                         cursor.getString(cursor.getColumnIndex("Tname")),
                         cursor.getString(cursor.getColumnIndex("bvid")),
                         true
-                        ));
+                ));
             }
         }
         pubdateVideoAdapter = new BlackListAdapter(BlackListActivity.this, videoDataStoragedInMemoryList);
@@ -81,6 +76,8 @@ public class BlackListActivity extends AppCompatActivity {
         linearLayoutManager.setInitialPrefetchItemCount(2);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new RecyclerViewDecoration(12, 12));
+        sqliteDatabase.close();
+        dbOpenHelper.close();
     }
 
 }

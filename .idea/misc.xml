@@ -10,11 +10,13 @@
         <entry key="..\:/as-as-fans/app/src/main/res/drawable/shape_for_custom_spinner.xml" value="0.1755" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/activity_black_list.xml" value="0.38177083333333334" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/activity_bottom_main.xml" value="0.401268115942029" />
+        <entry key="..\:/as-as-fans/app/src/main/res/layout/activity_config.xml" value="0.3333333333333333" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/activity_lanch.xml" value="0.3651041666666667" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/activity_main.xml" value="0.39028475711892796" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/dialog_black_list_more.xml" value="0.3859375" />
+        <entry key="..\:/as-as-fans/app/src/main/res/layout/dialog_new_version.xml" value="0.3" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/dialog_video_more.xml" value="0.38177083333333334" />
-        <entry key="..\:/as-as-fans/app/src/main/res/layout/dialog_why.xml" value="0.384375" />
+        <entry key="..\:/as-as-fans/app/src/main/res/layout/dialog_why.xml" value="0.2617801047120419" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/fragment_bari.xml" value="0.3609375" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/fragment_click_jump.xml" value="0.5536458333333333" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/fragment_fan_art_image.xml" value="0.4954710144927536" />
@@ -24,7 +26,7 @@
         <entry key="..\:/as-as-fans/app/src/main/res/layout/fragment_web.xml" value="0.5494791666666666" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/image_recyclerview.xml" value="0.5494791666666666" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/item_for_custom_spinner.xml" value="0.3609375" />
-        <entry key="..\:/as-as-fans/app/src/main/res/layout/my_dialog.xml" value="0.384375" />
+        <entry key="..\:/as-as-fans/app/src/main/res/layout/my_dialog.xml" value="0.3333333333333333" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/song_player.xml" value="0.33489583333333334" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/tools_recyclerview.xml" value="0.3104166666666667" />
         <entry key="..\:/as-as-fans/app/src/main/res/layout/video_recyclerview.xml" value="0.38177083333333334" />

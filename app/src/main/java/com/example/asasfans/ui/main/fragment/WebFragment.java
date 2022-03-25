@@ -38,6 +38,7 @@ import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -53,9 +54,13 @@ import androidx.fragment.app.Fragment;
 import com.example.asasfans.R;
 import com.example.asasfans.TestActivity;
 import com.example.asasfans.receiver.XMPlayerReceiver;
+import com.example.asasfans.ui.main.ConfigActivity;
 import com.scwang.smart.refresh.header.BezierRadarHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -167,10 +172,38 @@ public class WebFragment extends Fragment {
 
             }
         });
+
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
                 return super.shouldOverrideKeyEvent(view, event);
+            }
+
+            @Nullable
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                Log.i("shouldInterceptRequest:getUrl", request.getUrl().toString());
+                if (request.getUrl().toString().startsWith("https://asbbs-static-01.kzmidc.workers.dev/?file=/uploads/files/1/banner_1646556711136.mp4")){
+                    Log.i("banner_1646556711136.mp4", "shouldInterceptRequest: ");
+                    InputStream is = null;
+                    // 步骤2:创建一个输入流
+                    try {
+                        is =getActivity().getApplicationContext().getAssets().open("images/abc.png");
+                        // 步骤3:获得需要替换的资源(存放在assets文件夹里)
+                        // a. 先在app/src/main下创建一个assets文件夹
+                        // b. 在assets文件夹里再创建一个images文件夹
+                        // c. 在images文件夹放上需要替换的资源（此处替换的是abc.png图片）
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // 步骤4:替换资源
+                    WebResourceResponse response = new WebResourceResponse("image/png", "utf-8", is);
+                    // 参数1：http请求里该图片的Content-Type,此处图片为image/png
+                    // 参数2：编码类型
+                    // 参数3：存放着替换资源的输入流（上面创建的那个）
+                    return response;
+                }
+                return super.shouldInterceptRequest(view, request);
             }
 
             @Override

@@ -23,32 +23,9 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:text="1. 右侧管理底部栏按钮可以改变底部导航栏\n2. 长按每个条目可以复制原网址\n3. 单击条目可以在app内打开\n4. 如果打开页面为空白说明网页不兼容，请复制网址到浏览器打开\n5. 有些页面第一次加载较慢，请稍微等一会或者复制到浏览器打开\n6. 感谢每一位用户和开发者"
+        android:text="1. 右侧管理底部栏按钮可以改变底部导航栏\n2. 长按每个条目可以复制原网址\n3. 单击条目可以在app内打开\n4. 如果打开页面为空白说明网页不兼容，请复制网址到浏览器打开\n5. 有些页面第一次加载较慢，请稍微等一会\n6. 感谢每一位用户和开发者"
         android:textSize="15sp"
         android:textColor="#666666"/>
 
-    <TextView
-        android:text="提交bug/建议/issues"
-        android:textStyle="bold"
-        android:textColor="#353535"
-        android:layout_height="40dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:id="@+id/dialog_why_contact"
-        />
-
-    <TextView
-        android:text="开发者邮箱"
-        android:textStyle="bold"
-        android:textColor="#353535"
-        android:layout_height="40dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:id="@+id/dialog_why_email"
-        />
 
 </LinearLayout>

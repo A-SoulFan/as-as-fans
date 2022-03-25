@@ -20,8 +20,10 @@
     <TextView
         android:id="@+id/dialog_content"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="重启以更改底部导航栏\n（如果自动重启有问题手动关闭重启即可）"
         android:textSize="15sp"
         android:textColor="#666666"/>
@@ -29,6 +31,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:background="#CFCFCF" />
 
     <LinearLayout

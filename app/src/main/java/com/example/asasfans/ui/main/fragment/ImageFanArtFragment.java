@@ -354,11 +354,11 @@ public class ImageFanArtFragment extends Fragment {
                     if (val.equals("{\"code\": 1, \"message\": \"\\u6ca1\\u6709\\u66f4\\u591a\\u6570\\u636e\"}")){
                         imageUrl.pageSelfDecrement();
                         Toast.makeText(getContext(),"后面没有了~",Toast.LENGTH_SHORT).show();
-                        Log.i("GET_DATA_SUCCESS", val);
+//                        Log.i("GET_DATA_SUCCESS", val);
                         break;
                     }else {
                         List<ImageDataBean> imageDataBean = gson.fromJson(val, new TypeToken<List<ImageDataBean>>() {}.getType());
-                        Log.i("GET_DATA_SUCCESS:ImageDataBean", val);
+//                        Log.i("GET_DATA_SUCCESS:ImageDataBean", val);
                         int pastSize = imageRecyclerViewData.size();
                         imageRecyclerViewData.addAll(imageDataBean);
                         if (imageRecyclerViewData.size() == 0){
@@ -421,7 +421,7 @@ public class ImageFanArtFragment extends Fragment {
                 tmp = response.body().string();
                 msg.what = GET_DATA_SUCCESS;
                 data.putString("dataBean", tmp);
-                Log.i("ImageDataBean", tmp);
+//                Log.i("ImageDataBean", tmp);
             } catch (IOException e) {
                 e.printStackTrace();
 //                page--;
