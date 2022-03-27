@@ -55,12 +55,12 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
     public static final List<String> iconFileName
             = Arrays.asList("icon_asoul_cloud",
                             "icon_zwcc",
-                            "icon_asf",
+                            "icon_zhijiang_book",
+                            "icon_long_comment",
                             "icon_asoul",
                             "icon_asoul",
                             "icon_asoul",
-                            "icon_asoul",
-                            "icon_asf",
+                            "icon_asoul_studio",
                             "icon_asoul",
                             "icon_asf",
                             "icon_asf"
