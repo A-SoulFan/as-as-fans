@@ -48,7 +48,7 @@ import okhttp3.Response;
  */
 
 public class LaunchActivity extends AppCompatActivity {
-    private String latestVersion = "https://gitee.com/api/v5/repos/akarinini/as-as-fans/releases/latest";
+    private String latestVersion = "https://api.github.com/repos/A-SoulFan/as-as-fans/releases/latest";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

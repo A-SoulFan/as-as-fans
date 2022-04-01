@@ -62,8 +62,8 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ToolsViewHol
                             "icon_asoul",
                             "icon_asoul_studio",
                             "icon_asoul",
-                            "icon_asf",
-                            "icon_asf"
+                            "icon_asf_bak",
+                            "icon_asf_bak"
             );
     public static final List<String> desc
             = Arrays.asList("A-SOUL Fans Art - 一个魂的二创",

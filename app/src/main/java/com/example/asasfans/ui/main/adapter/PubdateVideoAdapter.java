@@ -226,9 +226,9 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                             videoDataStoragedInMemoryList.get(position).setFirstLoad(false);
                         }else {
                             holder.videoTitle.setText(val);
-                            videoDataStoragedInMemoryList.remove(position);
-                            notifyItemRemoved(position);
-                            notifyDataSetChanged();
+//                            videoDataStoragedInMemoryList.remove(position);
+//                            notifyItemRemoved(position);
+//                            notifyDataSetChanged();
 //                            BiliVideoFragment.pubdateVideoAdapter.notifyItemRemoved(position);
 //                            BiliVideoFragment.pubdateVideoAdapter.notifyItemRangeChanged(position, BiliVideoFragment.pubdateVideoAdapter.getItemCount());
                         }
@@ -299,6 +299,8 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     public long getItemId(int position) {
         return videoDataStoragedInMemoryList.get(position).hashCode();
     }
+
+
 
 
     /**

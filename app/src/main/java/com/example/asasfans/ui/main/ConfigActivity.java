@@ -28,6 +28,7 @@ import com.example.asasfans.LaunchActivity;
 import com.example.asasfans.R;
 import com.example.asasfans.TestActivity;
 import com.example.asasfans.data.GiteeVersionBean;
+import com.example.asasfans.data.GithubVersionBean;
 import com.google.gson.Gson;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
@@ -46,7 +47,7 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
     private ConstraintLayout config_contract_us;
     private LinearLayout config;
     private TextView config_check_version_number;
-    private String latestVersion = "https://gitee.com/api/v5/repos/akarinini/as-as-fans/releases/latest";
+    private String latestVersion = "https://api.github.com/repos/A-SoulFan/as-as-fans/releases/latest";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +84,7 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.config_contract_us:
                 Intent intentContractUs = new Intent();
                 intentContractUs.setAction("android.intent.action.VIEW");
-                Uri content_url = Uri.parse("https://gitee.com/akarinini/as-as-fans/issues");
+                Uri content_url = Uri.parse("https://git.asf.ink/A-SoulFan/as-as-fans/issues");
                 intentContractUs.setData(content_url);
                 startActivity(intentContractUs);
                 break;
@@ -115,9 +116,9 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
             Log.i("latestVersion", "请求结果为-->" + val);
             Gson gson = new Gson();
             if (msg.what == GET_DATA_SUCCESS){
-                if (val.startsWith("{\"id\":")) {
-                    GiteeVersionBean giteeVersionBean = gson.fromJson(val, GiteeVersionBean.class);
-                    String versionName = giteeVersionBean.getTag_name();
+                if (val.startsWith("{\"url\"")) {
+                    GithubVersionBean githubVersionBean = gson.fromJson(val, GithubVersionBean.class);
+                    String versionName = githubVersionBean.getTag_name();
 
                     String[] tmp3 = versionName.split("v");
                     String[] versionCodeString = tmp3[1].split("\\.");
@@ -136,12 +137,12 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
                         TextView cancel = dialogView.findViewById(R.id.cancel);
                         TextView confirm = dialogView.findViewById(R.id.confirm);
                         title.setText("新版本提醒");
-                        content.setText(giteeVersionBean.getBody());
+                        content.setText(githubVersionBean.getBody());
                         confirm.setText("去下载");
                         confirm.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(giteeVersionBean.getAssets().get(0).getBrowser_download_url()));
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://app.asf.ink/"));
                                 startActivity(intent);
                                 dialog.dismiss();
                             }
@@ -158,7 +159,7 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 }else {
                     Toast.makeText(ConfigActivity.this, "403，请手动对比当前与最新版本号", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://gitee.com/akarinini/as-as-fans/releases"));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://app.asf.ink/"));
                     startActivity(intent);
                 }
             }else {

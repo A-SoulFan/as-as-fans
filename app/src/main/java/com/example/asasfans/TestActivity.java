@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.asasfans.data.GiteeVersionBean;
+import com.example.asasfans.data.GithubVersionBean;
 import com.example.asasfans.data.SingleVideoBean;
 import com.example.asasfans.data.TabData;
 import com.example.asasfans.ui.main.adapter.BottomPagerAdapter;
@@ -131,9 +132,9 @@ public class TestActivity extends AppCompatActivity {
         if (bundle.getString("latestVersion").equals("")){
             Toast.makeText(TestActivity.this, "网络错误，版本号获取失败", Toast.LENGTH_SHORT).show();
         }else {
-            if (bundle.getString("latestVersion").startsWith("{\"id\":")){
-                GiteeVersionBean giteeVersionBean = gson.fromJson(bundle.getString("latestVersion"), GiteeVersionBean.class);
-                String versionName = giteeVersionBean.getTag_name();
+            if (bundle.getString("latestVersion").startsWith("{\"url\"")){
+                GithubVersionBean githubVersionBean = gson.fromJson(bundle.getString("latestVersion"), GithubVersionBean.class);
+                String versionName = githubVersionBean.getTag_name();
 
                 String[] tmp3 = versionName.split("v");
                 String[] versionCodeString = tmp3[1].split("\\.");
@@ -145,12 +146,12 @@ public class TestActivity extends AppCompatActivity {
                     TextView cancel = dialogView.findViewById(R.id.cancel);
                     TextView confirm = dialogView.findViewById(R.id.confirm);
                     title.setText("新版本提醒");
-                    content.setText(giteeVersionBean.getBody());
+                    content.setText(githubVersionBean.getBody());
                     confirm.setText("去下载");
                     confirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(giteeVersionBean.getAssets().get(0).getBrowser_download_url()));
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.github.com/repos/A-SoulFan/as-as-fans/releases/latest"));
                             startActivity(intent);
                             dialog.dismiss();
                         }
