@@ -3,6 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/drawable/b_nothing.xml" value="0.2255" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2255" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/drawable/icon__asasf_black_logo.xml" value="0.2255" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/drawable/icon_asasf_blue_logo.xml" value="0.2255" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/drawable/icon_asasf_colorful_logo.xml" value="0.2255" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/drawable/icon_asasf_white_logo.xml" value="0.2255" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/activity_config.xml" value="0.2201114488348531" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/activity_lanch.xml" value="0.33697916666666666" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/activity_main.xml" value="0.3104166666666667" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/dialog_why.xml" value="0.45260416666666664" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/fragment_tools.xml" value="0.45260416666666664" />
         <entry key="..\:/as-as-fans/app/src/main/res/drawable/all_fragment_button_shape.xml" value="0.2145" />
         <entry key="..\:/as-as-fans/app/src/main/res/drawable/all_fragment_button_shape_selected.xml" value="0.2145" />
         <entry key="..\:/as-as-fans/app/src/main/res/drawable/edit_text_shape.xml" value="0.2145" />

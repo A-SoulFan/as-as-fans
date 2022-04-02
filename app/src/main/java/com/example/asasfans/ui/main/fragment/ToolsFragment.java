@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -83,6 +84,18 @@ public class ToolsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 dialog.show();
+                AppCompatTextView officialWeb = dialogView.findViewById(R.id.dialog_official_web);
+                officialWeb.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intentContractUs = new Intent();
+                        intentContractUs.setAction("android.intent.action.VIEW");
+                        Uri content_url = Uri.parse("https://app.asf.ink/");
+                        intentContractUs.setData(content_url);
+                        startActivity(intentContractUs);
+                        dialog.dismiss();
+                    }
+                });
             }
         });
         textView.setOnClickListener(new View.OnClickListener() {

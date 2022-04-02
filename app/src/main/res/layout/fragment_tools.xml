@@ -16,7 +16,7 @@
             android:orientation="horizontal"
             android:layout_height="match_parent">
             <ImageView
-                android:src="@mipmap/icon_why"
+                android:src="@drawable/icon_about"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

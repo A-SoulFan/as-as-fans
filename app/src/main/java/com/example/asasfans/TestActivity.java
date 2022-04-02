@@ -151,7 +151,7 @@ public class TestActivity extends AppCompatActivity {
                     confirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.github.com/repos/A-SoulFan/as-as-fans/releases/latest"));
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://app.asf.ink/"));
                             startActivity(intent);
                             dialog.dismiss();
                         }

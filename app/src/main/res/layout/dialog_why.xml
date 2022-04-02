@@ -27,5 +27,14 @@
         android:textSize="15sp"
         android:textColor="#666666"/>
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dialog_official_web"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:padding="8dp"
+        android:textColor="@color/tab_text_normal"
+        android:layout_height="wrap_content"
+        android:text="官网点我"/>
 
 </LinearLayout>
