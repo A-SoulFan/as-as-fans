@@ -9,11 +9,28 @@
         <entry key="..\:/GitHub/as-as-fans/app/src/main/res/drawable/icon_asasf_blue_logo.xml" value="0.2255" />
         <entry key="..\:/GitHub/as-as-fans/app/src/main/res/drawable/icon_asasf_colorful_logo.xml" value="0.2255" />
         <entry key="..\:/GitHub/as-as-fans/app/src/main/res/drawable/icon_asasf_white_logo.xml" value="0.2255" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/drawable/shape_for_custom_spinner.xml" value="0.208" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/activity_black_list.xml" value="0.3151041666666667" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/activity_bottom_main.xml" value="0.360054347826087" />
         <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/activity_config.xml" value="0.2201114488348531" />
         <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/activity_lanch.xml" value="0.33697916666666666" />
         <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/activity_main.xml" value="0.3104166666666667" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/dialog_black_list_more.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/dialog_video_more.xml" value="0.360054347826087" />
         <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/dialog_why.xml" value="0.45260416666666664" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/fragment_click_jump.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/fragment_fan_art_image.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/fragment_main.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/fragment_pubdate_video.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/fragment_test.xml" value="0.360054347826087" />
         <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/fragment_tools.xml" value="0.45260416666666664" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/fragment_web.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/image_recyclerview.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/item_for_custom_spinner.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/my_dialog.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/song_player.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/tools_recyclerview.xml" value="0.360054347826087" />
+        <entry key="..\:/GitHub/as-as-fans/app/src/main/res/layout/video_recyclerview.xml" value="0.360054347826087" />
         <entry key="..\:/as-as-fans/app/src/main/res/drawable/all_fragment_button_shape.xml" value="0.2145" />
         <entry key="..\:/as-as-fans/app/src/main/res/drawable/all_fragment_button_shape_selected.xml" value="0.2145" />
         <entry key="..\:/as-as-fans/app/src/main/res/drawable/edit_text_shape.xml" value="0.2145" />

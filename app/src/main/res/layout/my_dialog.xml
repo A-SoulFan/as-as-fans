@@ -15,7 +15,7 @@
         android:text="是否重启APP？"
         android:textStyle="bold"
         android:textColor="#353535"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/dialog_content"
@@ -25,7 +25,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:text="重启以更改底部导航栏\n（如果自动重启有问题手动关闭重启即可）"
-        android:textSize="15sp"
+        android:textSize="15dp"
         android:textColor="#666666"/>
 
     <View
@@ -50,7 +50,7 @@
             android:text="取消"
             android:textStyle="bold"
             android:textColor="@color/tab_text_normal"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
 
         <View
             android:layout_width="1dp"
@@ -66,7 +66,7 @@
             android:text="确定"
             android:textStyle="bold"
             android:textColor="@color/tab_text_normal"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="独属于一个魂的聚合平台"
-        android:textSize="19sp"
+        android:textSize="19dp"
         android:textColor="@color/tab_text_normal"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

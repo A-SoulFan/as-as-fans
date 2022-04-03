@@ -14,7 +14,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:textColor="#353535"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/dialog_content"
@@ -24,14 +24,14 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:text="1. 右侧管理底部栏按钮可以改变底部导航栏\n2. 长按每个条目可以复制原网址\n3. 单击条目可以在app内打开\n4. 如果打开页面为空白说明网页不兼容，请复制网址到浏览器打开\n5. 有些页面第一次加载较慢，请稍微等一会\n6. 感谢每一位用户和开发者"
-        android:textSize="15sp"
+        android:textSize="15dp"
         android:textColor="#666666"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/dialog_official_web"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:textSize="15sp"
+        android:textSize="15dp"
         android:padding="8dp"
         android:textColor="@color/tab_text_normal"
         android:layout_height="wrap_content"

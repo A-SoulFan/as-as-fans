@@ -37,11 +37,11 @@
 
     <TextView
         android:id="@+id/fan_art_author_name"
-        android:layout_width="95sp"
+        android:layout_width="95dp"
         android:layout_height="wrap_content"
         android:text="name"
         android:layout_marginLeft="8dp"
-        android:textSize="15sp"
+        android:textSize="15dp"
         android:textStyle="bold"
         android:textColor="@color/cardBlack"
         app:layout_constraintHorizontal_bias="0"

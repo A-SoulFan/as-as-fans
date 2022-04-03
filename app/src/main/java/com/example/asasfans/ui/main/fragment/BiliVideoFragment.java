@@ -175,7 +175,7 @@ public class BiliVideoFragment extends Fragment {
             ACache aCache = ACache.get(getActivity());
             String tmpACache = aCache.getAsString(url);
             if (tmpACache == null) {
-                OkHttpClient client = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
+                OkHttpClient client = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS).build();
                 Request request = new Request.Builder().url(url)
                         .get().build();
                 Call call = client.newCall(request);
