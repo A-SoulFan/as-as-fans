@@ -4,9 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/lightGray"
     android:layout_height="match_parent">
-    <com.google.android.material.appbar.AppBarLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="0dp"
+        android:id="@+id/emptyViewBlack"
+        android:elevation="5dp"
+        android:outlineProvider="none"
+        android:background="@color/tab_text_normal"/>
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -15,14 +23,14 @@
                 android:id="@+id/activity_black_list_back"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
+                android:layout_margin="12dp"
                 android:src="@drawable/icon_back_white"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:text="黑名单"
                 android:layout_gravity="left"
                 android:layout_marginLeft="1dp"
-                android:textSize="16dp"
+                android:textSize="17dp"
                 android:gravity="center"
                 android:textColor="@color/cardWhite"
                 android:layout_height="match_parent"/>

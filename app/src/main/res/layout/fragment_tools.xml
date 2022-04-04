@@ -5,9 +5,18 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/emptyViewTools"
+        android:elevation="5dp"
+        android:outlineProvider="none"
+        android:background="@color/tab_text_normal"/>
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
         android:id="@+id/appBar"
         android:theme="@style/AppTheme.PopupOverlay">
 
@@ -23,7 +32,7 @@
                 app:layout_constraintRight_toLeftOf="@+id/tools_button"
                 android:id="@+id/image_why"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="16dp"
                 android:scaleType="fitCenter"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
@@ -37,7 +46,7 @@
                 android:id="@+id/tools_button"
                 android:layout_width="80dp"
                 android:gravity="center"
-                android:layout_marginRight="8dp"
+                android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:textColor="@color/cardWhite"
@@ -47,17 +56,14 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tools_recyclerview"
         android:background="@color/backgroundGray"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tools_recyclerview"
-            android:background="@color/backgroundGray"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.core.widget.NestedScrollView>
+        android:layout_width="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="45dp"
+        android:overScrollMode="never"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="match_parent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

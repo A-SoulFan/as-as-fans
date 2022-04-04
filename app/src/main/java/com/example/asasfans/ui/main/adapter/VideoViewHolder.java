@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.R;
@@ -23,6 +24,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     TextView videoLike;
     TextView videoTname;
     ImageView videoMore;
+    ConstraintLayout videoLayout;
 
     public VideoViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -34,5 +36,6 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         videoLike = itemView.findViewById(R.id.videoLike);
         videoTname = itemView.findViewById(R.id.videoTname);
         videoMore = itemView.findViewById(R.id.video_more);
+        videoLayout = itemView.findViewById(R.id.videoLayout);
     }
 }

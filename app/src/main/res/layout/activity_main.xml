@@ -7,20 +7,31 @@
     android:background="@color/lightGray"
     android:layout_height="match_parent">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/emptyViewMain"
+        android:elevation="5dp"
+        android:outlineProvider="none"
+        android:background="@color/tab_text_normal"/>
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/appBar"
         android:theme="@style/AppTheme">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp"
             app:layout_scrollFlags="scroll|enterAlways"
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="5dp"
                 android:gravity="center"
                 app:layout_scrollFlags="scroll|enterAlways"
                 android:minHeight="?actionBarSize"
@@ -44,7 +55,8 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="10dp"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

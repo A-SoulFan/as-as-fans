@@ -11,20 +11,20 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs_bottom"
-            android:layout_gravity="bottom"
-            android:layout_width="match_parent"
-            app:tabIndicatorHeight="0dp"
-            android:clipToPadding="false"
-            app:tabIndicatorColor="@color/tab_text_normal"
-            app:tabMode="fixed"
-            app:tabIndicatorGravity="stretch"
-            app:tabSelectedTextColor="@color/cardWhite"
-            app:tabTextAppearance="@style/TextStyle"
-            android:layout_height="wrap_content"
-            app:tabRippleColor="@android:color/transparent"/>
-    </androidx.viewpager.widget.ViewPager>
+        android:layout_weight="1"
+        android:layout_height="0dp"/>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs_bottom"
+        android:layout_width="match_parent"
+        app:tabIndicatorHeight="0dp"
+        android:clipToPadding="false"
+        app:tabIndicatorColor="@color/tab_text_normal"
+        app:tabMode="fixed"
+        app:tabIndicatorGravity="stretch"
+        app:tabSelectedTextColor="@color/cardWhite"
+        app:tabTextAppearance="@style/TextStyle"
+        android:layout_height="45dp"
+        app:tabRippleColor="@android:color/transparent"/>
+
 
 </LinearLayout>
