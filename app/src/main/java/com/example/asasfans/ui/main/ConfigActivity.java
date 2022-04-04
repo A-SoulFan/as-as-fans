@@ -22,8 +22,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import com.example.asasfans.AsApplication;
 import com.example.asasfans.LaunchActivity;
 import com.example.asasfans.R;
 import com.example.asasfans.TestActivity;
@@ -47,6 +50,7 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
     private ConstraintLayout config_contract_us;
     private LinearLayout config;
     private TextView config_check_version_number;
+    private View emptyView;
     private String latestVersion = "https://api.github.com/repos/A-SoulFan/as-as-fans/releases/latest";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +60,7 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
         config_check_version = findViewById(R.id.config_check_version);
         config_contract_us = findViewById(R.id.config_contract_us);
         config = findViewById(R.id.config);
+        emptyView = findViewById(R.id.emptyViewConfig);
 
         config_check_version_number = findViewById(R.id.config_check_version_number);
 
@@ -65,6 +70,8 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
         config_check_version.setOnClickListener(this::onClick);
         config_contract_us.setOnClickListener(this::onClick);
         config.setOnClickListener(this::onClick);
+        LinearLayoutCompat.LayoutParams layoutParams = new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AsApplication.Companion.getStatusBarHeight());
+        emptyView.setLayoutParams(layoutParams);
 
     }
 

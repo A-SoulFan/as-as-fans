@@ -1,25 +1,31 @@
 package com.example.asasfans.ui.main;
 
+import static com.example.asasfans.util.ViewUtilsKt.setMargin;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.asasfans.AsApplication;
 import com.example.asasfans.R;
 import com.example.asasfans.data.DBOpenHelper;
 import com.example.asasfans.data.VideoDataStoragedInMemory;
 import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.main.adapter.BlackListAdapter;
 import com.example.asasfans.ui.main.adapter.PubdateVideoAdapter;
+import com.google.android.material.appbar.AppBarLayout;
 import com.scwang.smart.refresh.footer.BallPulseFooter;
 import com.scwang.smart.refresh.header.BezierRadarHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -44,6 +50,13 @@ public class BlackListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_black_list);
+
+        View emptyView = findViewById(R.id.emptyViewBlack);
+        CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AsApplication.Companion.getStatusBarHeight());
+        emptyView.setLayoutParams(layoutParams);
+        AppBarLayout appBarLayout = findViewById(R.id.appBar);
+        setMargin(appBarLayout, 0, AsApplication.Companion.getStatusBarHeight(),0,0);
+
         recyclerView = findViewById(R.id.black_list_recyclerview);
         ImageView back = findViewById(R.id.activity_black_list_back);
         back.setOnClickListener(new View.OnClickListener() {

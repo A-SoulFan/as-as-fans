@@ -1,5 +1,8 @@
 package com.example.asasfans.ui.main.adapter;
 
+import static com.example.asasfans.util.ViewUtilsKt.dip2px;
+import static com.example.asasfans.util.ViewUtilsKt.setMargin;
+
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -31,7 +34,6 @@ import com.example.asasfans.ui.main.fragment.BiliVideoFragment;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orhanobut.dialogplus.DialogPlus;
-import com.orhanobut.dialogplus.OnItemClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
 
 import java.io.IOException;
@@ -197,6 +199,11 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 //        Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fadein);
 //        holder.imageView.startAnimation(fadeIn);
 
+        if (position == 0) {
+            setMargin(holder.videoLayout, dip2px(10), dip2px(5), dip2px(10), 0);
+        } else {
+            setMargin(holder.videoLayout, dip2px(10), 0, dip2px(10), 0);
+        }
         Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -222,7 +229,7 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                             videoDataStoragedInMemoryList.get(position).setLike(singleVideoBean.getData().getStat().getLike());
                             holder.videoView.setText(viewNumFormat(singleVideoBean.getData().getStat().getView()) + " 播放");
                             videoDataStoragedInMemoryList.get(position).setView(singleVideoBean.getData().getStat().getView());
-                            holder.videoTname.setText(singleVideoBean.getData().getTname());
+                            holder.videoTname.setText("分区 "+singleVideoBean.getData().getTname());
                             videoDataStoragedInMemoryList.get(position).setTname(singleVideoBean.getData().getTname());
                             videoDataStoragedInMemoryList.get(position).setFirstLoad(false);
                         }else {
@@ -280,7 +287,7 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
             holder.videoDuration.setText(secondsToTime(videoDataStoragedInMemoryList.get(position).getDuration()));
             holder.videoLike.setText(viewNumFormat(videoDataStoragedInMemoryList.get(position).getLike()) + " 点赞");
             holder.videoView.setText(viewNumFormat(videoDataStoragedInMemoryList.get(position).getView()) + " 播放");
-            holder.videoTname.setText(videoDataStoragedInMemoryList.get(position).getTname());
+            holder.videoTname.setText("分区 "+videoDataStoragedInMemoryList.get(position).getTname());
 //            Log.i("getFirstLoad:false", String.valueOf(position));
         }
 
@@ -338,5 +345,4 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
             return viewNum/10000 +"万";
         }
     }
-
 }

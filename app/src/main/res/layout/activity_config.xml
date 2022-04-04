@@ -7,21 +7,30 @@
     app:divider="@color/cardGray"
     app:showDividers="middle"
     android:layout_height="match_parent">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/emptyViewConfig"
+        android:elevation="5dp"
+        android:outlineProvider="none"
+        android:background="@color/tab_text_normal"/>
     <LinearLayout
         android:id="@+id/config"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:orientation="horizontal"
         android:background="@color/tab_text_normal">
         <ImageView
             android:src="@drawable/icon_back_white"
             android:layout_margin="12dp"
             android:layout_width="24dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="24dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="设置"
+            android:layout_gravity="center_vertical"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:textSize="17dp"

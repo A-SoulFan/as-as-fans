@@ -6,18 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.asasfans.AsApplication;
 import com.example.asasfans.LaunchActivity;
 import com.example.asasfans.R;
 import com.example.asasfans.TestActivity;
 import com.example.asasfans.ui.main.BlackListActivity;
 import com.example.asasfans.ui.main.ConfigActivity;
 import com.example.asasfans.ui.main.adapter.SectionsPagerAdapter;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
 
 /**
@@ -57,7 +62,11 @@ public class MainFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
+        View emptyView = view.findViewById(R.id.emptyViewMain);
+        CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AsApplication.Companion.getStatusBarHeight());
+        emptyView.setLayoutParams(layoutParams);
+        AppBarLayout appBarLayout = view.findViewById(R.id.appBar);
+        appBarLayout.setPadding(0,AsApplication.Companion.getStatusBarHeight(),0,0);
         return view;
     }
 

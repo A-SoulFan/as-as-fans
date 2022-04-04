@@ -1,33 +1,34 @@
 package com.example.asasfans.ui.main.fragment;
 
+import static com.example.asasfans.util.ViewUtilsKt.setMargin;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.asasfans.AsApplication;
 import com.example.asasfans.R;
 import com.example.asasfans.ui.customcomponent.MyDialog;
 import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.main.adapter.ToolsAdapter;
+import com.google.android.material.appbar.AppBarLayout;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
@@ -56,6 +57,7 @@ public class ToolsFragment extends Fragment {
                 .setContentHolder(new ViewHolder(R.layout.dialog_why))
                 .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
                 .setContentWidth(ViewGroup.LayoutParams.MATCH_PARENT)
+                .setPadding(0,AsApplication.Companion.getStatusBarHeight(),0,0)
                 .setCancelable(true)
                 .setGravity(Gravity.TOP)
                 .create();
@@ -128,6 +130,11 @@ public class ToolsFragment extends Fragment {
                 }
             }
         });
+        View emptyView = view.findViewById(R.id.emptyViewTools);
+        CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AsApplication.Companion.getStatusBarHeight());
+        emptyView.setLayoutParams(layoutParams);
+        AppBarLayout appBarLayout = view.findViewById(R.id.appBar);
+        setMargin(appBarLayout, 0, AsApplication.Companion.getStatusBarHeight(),0,0);
         return view;
     }
 
