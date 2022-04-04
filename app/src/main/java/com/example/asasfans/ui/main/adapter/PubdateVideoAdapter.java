@@ -154,23 +154,11 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                 dialog.show();
             }
         });
-        
-        // 实现复制 bv 号到剪贴板的复用
-        public void copy2Pasteboard() {
-            ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData mClipData = ClipData.newPlainText("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
-            cm.setPrimaryClip(mClipData);
-        }
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(mContext,mResultBean.get(videoViewHolder.getBindingAdapterPosition()).getBvid(),Toast.LENGTH_SHORT).show();
-                //获取剪贴板管理器：
-//                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-//                ClipData mClipData = ClipData.newPlainText("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
-//                cm.setPrimaryClip(mClipData);
-
                 PackageManager packageManager = mContext.getPackageManager();
                 Intent it = new Intent();
                 Intent intent = packageManager.getLaunchIntentForPackage(PackageName);
@@ -180,8 +168,11 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                     mContext.startActivity(it);
                 }else {
                     Toast.makeText(mContext,"没有bilibili，已复制bv号",Toast.LENGTH_SHORT).show();
-                    copy2Pasteboard();
                     // TODO 通过浏览器打开链接
+                    //获取剪贴板管理器：
+                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData mClipData = ClipData.newPlainText("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+                    cm.setPrimaryClip(mClipData);
                 }
 
             }
@@ -191,7 +182,9 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
             public boolean onLongClick(View v) {
                 Toast.makeText(mContext,videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid() + "已复制到剪贴板",Toast.LENGTH_SHORT).show();
                 //获取剪贴板管理器：
-                copy2Pasteboard();
+                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData mClipData = ClipData.newPlainText("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+                cm.setPrimaryClip(mClipData);
                 return true;
             }
         });
