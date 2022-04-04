@@ -60,9 +60,8 @@
         android:id="@+id/tools_recyclerview"
         android:background="@color/backgroundGray"
         android:layout_width="match_parent"
+        android:paddingBottom="10dp"
         android:clipToPadding="false"
-        android:paddingBottom="45dp"
-        android:overScrollMode="never"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_height="match_parent" />
 

@@ -76,6 +76,7 @@ public class ToolsFragment extends Fragment {
         ToolsAdapter toolsAdapter = new ToolsAdapter(getActivity());
         toolsAdapter.setHasStableIds(true);
         recyclerView.setAdapter(toolsAdapter);
+        setMargin(recyclerView, 0, 0, 0, AsApplication.Companion.getStatusBarHeight());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false){
             @Override
             public boolean canScrollVertically() {
