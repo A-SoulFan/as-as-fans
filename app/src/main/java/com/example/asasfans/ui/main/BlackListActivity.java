@@ -58,6 +58,7 @@ public class BlackListActivity extends AppCompatActivity {
         setMargin(appBarLayout, 0, AsApplication.Companion.getStatusBarHeight(),0,0);
 
         recyclerView = findViewById(R.id.black_list_recyclerview);
+        setMargin(recyclerView, 0, 0, 0, AsApplication.Companion.getStatusBarHeight());
         ImageView back = findViewById(R.id.activity_black_list_back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override

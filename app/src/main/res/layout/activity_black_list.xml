@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
         <LinearLayout
+            android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <ImageView
@@ -43,16 +44,12 @@
             android:layout_height="wrap_content"/>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/black_list_recyclerview"
         android:background="@color/backgroundGray"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/black_list_recyclerview"
-            android:background="@color/backgroundGray"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.core.widget.NestedScrollView>
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="match_parent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
