@@ -16,13 +16,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.example.asasfans.AsApplication;
 import com.example.asasfans.R;
 import com.example.asasfans.data.ImageDataBean;
 import com.example.asasfans.ui.main.adapter.ImageAdapter;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -56,6 +59,7 @@ import okhttp3.Response;
 
 import static com.example.asasfans.ui.main.fragment.BiliVideoFragment.GET_DATA_SUCCESS;
 import static com.example.asasfans.ui.main.fragment.BiliVideoFragment.NETWORK_ERROR;
+import static com.example.asasfans.util.ViewUtilsKt.setMargin;
 
 /**
  * @author: akari
@@ -156,12 +160,18 @@ public class ImageFanArtFragment extends Fragment {
         cachedThreadPool.execute(networkTask.setParam(imageUrl.getUrl()));
 //        cachedThreadPool.execute(networkTask.setParam(imageUrl.getUrl()));
 //        new Thread(networkTask.setParam("https://api.asoul.cloud:8000/getPic?page=1&sort=3&part=0&rank=0&type=1")).start();
+        View emptyView = view.findViewById(R.id.emptyViewFanArt);
+        CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AsApplication.Companion.getStatusBarHeight());
+        emptyView.setLayoutParams(layoutParams);
+        AppBarLayout appBarLayout = view.findViewById(R.id.appBar);
+        setMargin(appBarLayout, 0, AsApplication.Companion.getStatusBarHeight(),0,0);
         return view;
     }
 
     private void initImageAdapter(){
         imageAdapter = new ImageAdapter(getActivity(), imageRecyclerViewData.size(), imageRecyclerViewData);
         recyclerView = view.findViewById(R.id.fan_art_image_recyclerview);
+        setMargin(recyclerView, 0, 0, 0, AsApplication.Companion.getStatusBarHeight());
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         RecyclerView.ItemDecoration gridItemDecoration = new RecyclerView.ItemDecoration() {
             @Override

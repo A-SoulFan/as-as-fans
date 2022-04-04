@@ -42,15 +42,18 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.asasfans.AsApplication;
 import com.example.asasfans.R;
 import com.example.asasfans.TestActivity;
 import com.example.asasfans.receiver.XMPlayerReceiver;
@@ -119,6 +122,11 @@ public class WebFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_web, container, false);
         webView = view.findViewById(R.id.webView);
         progressBar = view.findViewById(R.id.pb);
+
+        View emptyView = view.findViewById(R.id.emptyViewWeb);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AsApplication.Companion.getStatusBarHeight());
+        emptyView.setLayoutParams(layoutParams);
+
         RefreshLayout refreshLayout = (RefreshLayout)view.findViewById(R.id.web_refreshLayout);
         refreshLayout.setRefreshHeader(new BezierRadarHeader(getActivity()));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
