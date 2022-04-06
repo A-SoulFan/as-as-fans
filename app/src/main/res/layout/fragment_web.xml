@@ -7,6 +7,14 @@
     android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/emptyViewWeb"
+        android:elevation="5dp"
+        android:outlineProvider="none"
+        android:background="@color/tab_text_normal"/>
+
     <ProgressBar
         android:id="@+id/pb"
         android:indeterminateTintMode="src_atop"
