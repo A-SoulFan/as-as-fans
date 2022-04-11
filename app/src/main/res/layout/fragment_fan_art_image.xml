@@ -79,7 +79,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/backgroundGray"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -88,19 +88,13 @@
             android:id="@+id/fan_art_image_refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.scwang.smart.refresh.header.BezierRadarHeader
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fan_art_image_recyclerview"
                 android:background="@color/backgroundGray"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-            <com.scwang.smart.refresh.footer.BallPulseFooter
-                app:srlAnimatingColor="@color/tab_text_normal"
-                app:srlNormalColor="@color/tab_text_normal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+
         </com.scwang.smart.refresh.layout.SmartRefreshLayout>
     </androidx.core.widget.NestedScrollView>
 

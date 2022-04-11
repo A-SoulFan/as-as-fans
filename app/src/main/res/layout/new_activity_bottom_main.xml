@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        ></androidx.viewpager.widget.ViewPager>
+
+    <com.chaychan.viewlib.bottombarlayout.BottomBarLayout
+        android:id="@+id/bbl"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="@color/light_gray"
+        >
+
+        <com.chaychan.viewlib.bottombarlayout.BottomBarItem
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            app:iconNormal="@drawable/ic_new_video"
+            app:iconSelected="@drawable/ic_new_video_pressed"
+            app:itemText="视频"
+            app:textColorNormal="@color/cardGray"
+            app:textColorSelected="@color/tab_text_normal"
+            app:itemTextSize="8dp"
+            app:itemMarginTop="-1dp"
+            />
+
+        <com.chaychan.viewlib.bottombarlayout.BottomBarItem
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            app:iconNormal="@drawable/ic_new_pic"
+            app:iconSelected="@drawable/ic_new_pic_pressed"
+            app:itemText="图片"
+            app:textColorNormal="@color/cardGray"
+            app:textColorSelected="@color/tab_text_normal"
+            app:itemTextSize="8dp"
+            app:itemMarginTop="-1dp"
+            />
+
+
+        <com.chaychan.viewlib.bottombarlayout.BottomBarItem
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            app:iconNormal="@drawable/ic_new_music"
+            app:iconSelected="@drawable/ic_new_music_pressed"
+            app:itemText="音乐"
+            app:textColorNormal="@color/cardGray"
+            app:textColorSelected="@color/tab_text_normal"
+            app:itemTextSize="8dp"
+            app:itemMarginTop="-1dp"
+            />
+
+        <com.chaychan.viewlib.bottombarlayout.BottomBarItem
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            app:iconNormal="@drawable/ic_new_other_tools"
+            app:iconSelected="@drawable/ic_new_other_tools_pressed"
+            app:itemText="工具"
+            app:textColorNormal="@color/cardGray"
+            app:textColorSelected="@color/tab_text_normal"
+            app:itemTextSize="8dp"
+            app:itemMarginTop="-1dp"
+            />
+
+    </com.chaychan.viewlib.bottombarlayout.BottomBarLayout>
+
+</LinearLayout>

@@ -15,16 +15,18 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:minHeight="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:id="@+id/appBar"
         android:theme="@style/AppTheme.PopupOverlay">
+<!--        android:minHeight="?attr/actionBarSize"-->
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:layout_height="match_parent">
             <ImageView
+                android:visibility="gone"
                 android:src="@drawable/icon_about"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -39,6 +41,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"/>
             <TextView
+                android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

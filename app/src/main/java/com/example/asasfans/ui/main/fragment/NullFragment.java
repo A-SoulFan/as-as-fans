@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.asasfans.R;
-import com.example.asasfans.TestActivity;
 import com.example.asasfans.data.TabData;
 
 import java.util.ArrayList;

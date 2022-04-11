@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+  <path
+      android:fillColor="@color/tab_text_normal"
+      android:pathData="M512,992C246.91,992 32,777.09 32,512 32,246.91 246.91,32 512,32c265.09,0 480,214.91 480,480 0,265.09 -214.91,480 -480,480zM512,928c229.76,0 416,-186.24 416,-416S741.76,96 512,96 96,282.24 96,512s186.24,416 416,416z"/>
+  <path
+      android:fillColor="@color/tab_text_normal"
+      android:pathData="M256,544a32,32 0,0 1,0 -64h512a32,32 0,0 1,0 64H256z"/>
+  <path
+      android:fillColor="@color/tab_text_normal"
+      android:pathData="M480,256a32,32 0,0 1,64 0v512a32,32 0,0 1,-64 0V256z"/>
+</vector>

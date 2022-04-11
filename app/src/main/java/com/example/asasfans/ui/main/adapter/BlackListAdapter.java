@@ -52,7 +52,7 @@ public class BlackListAdapter extends PubdateVideoAdapter{
                 appCompatButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        DBOpenHelper dbOpenHelper = new DBOpenHelper(context,"blackList.db",null,1);
+                        DBOpenHelper dbOpenHelper = new DBOpenHelper(context,"blackList.db",null,DBOpenHelper.DB_VERSION);
                         SQLiteDatabase sqliteDatabase = dbOpenHelper.getWritableDatabase();
                         sqliteDatabase.delete("blackBvid", "bvid=?", new String[]{videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid()});
                         sqliteDatabase.close();

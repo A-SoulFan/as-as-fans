@@ -16,12 +16,8 @@
         app:srlPrimaryColor="@color/lightGray"
         app:srlAccentColor="@color/tab_text_normal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.scwang.smart.refresh.header.BezierRadarHeader
-            app:srlPrimaryColor="@color/lightGray"
-            app:srlAccentColor="@color/tab_text_normal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:clipToPadding="false"
@@ -31,11 +27,33 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <com.scwang.smart.refresh.footer.BallPulseFooter
-            app:srlAnimatingColor="@color/tab_text_normal"
-            app:srlNormalColor="@color/tab_text_normal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+    <ImageView
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
+        android:id="@+id/to_top"
+        android:padding="0dp"
+        android:visibility="gone"
+        android:src="@drawable/ic_top"
+        android:layout_width="48dp"
+        android:layout_height="48dp"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_anchor="@id/refreshLayout"
+        android:clickable="true"
+        android:visibility="gone"
+        app:elevation="5dp"
+        app:fabSize="auto"
+        android:layout_margin="12dp"
+        app:layout_anchorGravity="bottom|right|end"
+        android:padding="0dp"
+        android:src="@drawable/ic_fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

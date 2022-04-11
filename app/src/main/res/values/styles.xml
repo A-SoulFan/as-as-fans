@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/tab_text_normal</item>
         <item name="colorPrimaryDark">@color/tab_text_normal</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/tab_text_normal</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
@@ -60,4 +60,22 @@
         <item name="android:dividerHeight">1dp</item>
     </style>
 
+    <!-- flexlayout中tag选择框自定义主题 -->
+    <style name="select_flex_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:background">@drawable/select_selector</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@drawable/txt_select_selector</item>
+    </style>
 </resources>

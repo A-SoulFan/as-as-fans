@@ -1,28 +1,14 @@
 package com.example.asasfans.ui.main.fragment;
 
-import static android.app.Notification.CATEGORY_MESSAGE;
-import static android.app.Notification.DEFAULT_ALL;
-import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static android.content.Context.DOWNLOAD_SERVICE;
 
-import static androidx.core.app.NotificationCompat.PRIORITY_MAX;
-import static com.example.asasfans.receiver.XMPlayerReceiver.PLAY_NEXT;
-import static com.example.asasfans.receiver.XMPlayerReceiver.PLAY_PAUSE;
-import static com.example.asasfans.receiver.XMPlayerReceiver.PLAY_PLAY;
-import static com.example.asasfans.receiver.XMPlayerReceiver.PLAY_PRE;
-
 import android.app.DownloadManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,20 +30,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.asasfans.AsApplication;
 import com.example.asasfans.R;
-import com.example.asasfans.TestActivity;
-import com.example.asasfans.receiver.XMPlayerReceiver;
-import com.example.asasfans.ui.main.ConfigActivity;
 import com.scwang.smart.refresh.header.BezierRadarHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -128,6 +108,8 @@ public class WebFragment extends Fragment {
         emptyView.setLayoutParams(layoutParams);
 
         RefreshLayout refreshLayout = (RefreshLayout)view.findViewById(R.id.web_refreshLayout);
+        //先关掉下拉刷新
+        refreshLayout.setEnableRefresh(false);
         refreshLayout.setRefreshHeader(new BezierRadarHeader(getActivity()));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -373,7 +355,7 @@ public class WebFragment extends Fragment {
     private void downloadByBrowser(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        getContext().startActivity(intent);
+        getActivity().startActivity(intent);
     }
 
     private void downloadBySystem(String url, String contentDisposition, String mimeType) {

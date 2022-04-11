@@ -10,6 +10,7 @@ public class VideoDataStoragedInMemory {
     private String Tname;
     private String Bvid;
     private Boolean firstLoad;
+    private String description;
 
     public VideoDataStoragedInMemory(String picUrl, String title, int duration, String author, int view, int like, String tname, String bvid, Boolean firstLoad) {
         PicUrl = picUrl;
@@ -93,5 +94,13 @@ public class VideoDataStoragedInMemory {
 
     public void setFirstLoad(Boolean firstLoad) {
         this.firstLoad = firstLoad;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

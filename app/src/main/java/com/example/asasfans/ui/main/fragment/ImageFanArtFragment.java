@@ -1,11 +1,14 @@
 package com.example.asasfans.ui.main.fragment;
 
+import static com.example.asasfans.ui.main.fragment.BiliVideoFragment.GET_DATA_SUCCESS;
+import static com.example.asasfans.ui.main.fragment.BiliVideoFragment.NETWORK_ERROR;
+import static com.example.asasfans.util.ViewUtilsKt.setMargin;
+
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +33,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smart.refresh.footer.BallPulseFooter;
+import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.BezierRadarHeader;
+import com.scwang.smart.refresh.header.MaterialHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -56,10 +61,6 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import static com.example.asasfans.ui.main.fragment.BiliVideoFragment.GET_DATA_SUCCESS;
-import static com.example.asasfans.ui.main.fragment.BiliVideoFragment.NETWORK_ERROR;
-import static com.example.asasfans.util.ViewUtilsKt.setMargin;
 
 /**
  * @author: akari
@@ -132,11 +133,11 @@ public class ImageFanArtFragment extends Fragment {
 
         imageUrl = new ImageUrl();
         refreshLayout = (RefreshLayout)view.findViewById(R.id.fan_art_image_refreshLayout);
-        refreshLayout.setRefreshHeader(new BezierRadarHeader(getActivity()));
+        refreshLayout.setRefreshHeader(new MaterialHeader(getActivity()).setColorSchemeResources(R.color.tab_text_normal,R.color.cardWhite,R.color.cardWhite));
+        refreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
         refreshLayout.setDragRate(1f);
         refreshLayout.setEnableAutoLoadMore(true);
         refreshLayout.setHeaderTriggerRate((float) 0.3);
-        refreshLayout.setRefreshFooter(new BallPulseFooter(getActivity()));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
@@ -200,9 +201,9 @@ public class ImageFanArtFragment extends Fragment {
 
     private void initSpinner() {
         //声明一个下拉列表的数组适配器
-        ArrayAdapter<String> starAdapterOrder = new ArrayAdapter<String>(this.getActivity(), R.layout.item_for_custom_spinner, order);
-        ArrayAdapter<String> starAdapterDate = new ArrayAdapter<String>(this.getActivity(), R.layout.item_for_custom_spinner, date);
-        ArrayAdapter<String> starAdapterTag = new ArrayAdapter<String>(this.getActivity(), R.layout.item_for_custom_spinner, tag);
+        ArrayAdapter<String> starAdapterOrder = new ArrayAdapter<String>(this.getContext(), R.layout.item_for_custom_spinner, order);
+        ArrayAdapter<String> starAdapterDate = new ArrayAdapter<String>(this.getContext(), R.layout.item_for_custom_spinner, date);
+        ArrayAdapter<String> starAdapterTag = new ArrayAdapter<String>(this.getContext(), R.layout.item_for_custom_spinner, tag);
         //设置数组适配器的布局样式
 //        starAdapter.setDropDownViewResource(R.layout.spinner_item_select);
         //从布局文件中获取下拉框
@@ -363,7 +364,7 @@ public class ImageFanArtFragment extends Fragment {
                 case GET_DATA_SUCCESS:
                     if (val.equals("{\"code\": 1, \"message\": \"\\u6ca1\\u6709\\u66f4\\u591a\\u6570\\u636e\"}")){
                         imageUrl.pageSelfDecrement();
-                        Toast.makeText(getContext(),"后面没有了~",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"后面没有了~",Toast.LENGTH_SHORT).show();
 //                        Log.i("GET_DATA_SUCCESS", val);
                         break;
                     }else {
@@ -372,7 +373,7 @@ public class ImageFanArtFragment extends Fragment {
                         int pastSize = imageRecyclerViewData.size();
                         imageRecyclerViewData.addAll(imageDataBean);
                         if (imageRecyclerViewData.size() == 0){
-                            Toast.makeText(getContext(),"什么都没有了~",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),"什么都没有了~",Toast.LENGTH_SHORT).show();
                         }
                         imageAdapter.notifyItemRangeChanged(pastSize, imageDataBean.size());
                     }

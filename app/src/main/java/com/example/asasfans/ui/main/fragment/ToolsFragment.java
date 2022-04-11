@@ -123,11 +123,11 @@ public class ToolsFragment extends Fragment {
                         }
                     }).show();
 //                    Toast.makeText(getContext(),"手动重启以变更底部栏哦",Toast.LENGTH_SHORT).show();
-                    textView.setBackgroundColor(getContext().getResources().getColor(R.color.tab_text_normal));
-                    textView.setTextColor(getContext().getResources().getColor(R.color.cardWhite));
+                    textView.setBackgroundColor(getActivity().getResources().getColor(R.color.tab_text_normal));
+                    textView.setTextColor(getActivity().getResources().getColor(R.color.cardWhite));
                 }else {
-                    textView.setBackgroundColor(getContext().getResources().getColor(R.color.backgroundGray));
-                    textView.setTextColor(getContext().getResources().getColor(R.color.cardBlack));
+                    textView.setBackgroundColor(getActivity().getResources().getColor(R.color.backgroundGray));
+                    textView.setTextColor(getActivity().getResources().getColor(R.color.cardBlack));
                 }
             }
         });

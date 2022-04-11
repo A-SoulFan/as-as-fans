@@ -1,0 +1,28 @@
+<vector android:height="35.26641dp" android:viewportHeight="71.63"
+    android:viewportWidth="73.12" android:width="36dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="@color/tab_text_normal" android:pathData="M30.77,33.73l-4.79,0.2a17.66,17.66 0,0 0,0 35.3l4.79,0.19V33.73Z"/>
+    <path android:fillColor="@color/tab_text_normal" android:pathData="M42.34,33.73V69.42l4.79,-0.19a17.66,17.66 0,0 0,0 -35.3l-4.79,-0.2Z"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M28.5,33.82L28.5,69.33"
+        android:strokeColor="@color/tab_text_normal" android:strokeLineCap="round"
+        android:strokeLineJoin="round" android:strokeWidth="4.6"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M44.27,33.82L44.27,69.33"
+        android:strokeColor="@color/tab_text_normal" android:strokeLineCap="round"
+        android:strokeLineJoin="round" android:strokeWidth="4.6"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M10.94,51.31H5.63a33.93,33.93 0,0 1,-1.89 -4.9,34.26 34.26,0 1,1 65.59,0.14 33.45,33.45 0,0 1,-1.91 4.91H62.13"
+        android:strokeColor="@color/tab_text_normal" android:strokeLineJoin="round" android:strokeWidth="4.6"/>
+    <path android:fillColor="@color/queenLight" android:pathData="M26.17,38.52V64.63a13.07,13.07 0,0 1,0 -26.11"/>
+    <path android:fillColor="@color/queenLight" android:pathData="M13.63,51.34c0,0.08 0,0.16 0,0.24a13.07,13.07 0,0 0,12.55 13V51.34Z"/>
+    <path android:fillColor="@color/queenLight" android:pathData="M46.94,38.52a13.07,13.07 0,0 1,0 26.11V38.52"/>
+    <path android:fillColor="@color/queenLight" android:pathData="M46.94,64.63a13.07,13.07 0,0 0,12.55 -13c0,-0.08 0,-0.16 0,-0.24H46.94Z"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M52.57,46.69A6.57,6.57 0,0 1,52.64 56"
+        android:strokeColor="@color/queenLight" android:strokeLineCap="round"
+        android:strokeLineJoin="round" android:strokeWidth="4.6"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M20.77,46.69A6.57,6.57 0,0 0,20.7 56"
+        android:strokeColor="@color/queenLight" android:strokeLineCap="round"
+        android:strokeLineJoin="round" android:strokeWidth="4.6"/>
+</vector>

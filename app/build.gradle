@@ -10,10 +10,16 @@ android {
         minSdkVersion 25
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 25
-        versionCode 114
-        versionName "1.1.4"
+        versionCode 120
+        versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -69,4 +75,22 @@ dependencies {
     // debugImplementation because LeakCanary should only run in debug builds.
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
+
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
+    implementation('com.fasterxml.jackson.core:jackson-core:2.11.1')
+    implementation('com.fasterxml.jackson.core:jackson-annotations:2.11.1')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.11.1')
+
+    //更好用的EditText
+    implementation('com.github.chaychan:PowerfulViewLibrary:1.2.2')
+    //简单的底部栏
+//    implementation('com.github.chaychan:BottomBarLayout:2.0.2')
+    //更好的spinner
+    implementation('com.github.arcadefire:nice-spinner:1.4.4')
+    //更好的radiobutton
+    implementation('com.zaaach:tabradiobutton:1.0.2')
+    //ios风日期选择器
+    implementation('com.contrarywind:Android-PickerView:4.1.9')
+
 }

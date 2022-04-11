@@ -5,13 +5,10 @@ import static com.example.asasfans.util.ViewUtilsKt.setMargin;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -26,19 +23,10 @@ import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.main.adapter.BlackListAdapter;
 import com.example.asasfans.ui.main.adapter.PubdateVideoAdapter;
 import com.google.android.material.appbar.AppBarLayout;
-import com.scwang.smart.refresh.footer.BallPulseFooter;
-import com.scwang.smart.refresh.header.BezierRadarHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class BlackListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -66,7 +54,7 @@ public class BlackListActivity extends AppCompatActivity {
                 finish();
             }
         });
-        DBOpenHelper dbOpenHelper = new DBOpenHelper(this,"blackList.db",null,1);
+        DBOpenHelper dbOpenHelper = new DBOpenHelper(this,"blackList.db",null,DBOpenHelper.DB_VERSION);
         SQLiteDatabase sqliteDatabase = dbOpenHelper.getReadableDatabase();
         Cursor cursor = sqliteDatabase.query("blackBvid",null,null,null,null,null,null);
         if (cursor.getCount() > 0) {

@@ -1,40 +1,40 @@
 package com.example.asasfans;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.asasfans.data.GiteeVersionBean;
+import com.chaychan.viewlib.bottombarlayout.BottomBarItem;
+import com.chaychan.viewlib.bottombarlayout.BottomBarLayout;
 import com.example.asasfans.data.GithubVersionBean;
-import com.example.asasfans.data.SingleVideoBean;
 import com.example.asasfans.data.TabData;
 import com.example.asasfans.ui.main.adapter.BottomPagerAdapter;
+import com.example.asasfans.ui.main.adapter.NewBottomPagerAdapter;
+import com.example.asasfans.ui.main.adapter.ToolsAdapter;
 import com.example.asasfans.ui.main.fragment.ImageFanArtFragment;
 import com.example.asasfans.ui.main.fragment.MainFragment;
-import com.example.asasfans.ui.main.adapter.ToolsAdapter;
 import com.example.asasfans.ui.main.fragment.ToolsFragment;
 import com.example.asasfans.ui.main.fragment.WebFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -66,6 +66,7 @@ import java.util.Map;
  *                       现在换成了开源库imageloader，它的方式是把图片下载到存储里，
  *                       遇到相同的url直接从存储中加载。
  *                       修改了预加载页面数量，全部预加载。
+ *              2022/4/10 固定了页面
  */
 
 public class TestActivity extends AppCompatActivity {
@@ -87,6 +88,11 @@ public class TestActivity extends AppCompatActivity {
     private DialogPlus dialog;
     private View dialogView;
 
+    private BottomBarLayout bottomBarLayout;
+
+    private RotateAnimation mRotateAnimation;
+    private Handler mHandler = new Handler();
+
     /*
     权限相关
      */
@@ -102,22 +108,69 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.new_activity_bottom_main);
         initImageLoader();
         checkPermission();
-        setContentView(R.layout.activity_bottom_main);
-
-        //恢复时会第二次添加底部导航栏
-        mFragmentList.clear();
-        initTab();
-
-
-        bottomPagerAdapter = new BottomPagerAdapter(this, getSupportFragmentManager(), mFragmentList);
-        mCurrentFragment = bottomPagerAdapter.getCurrentFragment();
-        viewPager = findViewById(R.id.view_pager_main);
-        viewPager.setAdapter(bottomPagerAdapter);
+//        setContentView(R.layout.activity_bottom_main);
+//
+//        //恢复时会第二次添加底部导航栏
+//        mFragmentList.clear();
+//        initTab();
+//
+//
+//        bottomPagerAdapter = new BottomPagerAdapter(this, getSupportFragmentManager(), mFragmentList);
+//        mCurrentFragment = bottomPagerAdapter.getCurrentFragment();
+//        viewPager = findViewById(R.id.view_pager_main);
+//        viewPager.setAdapter(bottomPagerAdapter);
+//        viewPager.setOffscreenPageLimit(4);
+//        tabs = findViewById(R.id.tabs_bottom);
+//        tabs.setupWithViewPager(viewPager);
+        bottomBarLayout = findViewById(R.id.bbl);
+        viewPager = findViewById(R.id.vp_content);
+        viewPager.setAdapter(new NewBottomPagerAdapter(getSupportFragmentManager()));
         viewPager.setOffscreenPageLimit(4);
-        tabs = findViewById(R.id.tabs_bottom);
-        tabs.setupWithViewPager(viewPager);
+        bottomBarLayout.setViewPager(viewPager);
+
+        bottomBarLayout.setOnItemSelectedListener(new BottomBarLayout.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(BottomBarItem bottomBarItem, int position) {
+                switch (position){
+                    case 0:
+                        BottomBarItem bottomItem = bottomBarLayout.getBottomItem(0);
+                        bottomItem.setIconSelectedResourceId(R.drawable.ic_new_video_pressed);//更换为原来的图标
+
+                        cancelTabLoading(bottomItem);//停止旋转动画
+                        if (bottomBarLayout.getCurrentItem() == position){
+//                            bottomBarItem.setIconSelectedResourceId(R.drawable.ic_loading);//更换成加载图标
+//                            bottomBarItem.setStatus(true);
+//                            //播放旋转动画
+//                            if (mRotateAnimation == null) {
+//                                mRotateAnimation = new RotateAnimation(0, 360,
+//                                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+//                                        0.5f);
+//                                mRotateAnimation.setDuration(800);
+//                                mRotateAnimation.setRepeatCount(-1);
+//                            }
+//                            ImageView bottomImageView = bottomBarItem.getImageView();
+//                            bottomImageView.setAnimation(mRotateAnimation);
+//                            bottomImageView.startAnimation(mRotateAnimation);//播放旋转动画
+//
+//                            //模拟数据刷新完毕
+//                            mHandler.postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    bottomBarItem.setIconSelectedResourceId(R.drawable.ic_video_dark);//更换成首页原来图标
+//                                    bottomBarItem.setStatus(true);//刷新图标
+//                                    cancelTabLoading(bottomBarItem);
+//                                }
+//                            },500);
+                            return;
+                        }
+                    default:
+
+                }
+            }
+        });
 
         //设置分割线
 //        LinearLayout linearLayout = (LinearLayout) tabs.getChildAt(0);
@@ -141,13 +194,13 @@ public class TestActivity extends AppCompatActivity {
                 int versionCode = Integer.valueOf(versionCodeString[0]) * 100 + Integer.valueOf(versionCodeString[1]) * 10 + Integer.valueOf(versionCodeString[2]) * 1;
                 if (versionCode > getVersionCode(TestActivity.this)) {
                     initDialog(TestActivity.this);
-                    TextView title = dialogView.findViewById(R.id.dialog_title);
-                    TextView content = dialogView.findViewById(R.id.dialog_content);
-                    TextView cancel = dialogView.findViewById(R.id.cancel);
-                    TextView confirm = dialogView.findViewById(R.id.confirm);
-                    title.setText("新版本提醒");
+                    TextView title = dialogView.findViewById(R.id.title);
+                    TextView content = dialogView.findViewById(R.id.upgrade_content);
+                    TextView cancel = dialogView.findViewById(R.id.close);
+                    TextView confirm = dialogView.findViewById(R.id.upgrade);
+
                     content.setText(githubVersionBean.getBody());
-                    confirm.setText("去下载");
+
                     confirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -168,13 +221,21 @@ public class TestActivity extends AppCompatActivity {
         }
     }
 
+    private void cancelTabLoading(BottomBarItem bottomItem) {
+        Animation animation = bottomItem.getImageView().getAnimation();
+        if (animation != null){
+            animation.cancel();
+        }
+    }
+
     private void initDialog(Context context){
         dialog = DialogPlus.newDialog(context)
-                .setContentHolder(new ViewHolder(R.layout.my_dialog))
+                .setContentHolder(new ViewHolder(R.layout.dialog_upgrade))
                 .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-                .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setContentWidth(ViewGroup.LayoutParams.MATCH_PARENT)
                 .setCancelable(true)
                 .setGravity(Gravity.CENTER)
+                .setContentBackgroundResource(R.color.transparent)
                 .create();
         dialogView = dialog.getHolderView();
     }

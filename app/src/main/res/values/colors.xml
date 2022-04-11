@@ -14,5 +14,20 @@
     <color name="cardWhite">#ffffff</color>
 
     <color name="tab_text_selected">#0084e8</color>
-    <color name="tab_text_normal">#7597b3</color>
+    <color name="tab_text_normal">#576691</color>
+
+    <color name="bella">#DB7D74</color>
+    <color name="bellaLight">#b33a67</color>
+    <color name="bellaDark">#dc8da3</color>
+
+    <color name="queenDark">#30384f</color>
+    <color name="queenLight">#7885a7</color>
+
+    <color name="ava">#90c1df</color>
+    <color name="avaLight">#a5cde6</color>
+    <color name="avaDark">#387cad</color>
+
+    <color name="transparent">#00000000</color>
+
+
 </resources>

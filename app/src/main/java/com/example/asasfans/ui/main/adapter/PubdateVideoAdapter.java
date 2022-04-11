@@ -12,14 +12,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,26 +26,21 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.R;
+import com.example.asasfans.data.AdvancedSearchDataBean;
 import com.example.asasfans.data.DBOpenHelper;
-import com.example.asasfans.data.SingleVideoBean;
 import com.example.asasfans.data.VideoDataStoragedInMemory;
-import com.example.asasfans.ui.main.fragment.BiliVideoFragment;
-import com.google.gson.Gson;
+import com.google.android.flexbox.FlexboxLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.OnClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
 
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * @author akarinini
@@ -62,18 +56,28 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     private final String PackageName = "tv.danmaku.bili";
     private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
     private List<VideoDataStoragedInMemory> videoDataStoragedInMemoryList = new ArrayList<>();
+    private List<AdvancedSearchDataBean.DataBean.ResultBean> resultBeans = new ArrayList<>();
     private DialogPlus dialog;
     private View dialogView;
+    private List<CheckBox> checkBoxs = new ArrayList<CheckBox>();
     DBOpenHelper dbOpenHelper;
     SQLiteDatabase db;
 
     public PubdateVideoAdapter(Context context, List<VideoDataStoragedInMemory> videosBvid) {
         this.mContext = context;
         this.videoDataStoragedInMemoryList = videosBvid;
-        dbOpenHelper = new DBOpenHelper(context, "blackList.db", null, 1);
+        dbOpenHelper = new DBOpenHelper(context, "blackList.db", null, DBOpenHelper.DB_VERSION);
         db = dbOpenHelper.getWritableDatabase();
         initDialog();
     }
+    public PubdateVideoAdapter(Context context, List<AdvancedSearchDataBean.DataBean.ResultBean> resultBeans, int pageNums) {
+        this.mContext = context;
+        this.resultBeans = resultBeans;
+        dbOpenHelper = new DBOpenHelper(context, "blackList.db", null, DBOpenHelper.DB_VERSION);
+        db = dbOpenHelper.getWritableDatabase();
+        initDialog();
+    }
+
     public void closeSQL(){
         db.close();
         dbOpenHelper.close();
@@ -85,10 +89,34 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                 .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
                 .setContentWidth(ViewGroup.LayoutParams.MATCH_PARENT)
                 .setCancelable(true)
+                .setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(DialogPlus dialog, View view) {
+                        dialog.dismiss();
+                    }
+                })
                 .setGravity(Gravity.BOTTOM)
                 .create();
         dialogView = dialog.getHolderView();
     }
+
+    public static String[] tagFormat(String tag){
+        return tag.replace("\'", "").replace(" ", "").split(",");
+    }
+    public static String stampToDate(String s) {
+        if(s.length() == 10){
+            s=s+"000";
+        }
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        //如果它本来就是long类型的,则不用写这一步
+        long lt = new Long(s);
+//        Date date = new Date(lt * 1000);
+        Date date = new Date(lt );
+        res = simpleDateFormat.format(date);
+        return res;
+    }
+
 
     @NonNull
     @Override
@@ -99,60 +127,124 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
             @Override
             public void onClick(View view) {
                 AppCompatButton blacklistVideo =  dialogView.findViewById(R.id.dialog_black_list);
-//                AppCompatButton blacklistAuthor =  dialogView.findViewById(R.id.dialog_black_list_author);
+                AppCompatButton blacklistAuthor =  dialogView.findViewById(R.id.dialog_black_list_add_author);
+                AppCompatButton blacklistTag =  dialogView.findViewById(R.id.dialog_black_list_add_tag);
+                FlexboxLayout flexboxLayout = dialogView.findViewById(R.id.dialog_black_list_tag_flexbox);
+                TextView videoUpdateTime = dialogView.findViewById(R.id.video_update_time);
+                TextView dialog_black_list_video_desc = dialogView.findViewById(R.id.dialog_black_list_video_desc);
+
+                videoUpdateTime.setText(stampToDate(String.valueOf(resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getPubdate())));
+                dialog_black_list_video_desc.setText(resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getDesc());
+
+                flexboxLayout.removeAllViews();
+                checkBoxs.clear();
+                String[] tagList = tagFormat(resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getTag());
+                for (int i = 0; i < tagList.length; i++){
+                    CheckBox checkBox = (CheckBox) LayoutInflater.from(mContext).inflate(R.layout.checkbox_tag, parent,false);
+
+                    checkBox.setText(tagList[i]);
+                    checkBoxs.add(checkBox);
+                    //有些tag是空格，不加入布局
+                    if (!checkBoxs.get(i).getText().equals("")) {
+                        flexboxLayout.addView(checkBox);
+                    }
+                }
                 blacklistVideo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Log.i("appCompatButton", "onClick");
                         try {
-                            DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext,"blackList.db",null,1);
+                            DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext,"blackList.db",null,DBOpenHelper.DB_VERSION);
                             SQLiteDatabase sqliteDatabase = dbOpenHelper.getWritableDatabase();
                             ContentValues values = new ContentValues();
-                            values.put("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
-                            values.put("PicUrl", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getPicUrl());
-                            values.put("Title", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getTitle());
-                            values.put("Duration", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getDuration());
-                            values.put("Author", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getAuthor());
-                            values.put("ViewNum", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getView());
-                            values.put("LikeNum", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getLike());
-                            values.put("Tname", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getTname());
+//                            values.put("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+//                            values.put("PicUrl", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getPicUrl());
+//                            values.put("Title", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getTitle());
+//                            values.put("Duration", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getDuration());
+//                            values.put("Author", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getAuthor());
+//                            values.put("ViewNum", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getView());
+//                            values.put("LikeNum", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getLike());
+//                            values.put("Tname", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getTname());
+                            values.put("bvid", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+                            values.put("PicUrl", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getPic());
+                            values.put("Title", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getTitle());
+                            values.put("Duration", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getDuration());
+                            values.put("Author", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getName());
+                            values.put("ViewNum", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getView());
+                            values.put("LikeNum", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getLike());
+                            values.put("Tname", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getTname());
                             sqliteDatabase.insert("blackBvid", null, values);
-                            sqliteDatabase.close();
+
                             dbOpenHelper.close();
+                            sqliteDatabase.close();
                         }catch (Exception e){
                             e.printStackTrace();
                             Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
                         }
-                        videoDataStoragedInMemoryList.remove(videoViewHolder.getBindingAdapterPosition());
+                        resultBeans.remove(videoViewHolder.getBindingAdapterPosition());
                         notifyItemRemoved(videoViewHolder.getBindingAdapterPosition());
                         notifyItemRangeChanged(videoViewHolder.getBindingAdapterPosition(), getItemCount());
                         Toast.makeText(mContext,"屏蔽视频成功",Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
-//                blacklistAuthor.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        try {
-//                            DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext,"blackList.db",null,1);
-//                            SQLiteDatabase sqliteDatabase = dbOpenHelper.getWritableDatabase();
-//                            ContentValues values = new ContentValues();
-//                            values.put("name", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getAuthor());
-//                            sqliteDatabase.insert("blackAuthor", null, values);
-//                            sqliteDatabase.close();
-//                            dbOpenHelper.close();
-//                        }catch (Exception e){
-//                            e.printStackTrace();
-//                            Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                        videoDataStoragedInMemoryList.remove(videoViewHolder.getBindingAdapterPosition());
-//                        notifyItemRemoved(videoViewHolder.getBindingAdapterPosition());
-//                        notifyDataSetChanged();
-//                        Toast.makeText(mContext,"屏蔽作者成功",Toast.LENGTH_SHORT).show();
-//                        dialog.dismiss();
-//                    }
-//                });
+                blacklistAuthor.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext,"blackList.db",null,DBOpenHelper.DB_VERSION);
+                        SQLiteDatabase sqliteDatabase = dbOpenHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        values.put("mid", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getMid());
+                        sqliteDatabase.insert("blackMid", null, values);
+
+                        dbOpenHelper.close();
+                        sqliteDatabase.close();
+
+                        resultBeans.remove(videoViewHolder.getBindingAdapterPosition());
+                        notifyItemRemoved(videoViewHolder.getBindingAdapterPosition());
+                        notifyItemRangeChanged(videoViewHolder.getBindingAdapterPosition(), getItemCount());
+
+                        dialog.dismiss();
+                        Toast.makeText(mContext,"屏蔽UP主成功",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                blacklistTag.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext,"blackList.db",null,DBOpenHelper.DB_VERSION);
+                        SQLiteDatabase sqliteDatabase = dbOpenHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+
+                        List<String> tags = new ArrayList<>();
+
+                        for (CheckBox checkBox : checkBoxs){
+                            if (checkBox.isChecked()){
+                                tags.add(checkBox.getText().toString());
+                            }
+                        }
+                        if (tags.size() == 0){
+                            Toast.makeText(mContext,"请选择至少一个TAG",Toast.LENGTH_SHORT).show();
+                        }else {
+
+                            for (String tmp : tags){
+                                values.put("tag", tmp);
+                                sqliteDatabase.insert("blackTag", null, values);
+                                Log.i("blacklistTag", tmp);
+                            }
+
+                            Toast.makeText(mContext,"屏蔽TAG成功",Toast.LENGTH_SHORT).show();
+
+                            resultBeans.remove(videoViewHolder.getBindingAdapterPosition());
+                            notifyItemRemoved(videoViewHolder.getBindingAdapterPosition());
+                            notifyItemRangeChanged(videoViewHolder.getBindingAdapterPosition(), getItemCount());
+
+                            dialog.dismiss();
+                        }
+                        sqliteDatabase.close();
+                        dbOpenHelper.close();
+                        sqliteDatabase.close();
+                    }
+                });
                 dialog.show();
             }
         });
@@ -161,19 +253,22 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(mContext,mResultBean.get(videoViewHolder.getBindingAdapterPosition()).getBvid(),Toast.LENGTH_SHORT).show();
-                PackageManager packageManager = mContext.getPackageManager();
-                Intent it = new Intent();
-                Intent intent = packageManager.getLaunchIntentForPackage(PackageName);
-                if (intent != null) {
+               //跳转到特定包名app
+//                PackageManager packageManager = mContext.getPackageManager();
+//                Intent intent = packageManager.getLaunchIntentForPackage(PackageName);
+//                if (intent != null) {
+                try {
+                    Intent it = new Intent();
                     it.setAction(Intent.ACTION_VIEW);
-                    it.setData(Uri.parse("bilibili://video/" + videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid()));
+                    it.setData(Uri.parse("bilibili://video/" + resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid()));
                     mContext.startActivity(it);
-                }else {
-                    Toast.makeText(mContext,"没有bilibili，已复制bv号",Toast.LENGTH_SHORT).show();
-                    // TODO 通过浏览器打开链接
+                }
+//                }else {
+                catch (Exception e){
+                    Toast.makeText(mContext,"没有找到bilibili，已复制bv号",Toast.LENGTH_SHORT).show();
                     //获取剪贴板管理器：
                     ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData mClipData = ClipData.newPlainText("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+                    ClipData mClipData = ClipData.newPlainText("bvid", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
                     cm.setPrimaryClip(mClipData);
                 }
 
@@ -182,10 +277,10 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(mContext,videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid() + "已复制到剪贴板",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid() + "已复制到剪贴板",Toast.LENGTH_SHORT).show();
                 //获取剪贴板管理器：
                 ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData mClipData = ClipData.newPlainText("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+                ClipData mClipData = ClipData.newPlainText("bvid", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
                 cm.setPrimaryClip(mClipData);
                 return true;
             }
@@ -204,7 +299,16 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
         } else {
             setMargin(holder.videoLayout, dip2px(10), 0, dip2px(10), 0);
         }
-        Handler handler = new Handler() {
+        Log.i("onBindViewHolder", resultBeans.get(position).getTitle());
+        holder.videoTitle.setText(resultBeans.get(position).getTitle());
+        ImageLoader.getInstance().displayImage(resultBeans.get(position).getPic() + "@480w_300h_1e_1c.jpg", holder.imageView);
+        holder.videoAuthor.setText(resultBeans.get(position).getName());
+        holder.videoDuration.setText(secondsToTime(Integer.valueOf(resultBeans.get(position).getDuration())));
+        holder.videoLike.setText(viewNumFormat(resultBeans.get(position).getLike()));
+        holder.videoView.setText(viewNumFormat(resultBeans.get(position).getView()));
+        holder.videoTname.setText(resultBeans.get(position).getTname());
+        // 下面被成段注释掉的为传入bvid的item更新视频的机制，若
+        /*Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
@@ -289,14 +393,14 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
             holder.videoView.setText(viewNumFormat(videoDataStoragedInMemoryList.get(position).getView()) + " 播放");
             holder.videoTname.setText("分区 "+videoDataStoragedInMemoryList.get(position).getTname());
 //            Log.i("getFirstLoad:false", String.valueOf(position));
-        }
+        }*/
 
     }
 
 
     @Override
     public int getItemCount() {
-        return videoDataStoragedInMemoryList.size();
+        return resultBeans.size();
     }
     @Override
     public int getItemViewType(int position) {
@@ -305,7 +409,7 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 
     @Override
     public long getItemId(int position) {
-        return videoDataStoragedInMemoryList.get(position).hashCode();
+        return resultBeans.get(position).hashCode();
     }
 
 

@@ -1,0 +1,7 @@
+<vector android:height="32dp" android:viewportHeight="1024"
+    android:viewportWidth="1024" android:width="32dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="@color/tab_text_normal" android:pathData="M886.95,438.2c-63.51,63.51 -166.5,63.51 -230.01,0l-63.9,-63.9c-63.52,-63.51 -63.52,-166.49 0,-230.01l63.9,-63.9c63.52,-63.51 166.5,-63.51 230.01,0l63.9,63.9c63.52,63.52 63.52,166.5 0,230.01L886.95,438.2z"/>
+    <path android:fillColor="@color/tab_text_normal" android:pathData="M444.67,304.48c0,89.83 -72.82,162.64 -162.64,162.64l-90.36,0c-89.83,0 -162.64,-72.82 -162.64,-162.64l0,-90.36c0,-89.83 72.82,-162.64 162.64,-162.64l90.36,0c89.83,0 162.64,72.82 162.64,162.64L444.67,304.48z"/>
+    <path android:fillColor="@color/tab_text_normal" android:pathData="M979.77,828.19c0,89.82 -72.82,162.64 -162.64,162.64l-90.36,0c-89.83,0 -162.64,-72.82 -162.64,-162.64l0,-90.37c0,-89.82 72.82,-162.64 162.64,-162.64l90.36,0c89.83,0 162.64,72.82 162.64,162.64L979.77,828.19z"/>
+    <path android:fillColor="@color/tab_text_normal" android:pathData="M444.67,828.19c0,89.82 -72.82,162.64 -162.64,162.64l-90.36,0c-89.83,0 -162.64,-72.82 -162.64,-162.64l0,-90.37c0,-89.82 72.82,-162.64 162.64,-162.64l90.36,0c89.83,0 162.64,72.82 162.64,162.64L444.67,828.19z"/>
+</vector>

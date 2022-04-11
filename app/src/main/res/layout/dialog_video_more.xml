@@ -1,18 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:paddingBottom="8dp"
     android:background="@color/backgroundGray"
     android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="视频简介"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textColor="@color/cardBlack"
+            android:layout_marginLeft="8dp"
+            android:textSize="16dp"
+            android:layout_marginTop="8dp"
+            />
+        <TextView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发布时间"
+            android:id="@+id/video_update_time"
+            android:layout_marginRight="8dp"
+            android:textSize="16dp"
+            android:layout_marginTop="8dp"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/cardGray"
+        />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:contextClickable="true"
+        android:background="@color/backgroundGray">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dialog_black_list_video_desc"
+            android:text="test"
+            android:maxHeight="160dp"
+            android:textColorHighlight="@color/tab_text_normal"
+            android:textIsSelectable="true"
+            android:lineSpacingExtra="4dp"
+            android:textSize="15dp"
+            />
+    </ScrollView>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/cardGray"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="视频选项"
+        android:text="屏蔽选项"
+        android:textColor="@color/cardBlack"
         android:layout_marginLeft="8dp"
         android:textSize="16dp"
-        android:layout_marginTop="8dp"
         />
     <View
         android:layout_width="match_parent"
@@ -23,11 +93,40 @@
         android:layout_marginBottom="8dp"
         android:background="@color/cardGray"
         />
+
+    <com.google.android.flexbox.FlexboxLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:flexWrap="wrap"
+        android:id="@+id/dialog_black_list_tag_flexbox"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.google.android.flexbox.FlexboxLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/dialog_black_list_add_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="我不想再看到含有选中tag的视频"
+        android:background="@color/cardWhite"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        />
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/dialog_black_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="屏蔽视频"
+        android:text="我不想再看到这个视频"
+        android:background="@color/cardWhite"
+        android:layout_marginBottom="8dp"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/dialog_black_list_add_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="我不想再看到这个up主"
         android:background="@color/cardWhite"
         android:layout_marginBottom="8dp"
         />

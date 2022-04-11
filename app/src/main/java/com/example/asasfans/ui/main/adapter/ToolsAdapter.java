@@ -1,5 +1,7 @@
 package com.example.asasfans.ui.main.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -20,17 +22,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.asasfans.LaunchActivity;
 import com.example.asasfans.R;
-import com.example.asasfans.TestActivity;
 import com.example.asasfans.ui.main.ClickJumpActivity;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * @author: akari

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,15 +25,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.example.asasfans.AsApplication;
-import com.example.asasfans.LaunchActivity;
 import com.example.asasfans.R;
-import com.example.asasfans.TestActivity;
-import com.example.asasfans.data.GiteeVersionBean;
 import com.example.asasfans.data.GithubVersionBean;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
@@ -48,6 +46,8 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
     private ConstraintLayout config_blacklist;
     private ConstraintLayout config_check_version;
     private ConstraintLayout config_contract_us;
+    private ConstraintLayout config_clear_pic_cache;
+    private ConstraintLayout config_clear_web_cache;
     private LinearLayout config;
     private TextView config_check_version_number;
     private View emptyView;
@@ -59,6 +59,8 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
         config_blacklist = findViewById(R.id.config_blacklist);
         config_check_version = findViewById(R.id.config_check_version);
         config_contract_us = findViewById(R.id.config_contract_us);
+        config_clear_pic_cache = findViewById(R.id.config_clear_pic_cache);
+        config_clear_web_cache = findViewById(R.id.config_clear_web_cache);
         config = findViewById(R.id.config);
         emptyView = findViewById(R.id.emptyViewConfig);
 
@@ -69,6 +71,8 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
         config_blacklist.setOnClickListener(this::onClick);
         config_check_version.setOnClickListener(this::onClick);
         config_contract_us.setOnClickListener(this::onClick);
+        config_clear_pic_cache.setOnClickListener(this::onClick);
+        config_clear_web_cache.setOnClickListener(this::onClick);
         config.setOnClickListener(this::onClick);
         LinearLayoutCompat.LayoutParams layoutParams = new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AsApplication.Companion.getStatusBarHeight());
         emptyView.setLayoutParams(layoutParams);
@@ -79,7 +83,10 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.config_blacklist:
-                Intent intentBlacklist = new Intent(ConfigActivity.this, BlackListActivity.class);
+                Bundle data = new Bundle();
+                data.putBoolean("isBlacklist", true);
+                Intent intentBlacklist = new Intent(ConfigActivity.this, ClickJumpActivity.class);
+                intentBlacklist.putExtras(data);
                 startActivity(intentBlacklist);
                 break;
             case R.id.config_check_version:
@@ -94,6 +101,15 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
                 Uri content_url = Uri.parse("https://git.asf.ink/A-SoulFan/as-as-fans/issues");
                 intentContractUs.setData(content_url);
                 startActivity(intentContractUs);
+                break;
+            case R.id.config_clear_pic_cache:
+                ImageLoader.getInstance().clearDiskCache();//清除磁盘缓存
+                ImageLoader.getInstance().clearMemoryCache();//清除内存缓存
+                Toast.makeText(this, "清除图片缓存成功", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.config_clear_web_cache:
+                new WebView(ConfigActivity.this).clearCache(true);
+                Toast.makeText(this, "清除WEB缓存成功", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -132,20 +148,21 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
                     int versionCode = Integer.valueOf(versionCodeString[0]) * 100 + Integer.valueOf(versionCodeString[1]) * 10 + Integer.valueOf(versionCodeString[2]) * 1;
                     if (versionCode > getVersionCode(ConfigActivity.this)) {
                         DialogPlus dialog = DialogPlus.newDialog(ConfigActivity.this)
-                                .setContentHolder(new ViewHolder(R.layout.my_dialog))
+                                .setContentHolder(new ViewHolder(R.layout.dialog_upgrade))
                                 .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-                                .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
+                                .setContentWidth(ViewGroup.LayoutParams.MATCH_PARENT)
                                 .setCancelable(true)
+                                .setContentBackgroundResource(R.color.transparent)
                                 .setGravity(Gravity.CENTER)
                                 .create();
                         View dialogView = dialog.getHolderView();
-                        TextView title = dialogView.findViewById(R.id.dialog_title);
-                        TextView content = dialogView.findViewById(R.id.dialog_content);
-                        TextView cancel = dialogView.findViewById(R.id.cancel);
-                        TextView confirm = dialogView.findViewById(R.id.confirm);
-                        title.setText("新版本提醒");
+                        TextView title = dialogView.findViewById(R.id.title);
+                        TextView content = dialogView.findViewById(R.id.upgrade_content);
+                        TextView cancel = dialogView.findViewById(R.id.close);
+                        TextView confirm = dialogView.findViewById(R.id.upgrade);
+
                         content.setText(githubVersionBean.getBody());
-                        confirm.setText("去下载");
+
                         confirm.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
