@@ -8,9 +8,9 @@ android {
 
     defaultConfig {
         applicationId "com.example.asasfans"
-        minSdkVersion 25
+        minSdkVersion 23
         //noinspection ExpiredTargetSdkVersion
-        targetSdkVersion 25
+        targetSdkVersion 23
         versionCode 121
         versionName "1.2.1"
 
