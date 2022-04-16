@@ -8,11 +8,11 @@ android {
 
     defaultConfig {
         applicationId "com.example.asasfans"
-        minSdkVersion 23
+        minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
-        targetSdkVersion 23
-        versionCode 122
-        versionName "1.2.2"
+        targetSdkVersion 24
+        versionCode 123
+        versionName "1.2.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
