@@ -1,5 +1,6 @@
 package com.example.asasfans.ui.main;
 
+import static com.example.asasfans.TestActivity.floatHelper;
 import static com.example.asasfans.util.ViewUtilsKt.setMargin;
 
 import android.database.Cursor;
@@ -22,6 +23,7 @@ import com.example.asasfans.data.VideoDataStoragedInMemory;
 import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.main.adapter.BlackListAdapter;
 import com.example.asasfans.ui.main.adapter.PubdateVideoAdapter;
+import com.example.asasfans.util.ACache;
 import com.google.android.material.appbar.AppBarLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
@@ -80,6 +82,27 @@ public class BlackListActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new RecyclerViewDecoration(12, 12));
         sqliteDatabase.close();
         dbOpenHelper.close();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        floatHelper.dismiss();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ACache aCache = ACache.get(this);
+        String tmpACache =  aCache.getAsString("isShowFloatingBall"); // yes or no
+        if (tmpACache == null){
+            floatHelper.show();
+//            Toast.makeText(TestActivity.this, "悬浮球默认打开哦，可以在设置关闭", Toast.LENGTH_SHORT).show();
+        }else if (tmpACache.equals("yes")){
+            floatHelper.show();
+        }else if (tmpACache.equals("no")){
+
+        }
     }
 
 }

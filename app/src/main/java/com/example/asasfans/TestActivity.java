@@ -120,6 +120,12 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        floatHelper.dismiss();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
         ACache aCache = ACache.get(this);
         String tmpACache =  aCache.getAsString("isShowFloatingBall"); // yes or no
         if (tmpACache == null){
@@ -342,7 +348,7 @@ public class TestActivity extends AppCompatActivity {
                             TextView confirm = dialogViewP.findViewById(R.id.confirm);
                             TextView cancel = dialogViewP.findViewById(R.id.cancel);
                             title.setText("需要悬浮窗权限");
-                            content.setText("通过悬浮球可以在其他应用快速回到AsAsFans，需要去开启悬浮窗权限");
+                            content.setText("通过悬浮球可以在其他应用快速回到AsAsFans，需要去开启悬浮窗权限，悬浮窗只会在其他界面显示出来哦");
                             confirm.setText("去开启");
                             cancel.setText("不再提醒");
                             cancel.setOnClickListener(new View.OnClickListener() {

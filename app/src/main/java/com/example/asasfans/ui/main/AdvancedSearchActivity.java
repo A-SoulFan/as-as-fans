@@ -1,5 +1,7 @@
 package com.example.asasfans.ui.main;
 
+import static com.example.asasfans.TestActivity.floatHelper;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,6 +22,7 @@ import com.example.asasfans.AsApplication;
 import com.example.asasfans.R;
 import com.example.asasfans.ui.main.fragment.AdvancedSearchOptionFragment;
 import com.example.asasfans.ui.main.fragment.BiliVideoFragment;
+import com.example.asasfans.util.ACache;
 import com.example.asasfans.util.ApiConfig;
 import com.example.asasfans.util.QConstructor;
 import com.google.android.material.appbar.AppBarLayout;
@@ -367,5 +370,25 @@ public class AdvancedSearchActivity extends AppCompatActivity {
             return true;
         }
 //        return super.onKeyDown(keyCode, event);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        floatHelper.dismiss();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ACache aCache = ACache.get(this);
+        String tmpACache =  aCache.getAsString("isShowFloatingBall"); // yes or no
+        if (tmpACache == null){
+            floatHelper.show();
+//            Toast.makeText(TestActivity.this, "悬浮球默认打开哦，可以在设置关闭", Toast.LENGTH_SHORT).show();
+        }else if (tmpACache.equals("yes")){
+            floatHelper.show();
+        }else if (tmpACache.equals("no")){
+
+        }
     }
 }

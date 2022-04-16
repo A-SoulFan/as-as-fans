@@ -1,5 +1,7 @@
 package com.example.asasfans.ui.main;
 
+import static com.example.asasfans.TestActivity.floatHelper;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +18,7 @@ import com.example.asasfans.ui.main.adapter.ToolsAdapter;
 import com.example.asasfans.ui.main.fragment.BlacklistFragment;
 import com.example.asasfans.ui.main.fragment.ImageFanArtFragment;
 import com.example.asasfans.ui.main.fragment.WebFragment;
+import com.example.asasfans.util.ACache;
 
 public class ClickJumpActivity extends AppCompatActivity {
     FragmentManager fragmentManager;
@@ -44,6 +47,27 @@ public class ClickJumpActivity extends AppCompatActivity {
         }
 //        transaction.replace(R.id.click_jump, WebFragment.newInstance(data.getString("WebUrl")));
         transaction.commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        floatHelper.dismiss();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ACache aCache = ACache.get(this);
+        String tmpACache =  aCache.getAsString("isShowFloatingBall"); // yes or no
+        if (tmpACache == null){
+            floatHelper.show();
+//            Toast.makeText(TestActivity.this, "悬浮球默认打开哦，可以在设置关闭", Toast.LENGTH_SHORT).show();
+        }else if (tmpACache.equals("yes")){
+            floatHelper.show();
+        }else if (tmpACache.equals("no")){
+
+        }
     }
 
     @Override

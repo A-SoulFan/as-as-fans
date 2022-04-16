@@ -1,5 +1,6 @@
 package com.example.asasfans.ui.main;
 
+import static com.example.asasfans.TestActivity.floatHelper;
 import static com.example.asasfans.TestActivity.getVersionCode;
 import static com.example.asasfans.ui.main.adapter.PubdateVideoAdapter.GET_DATA_SUCCESS;
 import static com.example.asasfans.ui.main.adapter.PubdateVideoAdapter.NETWORK_ERROR;
@@ -113,10 +114,10 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
                         aCache.put("isNoLongerShowFloatingBall", "no");
                         Toast.makeText(ConfigActivity.this, "需要手动开启悬浮窗权限才能使用悬浮球，回到主页可再次开启", Toast.LENGTH_SHORT).show();
                     }
-                    TestActivity.floatHelper.show();
+                    floatHelper.show();
                 }else {
                     aCache.put("isShowFloatingBall", "no");
-                    TestActivity.floatHelper.dismiss();
+                    floatHelper.dismiss();
                 }
             }
         });
@@ -124,7 +125,26 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
         emptyView.setLayoutParams(layoutParams);
 
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        floatHelper.dismiss();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ACache aCache = ACache.get(this);
+        String tmpACache =  aCache.getAsString("isShowFloatingBall"); // yes or no
+        if (tmpACache == null){
+            floatHelper.show();
+//            Toast.makeText(TestActivity.this, "悬浮球默认打开哦，可以在设置关闭", Toast.LENGTH_SHORT).show();
+        }else if (tmpACache.equals("yes")){
+            floatHelper.show();
+        }else if (tmpACache.equals("no")){
+
+        }
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
