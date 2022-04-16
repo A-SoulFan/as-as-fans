@@ -13,35 +13,24 @@
         android:id="@+id/emptyViewWeb"
         android:elevation="5dp"
         android:outlineProvider="none"
-        android:background="@color/cardWhite"/>
+        android:background="@color/tab_text_normal"/>
 
     <ProgressBar
         android:id="@+id/pb"
         android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="@color/tab_text_selected"
+        android:indeterminateTint="@color/bella"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:max="100"
         android:progress="50"
         android:visibility="gone" />
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout
-        android:id="@+id/web_refreshLayout"
-        app:srlPrimaryColor="@color/lightGray"
-        app:srlAccentColor="@color/tab_text_normal"
+
+    <WebView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/webView"/>
 
-        <com.scwang.smart.refresh.header.BezierRadarHeader
-            app:srlPrimaryColor="@color/lightGray"
-            app:srlAccentColor="@color/tab_text_normal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <WebView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/webView"/>
 
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
 </LinearLayout>

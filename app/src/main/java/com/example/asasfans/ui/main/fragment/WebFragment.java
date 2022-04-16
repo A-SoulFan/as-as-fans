@@ -1,5 +1,7 @@
 package com.example.asasfans.ui.main.fragment;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 import android.app.DownloadManager;
@@ -7,7 +9,6 @@ import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -23,6 +24,7 @@ import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -38,9 +40,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.asasfans.AsApplication;
 import com.example.asasfans.R;
-import com.scwang.smart.refresh.header.BezierRadarHeader;
-import com.scwang.smart.refresh.layout.api.RefreshLayout;
-import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +51,7 @@ import java.io.InputStream;
  */
 
 public class WebFragment extends Fragment {
-    private static WebView webView;
+    public WebView webView;
     private ProgressBar progressBar;
     private long exitTime = 0;
     private String url = "https://asoulcnki.asia/";
@@ -61,11 +60,14 @@ public class WebFragment extends Fragment {
     private ValueCallback<Uri> mUploadCallbackForLowApi;
     private ValueCallback<Uri[]> mUploadCallbackForHighApi;
 
+    private Boolean inBottom = true;
 
-    public static WebFragment newInstance(String url) {
+
+    public static WebFragment newInstance(String url, Boolean inBottom) {
         WebFragment fragment = new WebFragment();
         Bundle args = new Bundle();
         args.putString("WebUrl", url);
+        args.putBoolean("Bottom", inBottom);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,6 +76,7 @@ public class WebFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.url = getArguments().getString("WebUrl");
+        this.inBottom = getArguments().getBoolean("Bottom");
         // This callback will only be called when MyFragment is at least Started.
 //        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
 //            @Override
@@ -96,28 +99,57 @@ public class WebFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == REQUEST_CODE_FILE_CHOOSER && (resultCode == RESULT_OK || resultCode == RESULT_CANCELED)) {
+            afterFileChooseGoing(resultCode, data);
+        }
+    }
+
+    private void afterFileChooseGoing(int resultCode, Intent data) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (mUploadCallbackForHighApi == null) {
+                return;
+            }
+            mUploadCallbackForHighApi.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+            mUploadCallbackForHighApi = null;
+        } else {
+            if (mUploadCallbackForLowApi == null) {
+                return;
+            }
+            Uri result = data == null ? null : data.getData();
+            mUploadCallbackForLowApi.onReceiveValue(result);
+            mUploadCallbackForLowApi = null;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_web, container, false);
+        View view;
+        //兼容状态栏
+        if (inBottom) {
+            view = inflater.inflate(R.layout.fragment_web, container, false);
+            View emptyView = view.findViewById(R.id.emptyViewWeb);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AsApplication.Companion.getStatusBarHeight());
+            emptyView.setLayoutParams(layoutParams);
+        }else {
+            view = inflater.inflate(R.layout.fragment_tools_web, container, false);
+        }
+
         webView = view.findViewById(R.id.webView);
         progressBar = view.findViewById(R.id.pb);
-
-        View emptyView = view.findViewById(R.id.emptyViewWeb);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AsApplication.Companion.getStatusBarHeight());
-        emptyView.setLayoutParams(layoutParams);
-
-        RefreshLayout refreshLayout = (RefreshLayout)view.findViewById(R.id.web_refreshLayout);
-        //先关掉下拉刷新
-        refreshLayout.setEnableRefresh(false);
-        refreshLayout.setRefreshHeader(new BezierRadarHeader(getActivity()));
-        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                webView.loadUrl(url);
-                refreshLayout.finishRefresh();
-            }
-        });
+//        RefreshLayout refreshLayout = (RefreshLayout)view.findViewById(R.id.web_refreshLayout);
+//        //先关掉下拉刷新
+//        refreshLayout.setEnableRefresh(false);
+//        refreshLayout.setRefreshHeader(new BezierRadarHeader(getActivity()));
+//        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+//            @Override
+//            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+//                webView.loadUrl(url);
+//                refreshLayout.finishRefresh();
+//            }
+//        });
 
         webView.getSettings().setDatabaseEnabled(true);
 
@@ -132,6 +164,9 @@ public class WebFragment extends Fragment {
         webSettings.setLoadsImagesAutomatically(true); // 加载图片
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
+
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
@@ -145,9 +180,10 @@ public class WebFragment extends Fragment {
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 try {
                     startActivityForResult(intent, REQUEST_CODE_FILE_CHOOSER);
+//                    Toast.makeText(getActivity(), "can_open_file_chooser", Toast.LENGTH_LONG).show();
                 } catch (ActivityNotFoundException e) {
                     mUploadCallbackForHighApi = null;
-//                    Toast.makeText(EShopAiCustomServiceAct.this, R.string.cant_open_file_chooser, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getActivity(), "R.string.cant_open_file_chooser", Toast.LENGTH_LONG).show();
                     return false;
                 }
                 return true;
@@ -203,10 +239,14 @@ public class WebFragment extends Fragment {
                 if (request.getUrl().toString().startsWith("http")) {
                     return super.shouldOverrideUrlLoading(view, request);
                 }else {
-                    Intent it = new Intent();
-                    it.setAction(Intent.ACTION_VIEW);
-                    it.setData(Uri.parse(request.getUrl().toString()));
-                    getActivity().startActivity(it);
+                    try {
+                        Intent it = new Intent();
+                        it.setAction(Intent.ACTION_VIEW);
+                        it.setData(Uri.parse(request.getUrl().toString()));
+                        getActivity().startActivity(it);
+                    }catch (Exception e){
+                        Toast.makeText(getActivity(), "没有找到对应app", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
                 }
             }
@@ -222,22 +262,37 @@ public class WebFragment extends Fragment {
                 super.onPageFinished(view, url);
                 progressBar.setVisibility(View.GONE);
             }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    return;
+                }
+            }
         });
 
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
 //                downloadByBrowser(url);
-                if (url.startsWith("http")) {
-                    downloadBySystem(url, contentDisposition, mimetype);
-                    // 使用
-                    DownloadCompleteReceiver receiver = new DownloadCompleteReceiver();
-                    IntentFilter intentFilter = new IntentFilter();
-                    intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-                    getActivity().registerReceiver(receiver, intentFilter);
-                }else {
-                    Toast.makeText(getActivity(), "下载链接不是http/https协议", Toast.LENGTH_SHORT).show();
+                try {
+                    downloadByBrowser(url);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "下载链接浏览器无法识别", Toast.LENGTH_SHORT).show();
                 }
+//                if (url.startsWith("http")) {
+//
+////                    downloadBySystem(url, contentDisposition, mimetype);
+////                    // 使用
+////                    DownloadCompleteReceiver receiver = new DownloadCompleteReceiver();
+////                    IntentFilter intentFilter = new IntentFilter();
+////                    intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+////                    getActivity().registerReceiver(receiver, intentFilter);
+//                }else {
+//
+//                }
 
             }
         });
@@ -330,15 +385,16 @@ public class WebFragment extends Fragment {
 
     public void onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+            Log.i("web:onKeyDown", "canGoBack: ");
             webView.goBack();
         }
         else if ((keyCode == KeyEvent.KEYCODE_BACK) && (!webView.canGoBack()) && event.getRepeatCount() == 0) {
+            Log.i("web:onKeyDown", "can not GoBack: ");
             if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(getActivity(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
                 getActivity().finish();
-                System.exit(0);
             }
         }
     }

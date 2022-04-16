@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -10,8 +11,8 @@ android {
         minSdkVersion 25
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 25
-        versionCode 120
-        versionName "1.2.0"
+        versionCode 121
+        versionName "1.2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -45,9 +46,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.github.donkingliang:ConsecutiveScroller:4.6.1'
+//    implementation 'com.github.donkingliang:ConsecutiveScroller:4.6.1'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    implementation 'com.google.firebase:firebase-analytics:20.1.2'
 
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     // For control over item selection of both touch and mouse driven selection
@@ -56,11 +59,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.0'                 //必须 1.0.0 以上
     implementation  'com.scwang.smart:refresh-layout-kernel:2.0.1'      //核心必须依赖
     implementation  'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
-    implementation  'com.scwang.smart:refresh-header-radar:2.0.1'       //雷达刷新头
-    implementation  'com.scwang.smart:refresh-header-falsify:2.0.1'     //虚拟刷新头
+//    implementation  'com.scwang.smart:refresh-header-radar:2.0.1'       //雷达刷新头
+//    implementation  'com.scwang.smart:refresh-header-falsify:2.0.1'     //虚拟刷新头
     implementation  'com.scwang.smart:refresh-header-material:2.0.1'    //谷歌刷新头
-    implementation  'com.scwang.smart:refresh-header-two-level:2.0.1'   //二级刷新头
-    implementation  'com.scwang.smart:refresh-footer-ball:2.0.1'        //球脉冲加载
+//    implementation  'com.scwang.smart:refresh-header-two-level:2.0.1'   //二级刷新头
+//    implementation  'com.scwang.smart:refresh-footer-ball:2.0.1'        //球脉冲加载
     implementation  'com.scwang.smart:refresh-footer-classics:2.0.1'    //经典加载
 
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
@@ -78,9 +81,9 @@ dependencies {
 
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
-    implementation('com.fasterxml.jackson.core:jackson-core:2.11.1')
-    implementation('com.fasterxml.jackson.core:jackson-annotations:2.11.1')
-    implementation('com.fasterxml.jackson.core:jackson-databind:2.11.1')
+//    implementation('com.fasterxml.jackson.core:jackson-core:2.11.1')
+//    implementation('com.fasterxml.jackson.core:jackson-annotations:2.11.1')
+//    implementation('com.fasterxml.jackson.core:jackson-databind:2.11.1')
 
     //更好用的EditText
     implementation('com.github.chaychan:PowerfulViewLibrary:1.2.2')
@@ -92,5 +95,11 @@ dependencies {
     implementation('com.zaaach:tabradiobutton:1.0.2')
     //ios风日期选择器
     implementation('com.contrarywind:Android-PickerView:4.1.9')
+    //悬浮球
+//    implementation 'com.alonsol:floatserver:1.0.0'
+    //修改了这个悬浮球的源码，本地导入的
+    compile(name:'floatserver-debug', ext:'aar')
+
+    implementation 'com.kyleduo.switchbutton:library:2.1.0'
 
 }

@@ -12,11 +12,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.webkit.WebView;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,8 +33,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.asasfans.AsApplication;
 import com.example.asasfans.R;
+import com.example.asasfans.TestActivity;
 import com.example.asasfans.data.GithubVersionBean;
+import com.example.asasfans.util.ACache;
 import com.google.gson.Gson;
+import com.kyleduo.switchbutton.SwitchButton;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
@@ -45,24 +53,32 @@ import okhttp3.Response;
 public class ConfigActivity extends AppCompatActivity implements View.OnClickListener{
     private ConstraintLayout config_blacklist;
     private ConstraintLayout config_check_version;
+    private ImageView config_check_version_icon;
     private ConstraintLayout config_contract_us;
     private ConstraintLayout config_clear_pic_cache;
     private ConstraintLayout config_clear_web_cache;
     private LinearLayout config;
     private TextView config_check_version_number;
+    private SwitchButton config_floating_ball_switch;
     private View emptyView;
     private String latestVersion = "https://api.github.com/repos/A-SoulFan/as-as-fans/releases/latest";
+    private RotateAnimation mRotateAnimation;
+    private Handler mHandler = new Handler();
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
         config_blacklist = findViewById(R.id.config_blacklist);
         config_check_version = findViewById(R.id.config_check_version);
+        config_check_version_icon = findViewById(R.id.config_check_version_icon);
         config_contract_us = findViewById(R.id.config_contract_us);
         config_clear_pic_cache = findViewById(R.id.config_clear_pic_cache);
         config_clear_web_cache = findViewById(R.id.config_clear_web_cache);
         config = findViewById(R.id.config);
         emptyView = findViewById(R.id.emptyViewConfig);
+        config_floating_ball_switch = findViewById(R.id.config_floating_ball_switch);
 
         config_check_version_number = findViewById(R.id.config_check_version_number);
 
@@ -74,6 +90,36 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
         config_clear_pic_cache.setOnClickListener(this::onClick);
         config_clear_web_cache.setOnClickListener(this::onClick);
         config.setOnClickListener(this::onClick);
+
+        ACache aCache = ACache.get(this);
+        String tmpACache =  aCache.getAsString("isShowFloatingBall"); // yes or no
+        String isNoLongerShowFloatingBall =  aCache.getAsString("isNoLongerShowFloatingBall"); // yes or no
+        if (tmpACache == null || isNoLongerShowFloatingBall == null){
+            config_floating_ball_switch.setChecked(false);
+            aCache.put("isShowFloatingBall", "no");
+        } else if(tmpACache.equals("yes") && isNoLongerShowFloatingBall.equals("no")){
+            config_floating_ball_switch.setChecked(true);
+        }else {
+            config_floating_ball_switch.setChecked(false);
+        }
+
+        config_floating_ball_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                ACache aCache = ACache.get(ConfigActivity.this);
+                if (b){
+                    aCache.put("isShowFloatingBall", "yes");
+                    if (!Settings.canDrawOverlays(ConfigActivity.this)){
+                        aCache.put("isNoLongerShowFloatingBall", "no");
+                        Toast.makeText(ConfigActivity.this, "需要手动开启悬浮窗权限才能使用悬浮球，回到主页可再次开启", Toast.LENGTH_SHORT).show();
+                    }
+                    TestActivity.floatHelper.show();
+                }else {
+                    aCache.put("isShowFloatingBall", "no");
+                    TestActivity.floatHelper.dismiss();
+                }
+            }
+        });
         LinearLayoutCompat.LayoutParams layoutParams = new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AsApplication.Companion.getStatusBarHeight());
         emptyView.setLayoutParams(layoutParams);
 
@@ -90,6 +136,15 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(intentBlacklist);
                 break;
             case R.id.config_check_version:
+                if (mRotateAnimation == null) {
+                    mRotateAnimation = new RotateAnimation(0, 360,
+                            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                            0.5f);
+                    mRotateAnimation.setDuration(800);
+                    mRotateAnimation.setRepeatCount(-1);
+                }
+                config_check_version_icon.setAnimation(mRotateAnimation);
+                config_check_version_icon.startAnimation(mRotateAnimation);
                 new Thread(networkTask).start();
                 break;
             case R.id.config:
@@ -111,8 +166,10 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
                 new WebView(ConfigActivity.this).clearCache(true);
                 Toast.makeText(this, "清除WEB缓存成功", Toast.LENGTH_SHORT).show();
                 break;
+
         }
     }
+
     /**
      * get App versionName
      * @param context
@@ -189,6 +246,7 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
             }else {
                 Toast.makeText(ConfigActivity.this, "网络错误，版本号获取失败", Toast.LENGTH_SHORT).show();
             }
+            config_check_version_icon.clearAnimation();
         }
     };
 

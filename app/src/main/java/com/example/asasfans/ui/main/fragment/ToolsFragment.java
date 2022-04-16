@@ -2,9 +2,6 @@ package com.example.asasfans.ui.main.fragment;
 
 import static com.example.asasfans.util.ViewUtilsKt.setMargin;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.asasfans.AsApplication;
 import com.example.asasfans.R;
-import com.example.asasfans.ui.customcomponent.MyDialog;
 import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.main.adapter.ToolsAdapter;
 import com.google.android.material.appbar.AppBarLayout;
@@ -105,30 +101,30 @@ public class ToolsFragment extends Fragment {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toolsAdapter.setShowBox();
-                toolsAdapter.notifyDataSetChanged();
-                if (!toolsAdapter.isShowBox()){
-                    new MyDialog(getActivity(), R.style.mdialog, new MyDialog.OncloseListener() {
-                        @Override
-                        public void onClick(boolean confirm) {
-                            //设置重启后生效，但是自动重启速度慢，如果用户在自动重启的过程中之间点开应用会有神奇的bug
-                            if (confirm){
-                                Intent intent = getActivity().getPackageManager()
-                                        .getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
-                                PendingIntent restartIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, intent, 0);
-                                AlarmManager mgr = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-                                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, restartIntent); // 1秒钟后重启应用
-                                System.exit(0);
-                            }
-                        }
-                    }).show();
-//                    Toast.makeText(getContext(),"手动重启以变更底部栏哦",Toast.LENGTH_SHORT).show();
-                    textView.setBackgroundColor(getActivity().getResources().getColor(R.color.tab_text_normal));
-                    textView.setTextColor(getActivity().getResources().getColor(R.color.cardWhite));
-                }else {
-                    textView.setBackgroundColor(getActivity().getResources().getColor(R.color.backgroundGray));
-                    textView.setTextColor(getActivity().getResources().getColor(R.color.cardBlack));
-                }
+//                toolsAdapter.setShowBox();
+//                toolsAdapter.notifyDataSetChanged();
+//                if (!toolsAdapter.isShowBox()){
+//                    new MyDialog(getActivity(), R.style.mdialog, new MyDialog.OncloseListener() {
+//                        @Override
+//                        public void onClick(boolean confirm) {
+//                            //设置重启后生效，但是自动重启速度慢，如果用户在自动重启的过程中之间点开应用会有神奇的bug
+//                            if (confirm){
+//                                Intent intent = getActivity().getPackageManager()
+//                                        .getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
+//                                PendingIntent restartIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, intent, 0);
+//                                AlarmManager mgr = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+//                                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, restartIntent); // 1秒钟后重启应用
+//                                System.exit(0);
+//                            }
+//                        }
+//                    }).show();
+////                    Toast.makeText(getContext(),"手动重启以变更底部栏哦",Toast.LENGTH_SHORT).show();
+//                    textView.setBackgroundColor(getActivity().getResources().getColor(R.color.tab_text_normal));
+//                    textView.setTextColor(getActivity().getResources().getColor(R.color.cardWhite));
+//                }else {
+//                    textView.setBackgroundColor(getActivity().getResources().getColor(R.color.backgroundGray));
+//                    textView.setTextColor(getActivity().getResources().getColor(R.color.cardBlack));
+//                }
             }
         });
         View emptyView = view.findViewById(R.id.emptyViewTools);

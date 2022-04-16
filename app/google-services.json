@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1016964769616",
+    "project_id": "asasfans-app---ga4",
+    "storage_bucket": "asasfans-app---ga4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016964769616:android:6e4ca7a2613ce8c206ee55",
+        "android_client_info": {
+          "package_name": "com.example.asasfans"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1016964769616-4og6k6qn3fjje4ko35jlufhkfn4lskbl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK5xeMmbU36HKVu7tbKF-Y5B_vIQo3xFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1016964769616-4og6k6qn3fjje4ko35jlufhkfn4lskbl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

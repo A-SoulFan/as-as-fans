@@ -5,10 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.example.asasfans.TestActivity;
-import com.example.asasfans.ui.main.adapter.ToolsAdapter;
-import com.example.asasfans.ui.main.fragment.WebFragment;
-
 public class XMPlayerReceiver extends BroadcastReceiver {
     public static final String PLAY_PRE = "play_pre";
     public static final String PLAY_NEXT = "play_next";

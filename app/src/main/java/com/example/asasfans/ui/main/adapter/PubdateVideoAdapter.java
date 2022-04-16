@@ -9,7 +9,6 @@ import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
@@ -265,11 +264,17 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                 }
 //                }else {
                 catch (Exception e){
-                    Toast.makeText(mContext,"没有找到bilibili，已复制bv号",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext,"没有找到bilibili，已复制bv号",Toast.LENGTH_SHORT).show();
                     //获取剪贴板管理器：
                     ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData mClipData = ClipData.newPlainText("bvid", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
                     cm.setPrimaryClip(mClipData);
+                    Toast.makeText(mContext,"没有找到或无法用bilibili打开，尝试采用浏览器打开", Toast.LENGTH_LONG).show();
+                    Intent intent= new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse("https://www.bilibili.com/video/" + resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+                    intent.setData(content_url);
+                    mContext.startActivity(intent);
                 }
 
             }
@@ -277,11 +282,131 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(mContext,resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid() + "已复制到剪贴板",Toast.LENGTH_SHORT).show();
-                //获取剪贴板管理器：
-                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData mClipData = ClipData.newPlainText("bvid", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
-                cm.setPrimaryClip(mClipData);
+//                Toast.makeText(mContext,resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid() + "已复制到剪贴板",Toast.LENGTH_SHORT).show();
+//                //获取剪贴板管理器：
+//                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+//                ClipData mClipData = ClipData.newPlainText("bvid", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+//                cm.setPrimaryClip(mClipData);
+                AppCompatButton blacklistVideo =  dialogView.findViewById(R.id.dialog_black_list);
+                AppCompatButton blacklistAuthor =  dialogView.findViewById(R.id.dialog_black_list_add_author);
+                AppCompatButton blacklistTag =  dialogView.findViewById(R.id.dialog_black_list_add_tag);
+                FlexboxLayout flexboxLayout = dialogView.findViewById(R.id.dialog_black_list_tag_flexbox);
+                TextView videoUpdateTime = dialogView.findViewById(R.id.video_update_time);
+                TextView dialog_black_list_video_desc = dialogView.findViewById(R.id.dialog_black_list_video_desc);
+
+                videoUpdateTime.setText(stampToDate(String.valueOf(resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getPubdate())));
+                dialog_black_list_video_desc.setText(resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getDesc());
+
+                flexboxLayout.removeAllViews();
+                checkBoxs.clear();
+                String[] tagList = tagFormat(resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getTag());
+                for (int i = 0; i < tagList.length; i++){
+                    CheckBox checkBox = (CheckBox) LayoutInflater.from(mContext).inflate(R.layout.checkbox_tag, parent,false);
+
+                    checkBox.setText(tagList[i]);
+                    checkBoxs.add(checkBox);
+                    //有些tag是空格，不加入布局
+                    if (!checkBoxs.get(i).getText().equals("")) {
+                        flexboxLayout.addView(checkBox);
+                    }
+                }
+                blacklistVideo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.i("appCompatButton", "onClick");
+                        try {
+                            DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext,"blackList.db",null,DBOpenHelper.DB_VERSION);
+                            SQLiteDatabase sqliteDatabase = dbOpenHelper.getWritableDatabase();
+                            ContentValues values = new ContentValues();
+//                            values.put("bvid", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+//                            values.put("PicUrl", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getPicUrl());
+//                            values.put("Title", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getTitle());
+//                            values.put("Duration", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getDuration());
+//                            values.put("Author", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getAuthor());
+//                            values.put("ViewNum", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getView());
+//                            values.put("LikeNum", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getLike());
+//                            values.put("Tname", videoDataStoragedInMemoryList.get(videoViewHolder.getBindingAdapterPosition()).getTname());
+                            values.put("bvid", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getBvid());
+                            values.put("PicUrl", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getPic());
+                            values.put("Title", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getTitle());
+                            values.put("Duration", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getDuration());
+                            values.put("Author", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getName());
+                            values.put("ViewNum", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getView());
+                            values.put("LikeNum", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getLike());
+                            values.put("Tname", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getTname());
+                            sqliteDatabase.insert("blackBvid", null, values);
+
+                            dbOpenHelper.close();
+                            sqliteDatabase.close();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                        resultBeans.remove(videoViewHolder.getBindingAdapterPosition());
+                        notifyItemRemoved(videoViewHolder.getBindingAdapterPosition());
+                        notifyItemRangeChanged(videoViewHolder.getBindingAdapterPosition(), getItemCount());
+                        Toast.makeText(mContext,"屏蔽视频成功",Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+                blacklistAuthor.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext,"blackList.db",null,DBOpenHelper.DB_VERSION);
+                        SQLiteDatabase sqliteDatabase = dbOpenHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        values.put("mid", resultBeans.get(videoViewHolder.getBindingAdapterPosition()).getMid());
+                        sqliteDatabase.insert("blackMid", null, values);
+
+                        dbOpenHelper.close();
+                        sqliteDatabase.close();
+
+                        resultBeans.remove(videoViewHolder.getBindingAdapterPosition());
+                        notifyItemRemoved(videoViewHolder.getBindingAdapterPosition());
+                        notifyItemRangeChanged(videoViewHolder.getBindingAdapterPosition(), getItemCount());
+
+                        dialog.dismiss();
+                        Toast.makeText(mContext,"屏蔽UP主成功",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                blacklistTag.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext,"blackList.db",null,DBOpenHelper.DB_VERSION);
+                        SQLiteDatabase sqliteDatabase = dbOpenHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+
+                        List<String> tags = new ArrayList<>();
+
+                        for (CheckBox checkBox : checkBoxs){
+                            if (checkBox.isChecked()){
+                                tags.add(checkBox.getText().toString());
+                            }
+                        }
+                        if (tags.size() == 0){
+                            Toast.makeText(mContext,"请选择至少一个TAG",Toast.LENGTH_SHORT).show();
+                        }else {
+
+                            for (String tmp : tags){
+                                values.put("tag", tmp);
+                                sqliteDatabase.insert("blackTag", null, values);
+                                Log.i("blacklistTag", tmp);
+                            }
+
+                            Toast.makeText(mContext,"屏蔽TAG成功",Toast.LENGTH_SHORT).show();
+
+                            resultBeans.remove(videoViewHolder.getBindingAdapterPosition());
+                            notifyItemRemoved(videoViewHolder.getBindingAdapterPosition());
+                            notifyItemRangeChanged(videoViewHolder.getBindingAdapterPosition(), getItemCount());
+
+                            dialog.dismiss();
+                        }
+                        sqliteDatabase.close();
+                        dbOpenHelper.close();
+                        sqliteDatabase.close();
+                    }
+                });
+                dialog.show();
                 return true;
             }
         });

@@ -133,6 +133,8 @@
             android:text="作者"
             android:textSize="12dp"
             android:paddingLeft="1dp"
+            android:lines="1"
+            android:ellipsize="end"
             app:layout_constraintHorizontal_bias="0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

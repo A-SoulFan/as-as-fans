@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,9 +47,20 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("bilibili://following/detail/" + imageDataBean.get(imageViewHolder.getBindingAdapterPosition()).getDy_id());
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                context.startActivity(intent);
+                try {
+                    Uri uri = Uri.parse("bilibili://following/detail/" + imageDataBean.get(imageViewHolder.getBindingAdapterPosition()).getDy_id());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    context.startActivity(intent);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(context,"没有找到或无法用bilibili打开，尝试采用浏览器打开", Toast.LENGTH_LONG).show();
+                    Intent intent= new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse("https://t.bilibili.com/" + imageDataBean.get(imageViewHolder.getBindingAdapterPosition()).getDy_id());
+                    intent.setData(content_url);
+                    context.startActivity(intent);
+                }
+
             }
         });
         return imageViewHolder;
@@ -86,13 +97,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         // 屏幕宽度算法:屏幕宽度（像素）/屏幕密度
         int screenWidth = width;  // 屏幕宽度(dp)
 //        screenWidth = 600;
-        Log.i("widthdp", String.valueOf(screenWidth));
-        Log.i("dm.density", String.valueOf(density));
+//        Log.i("widthdp", String.valueOf(screenWidth));
+//        Log.i("dm.density", String.valueOf(density));
 
         layoutParams.width = (int) ((screenWidth - ImageFanArtFragment.divider*density)/2);//(imageDataBean.get(position).getPic_url().get(0).getImg_width()/density);
         layoutParams.height = (int) ((imageDataBean.get(position).getPic_url().get(0).getImg_height() /imageDataBean.get(position).getPic_url().get(0).getImg_width())*layoutParams.width);
         holder.fan_art_image.setLayoutParams(layoutParams);
-        Log.i("onBindViewHolder", String.valueOf(position));
+//        Log.i("onBindViewHolder", String.valueOf(position));
     }
 
     @Override

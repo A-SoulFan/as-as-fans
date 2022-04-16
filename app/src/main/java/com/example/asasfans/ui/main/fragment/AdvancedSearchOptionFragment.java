@@ -165,7 +165,8 @@ public class AdvancedSearchOptionFragment extends Fragment {
             Log.i("endTime", String.valueOf(endTime));
             if (startTime > endTime) {
                 Toast.makeText(getActivity(), "开始时间大于结束时间，已重置", Toast.LENGTH_SHORT).show();
-                timePickerReset();
+                start_time_pick.setText(initTime);
+                end_time_pick.setText(initTime);
                 AdvancedSearchActivity.initPubdateQ();
             }
         }
@@ -177,9 +178,6 @@ public class AdvancedSearchOptionFragment extends Fragment {
             Log.i("endTime", String.valueOf(AdvancedSearchActivity.pubdateQ.get(1)));
             start_time_pick.setText(PubdateVideoAdapter.stampToDate(AdvancedSearchActivity.pubdateQ.get(0)));
             end_time_pick.setText(PubdateVideoAdapter.stampToDate(AdvancedSearchActivity.pubdateQ.get(1)));
-        }else {
-            start_time_pick.setText(initTime);
-            end_time_pick.setText(initTime);
         }
     }
 
@@ -262,9 +260,10 @@ public class AdvancedSearchOptionFragment extends Fragment {
         time_reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                timePickerReset();
-                AdvancedSearchActivity.apiConfig.setQ(AdvancedSearchActivity.getQ());
+                start_time_pick.setText(initTime);
+                end_time_pick.setText(initTime);
                 AdvancedSearchActivity.initPubdateQ();
+                AdvancedSearchActivity.apiConfig.setQ(AdvancedSearchActivity.getQ());
             }
         });
         String digists = "0123456789";

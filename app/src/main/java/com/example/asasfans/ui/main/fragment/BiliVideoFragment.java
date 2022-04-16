@@ -28,9 +28,7 @@ import com.example.asasfans.ui.customcomponent.RecyclerViewDecoration;
 import com.example.asasfans.ui.main.adapter.PubdateVideoAdapter;
 import com.example.asasfans.util.ApiConfig;
 import com.google.gson.Gson;
-import com.scwang.smart.refresh.footer.BallPulseFooter;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
-import com.scwang.smart.refresh.header.BezierRadarHeader;
 import com.scwang.smart.refresh.header.MaterialHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
@@ -187,6 +185,7 @@ public class BiliVideoFragment extends Fragment {
             }
         });
         if (firstOnCreateView) {
+            refreshLayout.autoRefreshAnimationOnly();
             cachedThreadPool.execute(networkTask.setParam(apiConfig.getUrl()));
             firstOnCreateView = false;
         }
@@ -202,6 +201,7 @@ public class BiliVideoFragment extends Fragment {
             Gson gson =new Gson();
             switch (msg.what){
                 case GET_DATA_SUCCESS:
+                    refreshLayout.finishRefresh();
                     if (val.startsWith("{\"code\":0,\"message\":\"ok\"")) {
                         AdvancedSearchDataBean advancedSearchDataBean = gson.fromJson(val, AdvancedSearchDataBean.class);
                         List<AdvancedSearchDataBean.DataBean.ResultBean> allResultBeans = advancedSearchDataBean.getData().getResult();
@@ -292,23 +292,23 @@ public class BiliVideoFragment extends Fragment {
 //            ACache aCache = ACache.get(getActivity());
 //            String tmpACache = aCache.getAsString(url);
 //            if (tmpACache == null) {
-                OkHttpClient client = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS).build();
-                Request request = new Request.Builder().url(url)
-                        .get().build();
-                Call call = client.newCall(request);
-                Response response = null;
-                String tmp;
-                try {
-                    response = call.execute();
-                    tmp = response.body().string();
-                    msg.what = GET_DATA_SUCCESS;
-                    data.putString("AdvancedSearchDataBean", tmp);
+            OkHttpClient client = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS).build();
+            Request request = new Request.Builder().url(url)
+                    .get().build();
+            Call call = client.newCall(request);
+            Response response = null;
+            String tmp;
+            try {
+                response = call.execute();
+                tmp = response.body().string();
+                msg.what = GET_DATA_SUCCESS;
+                data.putString("AdvancedSearchDataBean", tmp);
 //                    aCache.put(url, tmp, ACache.TIME_HOUR);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
 //                page--;
-                    handler.sendEmptyMessage(NETWORK_ERROR);
-                }
+                handler.sendEmptyMessage(NETWORK_ERROR);
+            }
 //            }else {
 //                msg.what = GET_DATA_SUCCESS;
 //                data.putString("AdvancedSearchDataBean", aCache.getAsString(url));

@@ -91,15 +91,11 @@
             android:layout_height="wrap_content" />
     </com.google.android.material.appbar.AppBarLayout>
 
-
-
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:background="@color/lightGray"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 

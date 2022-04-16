@@ -40,7 +40,7 @@ public class ClickJumpActivity extends AppCompatActivity {
         } else if (data.getString("WebUrl").equals(ToolsAdapter.iconUrl.get(0))){
             transaction.replace(R.id.click_jump, ImageFanArtFragment.newInstance());
         }else {
-            transaction.replace(R.id.click_jump, WebFragment.newInstance(data.getString("WebUrl")));
+            transaction.replace(R.id.click_jump, WebFragment.newInstance(data.getString("WebUrl"), false));
         }
 //        transaction.replace(R.id.click_jump, WebFragment.newInstance(data.getString("WebUrl")));
         transaction.commit();

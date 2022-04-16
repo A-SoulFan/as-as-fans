@@ -1,17 +1,21 @@
 package com.example.asasfans;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -32,11 +36,9 @@ import com.example.asasfans.data.GithubVersionBean;
 import com.example.asasfans.data.TabData;
 import com.example.asasfans.ui.main.adapter.BottomPagerAdapter;
 import com.example.asasfans.ui.main.adapter.NewBottomPagerAdapter;
-import com.example.asasfans.ui.main.adapter.ToolsAdapter;
-import com.example.asasfans.ui.main.fragment.ImageFanArtFragment;
-import com.example.asasfans.ui.main.fragment.MainFragment;
-import com.example.asasfans.ui.main.fragment.ToolsFragment;
+import com.example.asasfans.ui.main.fragment.NewToolsFragment;
 import com.example.asasfans.ui.main.fragment.WebFragment;
+import com.example.asasfans.util.ACache;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -51,6 +53,9 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
+import com.yy.floatserver.FloatClient;
+import com.yy.floatserver.FloatHelper;
+import com.yy.floatserver.IFloatPermissionCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -93,6 +98,9 @@ public class TestActivity extends AppCompatActivity {
     private RotateAnimation mRotateAnimation;
     private Handler mHandler = new Handler();
 
+    private NewBottomPagerAdapter newBottomPagerAdapter;
+
+    public static FloatHelper floatHelper;
     /*
     权限相关
      */
@@ -100,17 +108,39 @@ public class TestActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.INTERNET,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_NETWORK_STATE
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.SYSTEM_ALERT_WINDOW
     };
     List<String> mPermissionList = new ArrayList<>();
     private static final int PERMISSION_REQUEST = 1;
+    private static final int REQUEST_DIALOG_PERMISSION = 2;
+
+    public static Context contextTestActivity;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ACache aCache = ACache.get(this);
+        String tmpACache =  aCache.getAsString("isShowFloatingBall"); // yes or no
+        if (tmpACache == null){
+            floatHelper.show();
+//            Toast.makeText(TestActivity.this, "悬浮球默认打开哦，可以在设置关闭", Toast.LENGTH_SHORT).show();
+        }else if (tmpACache.equals("yes")){
+            floatHelper.show();
+        }else if (tmpACache.equals("no")){
+
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_bottom_main);
+        contextTestActivity = TestActivity.this;
         initImageLoader();
         checkPermission();
+        initFloatingBall(TestActivity.this);
+
 //        setContentView(R.layout.activity_bottom_main);
 //
 //        //恢复时会第二次添加底部导航栏
@@ -126,8 +156,9 @@ public class TestActivity extends AppCompatActivity {
 //        tabs = findViewById(R.id.tabs_bottom);
 //        tabs.setupWithViewPager(viewPager);
         bottomBarLayout = findViewById(R.id.bbl);
+        newBottomPagerAdapter = new NewBottomPagerAdapter(getSupportFragmentManager());
         viewPager = findViewById(R.id.vp_content);
-        viewPager.setAdapter(new NewBottomPagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(newBottomPagerAdapter);
         viewPager.setOffscreenPageLimit(4);
         bottomBarLayout.setViewPager(viewPager);
 
@@ -179,10 +210,12 @@ public class TestActivity extends AppCompatActivity {
 //                R.drawable.divider)); //设置分割线的样式
 //        linearLayout.setDividerPadding(20); //设置分割线间隔
 
-        Intent intent =getIntent();
-        Bundle bundle =intent.getExtras();
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
         Gson gson = new Gson();
-        if (bundle.getString("latestVersion").equals("")){
+        if (bundle == null){
+
+        } else if (bundle.getString("latestVersion").equals("")){
             Toast.makeText(TestActivity.this, "网络错误，版本号获取失败", Toast.LENGTH_SHORT).show();
         }else {
             if (bundle.getString("latestVersion").startsWith("{\"url\"")){
@@ -221,6 +254,7 @@ public class TestActivity extends AppCompatActivity {
         }
     }
 
+
     private void cancelTabLoading(BottomBarItem bottomItem) {
         Animation animation = bottomItem.getImageView().getAnimation();
         if (animation != null){
@@ -241,9 +275,15 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void initImageLoader(){
-        Log.i("APATH", getApplicationContext().getFilesDir().getAbsolutePath());
-        Log.i("BPATH", getExternalCacheDir().getPath());
-        String dirname = getExternalCacheDir().getPath() + "/pic";
+//        Log.i("APATH", getApplicationContext().getFilesDir().getAbsolutePath());
+//        Log.i("BPATH", getExternalCacheDir().getPath());
+        String systemPath = getExternalCacheDir().getPath();
+        String dirname;
+        if (systemPath == null){
+            dirname = "/storage/emulated/0/Android/data/com.example.asasfans/cache/pic";
+        }else {
+            dirname = getExternalCacheDir().getPath() + "/pic";
+        }
 
         // 现在创建目录
 
@@ -260,7 +300,7 @@ public class TestActivity extends AppCompatActivity {
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .memoryCacheExtraOptions(480, 800) // max width, max height，即保存的每个缓存文件的最大长宽
-                .threadPoolSize(6) //线程池内加载的数量
+                .threadPoolSize(10) //线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator()) //将保存的时候的URI名称用MD5 加密
@@ -270,10 +310,86 @@ public class TestActivity extends AppCompatActivity {
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .defaultDisplayImageOptions(options)// 由原先的discCache -> diskCache
                 .diskCache(new UnlimitedDiskCache(new File(dirname)))//自定义缓存路径
-                .imageDownloader(new BaseImageDownloader(this, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
+                .imageDownloader(new BaseImageDownloader(this, 5 * 1000, 5 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
 //                .writeDebugLogs() // Remove for release app
                 .build();
         ImageLoader.getInstance().init(config);//全局初始化此配置
+    }
+
+    public void initFloatingBall(Context context){
+        View view =  LayoutInflater.from(contextTestActivity).inflate(R.layout.view_floating_ball, null);
+        floatHelper = new FloatClient.Builder()
+                .with(contextTestActivity)
+                .addView(view)
+                .enableDefaultPermissionDialog(false)
+                .setClickTarget(TestActivity.class)
+                .addPermissionCallback(new IFloatPermissionCallback() {
+                    @Override
+                    public void onPermissionResult(boolean b) {
+                        if (!b){
+                            ACache aCache = ACache.get(context);
+                            String isNoLongerShowFloatingBall =  aCache.getAsString("isNoLongerShowFloatingBall"); // yes or no
+                            DialogPlus dialogP = DialogPlus.newDialog(context)
+                                    .setContentHolder(new ViewHolder(R.layout.my_dialog))
+                                    .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                                    .setContentWidth(ViewGroup.LayoutParams.MATCH_PARENT)
+                                    .setGravity(Gravity.CENTER)
+                                    .setContentBackgroundResource(R.color.transparent)
+                                    .create();;
+                            View dialogViewP = dialogP.getHolderView();
+                            TextView title = dialogViewP.findViewById(R.id.dialog_title);
+                            TextView content = dialogViewP.findViewById(R.id.dialog_content);
+                            TextView confirm = dialogViewP.findViewById(R.id.confirm);
+                            TextView cancel = dialogViewP.findViewById(R.id.cancel);
+                            title.setText("需要悬浮窗权限");
+                            content.setText("通过悬浮球可以在其他应用快速回到AsAsFans，需要去开启悬浮窗权限");
+                            confirm.setText("去开启");
+                            cancel.setText("不再提醒");
+                            cancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    aCache.put("isNoLongerShowFloatingBall", "yes");
+                                    dialogP.dismiss();
+                                }
+                            });
+                            confirm.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    int sdkInt = Build.VERSION.SDK_INT;
+                                    if (sdkInt >= Build.VERSION_CODES.O) {//8.0以上
+                                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                                        startActivityForResult(intent, REQUEST_DIALOG_PERMISSION);
+                                    } else if (sdkInt >= Build.VERSION_CODES.M) {//6.0-8.0
+                                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                                        intent.setData(Uri.parse("package:" + getPackageName()));
+                                        startActivityForResult(intent, REQUEST_DIALOG_PERMISSION);
+                                    } else {//4.4-6.0一下
+                                        //无需处理了
+                                    }
+                                    dialogP.dismiss();
+                                }
+                            });
+                            if (isNoLongerShowFloatingBall == null){
+                                dialogP.show();
+                            }else if (isNoLongerShowFloatingBall.equals("yes")){
+                                aCache.put("isShowFloatingBall", "no");
+                            }else if (isNoLongerShowFloatingBall.equals("no")){
+                                dialogP.show();
+                            }
+                        }
+                    }
+                })
+                .build();
+        ACache aCache = ACache.get(this);
+        String tmpACache =  aCache.getAsString("isShowFloatingBall"); // yes or no
+        if (tmpACache == null){
+            floatHelper.show();
+//            Toast.makeText(TestActivity.this, "悬浮球默认打开哦，可以在设置关闭", Toast.LENGTH_SHORT).show();
+        }else if (tmpACache.equals("yes")){
+            floatHelper.show();
+        }else if (tmpACache.equals("no")){
+
+        }
     }
 
     /**
@@ -283,45 +399,45 @@ public class TestActivity extends AppCompatActivity {
      * @author akari
      * @time 2022/3/5 15:02
      */
-    private void initTab() {
-        //这里初始化TabLayout
-//        Log.i("initTab", String.valueOf((getSharedPreferences("ToolsData", MODE_PRIVATE)).contains(ToolsAdapter.iconUrl.get(0))));
-        //判断是否为第一次加载
-        if (!((getSharedPreferences("ToolsData", MODE_PRIVATE)).contains(ToolsAdapter.iconUrl.get(0)))) {
-            userInfo = getSharedPreferences("ToolsData", MODE_PRIVATE);
-            editor = userInfo.edit();
-            for (int i = 0; i < ToolsAdapter.iconUrl.size(); i++) {
-                editor.putBoolean(ToolsAdapter.iconUrl.get(i), false);
-                editor.commit();
-            }
-        }
-        mFragmentList.add(new TabData("视频", MainFragment.newInstance()));
-        if (getSharedPreferences("ToolsData", MODE_PRIVATE) != null){
-            userInfo = getSharedPreferences("ToolsData", MODE_PRIVATE);
-            tmp = userInfo.getAll();
-            if (tmp.size() < ToolsAdapter.iconUrl.size()){
-                editor = userInfo.edit();
-                for (int i = tmp.size(); i < ToolsAdapter.iconUrl.size(); i++) {
-                    editor.putBoolean(ToolsAdapter.iconUrl.get(i), false);
-                    editor.commit();
-                }
-            }
-            Log.i("initTab", tmp.toString());
-            for (int i = 0 ; i < tmp.size() ; i++){
-                if (userInfo.getBoolean(ToolsAdapter.iconUrl.get(i), false)) {
-                    switch (i){
-                        case 0:
-                            mFragmentList.add(new TabData("二创图片", ImageFanArtFragment.newInstance()));
-                            break;
-                        default:
-                            mFragmentList.add(new TabData(ToolsAdapter.name.get(i), WebFragment.newInstance(ToolsAdapter.iconUrl.get(i))));
-                            break;
-                    }
-                }
-            }
-        }
-        mFragmentList.add(new TabData("工具", ToolsFragment.newInstance()));
-    }
+//    private void initTab() {
+//        //这里初始化TabLayout
+////        Log.i("initTab", String.valueOf((getSharedPreferences("ToolsData", MODE_PRIVATE)).contains(ToolsAdapter.iconUrl.get(0))));
+//        //判断是否为第一次加载
+//        if (!((getSharedPreferences("ToolsData", MODE_PRIVATE)).contains(ToolsAdapter.iconUrl.get(0)))) {
+//            userInfo = getSharedPreferences("ToolsData", MODE_PRIVATE);
+//            editor = userInfo.edit();
+//            for (int i = 0; i < ToolsAdapter.iconUrl.size(); i++) {
+//                editor.putBoolean(ToolsAdapter.iconUrl.get(i), false);
+//                editor.commit();
+//            }
+//        }
+//        mFragmentList.add(new TabData("视频", MainFragment.newInstance()));
+//        if (getSharedPreferences("ToolsData", MODE_PRIVATE) != null){
+//            userInfo = getSharedPreferences("ToolsData", MODE_PRIVATE);
+//            tmp = userInfo.getAll();
+//            if (tmp.size() < ToolsAdapter.iconUrl.size()){
+//                editor = userInfo.edit();
+//                for (int i = tmp.size(); i < ToolsAdapter.iconUrl.size(); i++) {
+//                    editor.putBoolean(ToolsAdapter.iconUrl.get(i), false);
+//                    editor.commit();
+//                }
+//            }
+//            Log.i("initTab", tmp.toString());
+//            for (int i = 0 ; i < tmp.size() ; i++){
+//                if (userInfo.getBoolean(ToolsAdapter.iconUrl.get(i), false)) {
+//                    switch (i){
+//                        case 0:
+//                            mFragmentList.add(new TabData("二创图片", ImageFanArtFragment.newInstance()));
+//                            break;
+//                        default:
+//                            mFragmentList.add(new TabData(ToolsAdapter.name.get(i), WebFragment.newInstance(ToolsAdapter.iconUrl.get(i))));
+//                            break;
+//                    }
+//                }
+//            }
+//        }
+//        mFragmentList.add(new TabData("工具", ToolsFragment.newInstance()));
+//    }
 
 //    public static void updateTabs(List<TabData> FragmentList){
 //        mFragmentList.addAll(1, FragmentList);
@@ -349,7 +465,8 @@ public class TestActivity extends AppCompatActivity {
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        mCurrentFragment = bottomPagerAdapter.getCurrentFragment();
+        mCurrentFragment = newBottomPagerAdapter.getCurrentFragment();
+
         Log.i("instanceof", String.valueOf(mCurrentFragment instanceof WebFragment));
         Log.i("keyCode", String.valueOf(keyCode));
         //解决音量键的监听被webview劫持无法使用的问题
@@ -359,14 +476,17 @@ public class TestActivity extends AppCompatActivity {
         if(mCurrentFragment instanceof WebFragment){
             ((WebFragment)mCurrentFragment).onKeyDown(keyCode, event);
             return true;
-        }else if (keyCode==KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+        }else if(mCurrentFragment instanceof NewToolsFragment){
+            ((NewToolsFragment) mCurrentFragment).current().onKeyDown(keyCode, event);
+            return true;
+        }
+        else if (keyCode==KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             long backPressed = System.currentTimeMillis();
             if (backPressed - lastBackPressed > QUIT_INTERVAL) {
                 lastBackPressed = backPressed;
                 Toast.makeText(this,"再按一次退出", Toast.LENGTH_LONG).show();
             } else {
                 finish();
-                System.exit(0);
             }
             return true;
         }
@@ -403,6 +523,36 @@ public class TestActivity extends AppCompatActivity {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_DIALOG_PERMISSION:
+                floatHelper.show();
+                ACache aCache = ACache.get(this);
+                aCache.put("isShowFloatingBall", "yes");
+                aCache.put("isNoLongerShowFloatingBall", "no");
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        floatHelper.release();
+        Log.i("TestActivity", "onDestroy: ");
+    }
+    public static void launchActivity(Activity act) {
+        try {
+            Intent intent = new Intent(act, TestActivity.class);
+            act.startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

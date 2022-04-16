@@ -15,9 +15,9 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:id="@+id/appBar"
-        android:theme="@style/AppTheme.PopupOverlay">
+        android:theme="@style/AppTheme">
         <LinearLayout
             android:layout_marginLeft="1dp"
             android:layout_marginRight="1dp"
