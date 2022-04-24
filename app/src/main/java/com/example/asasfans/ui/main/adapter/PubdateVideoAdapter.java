@@ -88,12 +88,6 @@ public class PubdateVideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                 .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
                 .setContentWidth(ViewGroup.LayoutParams.MATCH_PARENT)
                 .setCancelable(true)
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(DialogPlus dialog, View view) {
-                        dialog.dismiss();
-                    }
-                })
                 .setGravity(Gravity.BOTTOM)
                 .create();
         dialogView = dialog.getHolderView();

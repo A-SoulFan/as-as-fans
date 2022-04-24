@@ -259,7 +259,7 @@ public class WebFragment extends Fragment {
                             e.printStackTrace();
                             webResourceResponse = null;
                         }
-                        webResourceResponse = new WebResourceResponse("video/mp4", "utf-8", is);
+                        webResourceResponse = new WebResourceResponse("video/avc", "utf-8", is);
                     }else {
 
                         String[] tmp = proxyUrl.split("/");
@@ -284,7 +284,7 @@ public class WebFragment extends Fragment {
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
                                 InputStream inputStream = response.body().byteStream();
-                                webResourceResponse = new WebResourceResponse("video/mp4", "utf-8", inputStream);
+                                webResourceResponse = new WebResourceResponse("video/avc", "utf-8", inputStream);
                             }
                         });
                     }

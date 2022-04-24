@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
@@ -42,6 +43,8 @@ import com.example.asasfans.util.SPUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author akarinini
@@ -139,6 +142,9 @@ public class MusicService extends LifecycleService implements MediaPlayer.OnComp
     public static Context musicContext;
 
     LimitQueue<String> currentSongTime = new LimitQueue<String>(3);
+
+    private Timer timer = new Timer();
+    private static int clickCount;
 
     public class MusicBinder extends Binder {
         public MusicService getService() {
@@ -630,6 +636,20 @@ public class MusicService extends LifecycleService implements MediaPlayer.OnComp
                     }
                 }
             }
+            if(Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())) {
+                KeyEvent keyEvent = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_HEADSETHOOK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                    clickCount = clickCount + 1;
+                    if(clickCount == 1){
+                        HeadsetTimerTask headsetTimerTask = new HeadsetTimerTask();
+                        timer.schedule(headsetTimerTask,1000);
+                    }
+                } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_MEDIA_NEXT) {
+                    handler.sendEmptyMessage(2);
+                } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PREVIOUS) {
+                    handler.sendEmptyMessage(3);
+                }
+            }
         }
 
     };
@@ -655,6 +675,43 @@ public class MusicService extends LifecycleService implements MediaPlayer.OnComp
             i++;
         } while (i < 10);
     }
+    class HeadsetTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            try{
+                if(clickCount==1){
+                    handler.sendEmptyMessage(1);
+                }else if(clickCount==2){
+                    handler.sendEmptyMessage(2);
+                }else if(clickCount>=3){
+                    handler.sendEmptyMessage(3);
+                }
+                clickCount=0;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            try {
+                if (msg.what == 1) {
+                    ((WebFragment)TestActivity.studioFragment).clickPlaySong();
+                    ((WebFragment)TestActivity.studioFragment).updateName();
+                }else if(msg.what == 2){
+                    ((WebFragment)TestActivity.studioFragment).clickNextSong();
+                    ((WebFragment)TestActivity.studioFragment).updateName();
+                }else if(msg.what == 3){
+                    ((WebFragment)TestActivity.studioFragment).clickPreviousSong();
+                    ((WebFragment)TestActivity.studioFragment).updateName();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
 
 }
 
