@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -365,7 +366,8 @@ public class ImageFanArtFragment extends Fragment {
                         Toast.makeText(getActivity(),"后面没有了~",Toast.LENGTH_SHORT).show();
 //                        Log.i("GET_DATA_SUCCESS", val);
                         break;
-                    }else {
+                    }else if (val.startsWith("[{\"dy_id\":")){
+//                        Log.i("GET_DATA_SUCCESS:ImageDataBean", val);
                         List<ImageDataBean> imageDataBean = gson.fromJson(val, new TypeToken<List<ImageDataBean>>() {}.getType());
 //                        Log.i("GET_DATA_SUCCESS:ImageDataBean", val);
                         int pastSize = imageRecyclerViewData.size();
@@ -374,6 +376,9 @@ public class ImageFanArtFragment extends Fragment {
                             Toast.makeText(getActivity(),"什么都没有了~",Toast.LENGTH_SHORT).show();
                         }
                         imageAdapter.notifyItemRangeChanged(pastSize, imageDataBean.size());
+                    }else {
+                        Log.i("GET_DATA_SUCCESS:ImageDataBean", val);
+                        Toast.makeText(getActivity(),"Server Error (500)",Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case NETWORK_ERROR:

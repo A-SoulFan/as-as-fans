@@ -1,16 +1,28 @@
 package com.example.asasfans;
 
+import static com.example.asasfans.service.MusicService.CLOSE;
+import static com.example.asasfans.service.MusicService.NEXT;
+import static com.example.asasfans.service.MusicService.PAUSE;
+import static com.example.asasfans.service.MusicService.PLAY;
+import static com.example.asasfans.service.MusicService.PREV;
+import static com.example.asasfans.service.MusicService.PROGRESS;
+
 import android.Manifest;
-import android.app.Activity;
+import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,12 +40,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.ViewPager;
 
 import com.chaychan.viewlib.bottombarlayout.BottomBarItem;
 import com.chaychan.viewlib.bottombarlayout.BottomBarLayout;
 import com.example.asasfans.data.GithubVersionBean;
 import com.example.asasfans.data.TabData;
+import com.example.asasfans.service.LiveDataBus;
+import com.example.asasfans.service.MusicService;
 import com.example.asasfans.ui.main.adapter.BottomPagerAdapter;
 import com.example.asasfans.ui.main.adapter.NewBottomPagerAdapter;
 import com.example.asasfans.ui.main.fragment.NewToolsFragment;
@@ -53,9 +69,11 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
+
 import com.yy.floatserver.FloatClient;
 import com.yy.floatserver.FloatHelper;
 import com.yy.floatserver.IFloatPermissionCallback;
+
 
 import java.io.File;
 import java.util.ArrayList;
@@ -81,7 +99,7 @@ public class TestActivity extends AppCompatActivity {
     private static final int QUIT_INTERVAL = 3000;
 
     private TabLayout tabs;
-    private ViewPager viewPager;
+    public static ViewPager viewPager;
     public List<TabData> mFragmentList = new ArrayList<>();
 
     private BottomPagerAdapter bottomPagerAdapter;
@@ -110,13 +128,46 @@ public class TestActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.SYSTEM_ALERT_WINDOW,
-            Manifest.permission.REORDER_TASKS
+            Manifest.permission.REORDER_TASKS,
+            Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE,
+            Manifest.permission.ACCESS_NOTIFICATION_POLICY,
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.WAKE_LOCK
     };
     List<String> mPermissionList = new ArrayList<>();
     private static final int PERMISSION_REQUEST = 1;
     private static final int REQUEST_DIALOG_PERMISSION = 2;
 
     public static Context contextTestActivity;
+
+    private MusicService.MusicBinder musicBinder;
+
+    private MusicService musicService;
+
+    public static Object studioFragment;
+
+    private Intent serviceIntent;
+
+    /**
+     * 当Service中通知栏有变化时接收到消息
+     */
+    private LiveDataBus.BusMutableLiveData<String> activityLiveData;
+    /**
+     * 当在Activity中做出播放状态的改变时，通知做出相应改变
+     */
+    private LiveDataBus.BusMutableLiveData<String> notificationLiveData;
+
+    //试图解决锁屏后wlan休眠的问题，无效，寄了
+    private PowerManager pm;
+
+    private PowerManager.WakeLock wl;
+
+    // 定义WifiManager对象
+    private WifiManager wifiManager;
+
+    // 定义一个WifiLock
+    private WifiManager.WifiLock wifiLock;
+//    private static HttpProxyCacheServer proxy;
 
     @Override
     protected void onResume() {
@@ -139,6 +190,7 @@ public class TestActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,6 +198,12 @@ public class TestActivity extends AppCompatActivity {
         contextTestActivity = TestActivity.this;
         initImageLoader();
         checkPermission();
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "POWER_MANAGER_TAG");
+        wl.acquire();
+        wifiManager = (WifiManager) contextTestActivity.getSystemService(Context.WIFI_SERVICE);
+        wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "WifiLocKManager");
+        wifiLock.acquire();
         initFloatingBall(TestActivity.this);
 
 //        setContentView(R.layout.activity_bottom_main);
@@ -168,6 +226,8 @@ public class TestActivity extends AppCompatActivity {
         viewPager.setAdapter(newBottomPagerAdapter);
         viewPager.setOffscreenPageLimit(4);
         bottomBarLayout.setViewPager(viewPager);
+
+
 
         bottomBarLayout.setOnItemSelectedListener(new BottomBarLayout.OnItemSelectedListener() {
             @Override
@@ -259,7 +319,112 @@ public class TestActivity extends AppCompatActivity {
                 }
             }
         }
+        FragmentStatePagerAdapter f = (FragmentStatePagerAdapter) viewPager.getAdapter();
+        if (f != null) {
+            //instantiateItem(pager, position) 方法会返回在position位置的fragment的引用。
+            //如果该fragment 已经实例化了,再次调用instantiateItem(pager,position)的时候，该方法并不会调用
+            //getItem()来再次实例化fragment，而是直接返回引用。
+            studioFragment = f.instantiateItem(viewPager, 2);
+        }
+        //绑定服务
+        serviceIntent = new Intent(contextTestActivity, MusicService.class);
+//        bindService(serviceIntent, connection, BIND_AUTO_CREATE);
+        startService(serviceIntent);
+//        startForegroundService(serviceIntent);
+        //通知栏的观察者
+        notificationObserver();
+        //控制通知栏
+        notificationLiveData = LiveDataBus.getInstance().with("notification_control", String.class);
+
     }
+
+//    public static void init(Context aContext) {
+//        //设置点击栏目知想打开的页面
+//        RxConstants.CLASSNAME = "MainActivty";
+//
+//        RxDownloadManager manager = RxDownloadManager.getInstance();
+//        manager.init(aContext, new DownloadAdapter());
+//        manager.setContext(aContext);
+//        manager.setListener(new DLDownloadListener(aContext));
+//        DLNormalCallback normalCallback = new DLNormalCallback();
+//        if (manager.getClient() != null) {
+//            manager.getClient().setCallback(normalCallback);
+//        }
+//        RxDownLoadCenter.getInstance(aContext).loadTask();
+//    }
+    /**
+     * 通知栏动作观察者
+     */
+    private void notificationObserver() {
+        activityLiveData = LiveDataBus.getInstance().with("activity_control", String.class);
+        activityLiveData.observe(TestActivity.this, true, new Observer<String>() {
+            @Override
+            public void onChanged(String state) {
+
+                switch (state) {
+                    case PLAY:
+//                        btnPlay.setIcon(getDrawable(R.mipmap.icon_pause));
+//                        btnPlay.setIconTint(getColorStateList(R.color.gold_color));
+//                        BLog.d(TAG,state);
+//                        changeUI(musicService.getPlayPosition());
+                        break;
+                    case PAUSE:
+                    case CLOSE:
+//                        btnPlay.setIcon(getDrawable(R.mipmap.icon_play));
+//                        btnPlay.setIconTint(getColorStateList(R.color.white));
+//                        changeUI(musicService.getPlayPosition());
+                        break;
+                    case PREV:
+//                        BLog.d(TAG, "上一曲");
+//                        changeUI(musicService.getPlayPosition());
+                        break;
+                    case NEXT:
+//                        BLog.d(TAG, "下一曲");
+//                        changeUI(musicService.getPlayPosition());
+                        break;
+                    case PROGRESS:
+                        //播放进度发生改变时,只改变进度，不改变其他
+//                        musicProgress.setProgress(musicService.mediaPlayer.getCurrentPosition(), musicService.mediaPlayer.getDuration());
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        });
+    }
+
+//    public static HttpProxyCacheServer getProxy() {
+//
+////        App app = (App) context.getApplicationContext();
+//        return proxy == null ? (proxy = newProxy()) : proxy;
+//    }
+//    private static HttpProxyCacheServer newProxy() {
+//        return new HttpProxyCacheServer.Builder(contextTestActivity)
+//                .maxCacheSize(6 * 1024 * 1024)       // 1 Gb for cache
+//                .build();
+//    }
+    private ServiceConnection connection = new ServiceConnection() {
+
+        /**
+         * 连接服务
+         * @param name
+         * @param service
+         */
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            musicBinder = (MusicService.MusicBinder) service;
+            musicService = musicBinder.getService();
+            Log.i("onServiceConnected", "Service与Activity已连接");
+
+        }
+
+        //断开服务
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            musicBinder = null;
+        }
+    };
 
 
     private void cancelTabLoading(BottomBarItem bottomItem) {
@@ -281,15 +446,18 @@ public class TestActivity extends AppCompatActivity {
         dialogView = dialog.getHolderView();
     }
 
+
     private void initImageLoader(){
 //        Log.i("APATH", getApplicationContext().getFilesDir().getAbsolutePath());
 //        Log.i("BPATH", getExternalCacheDir().getPath());
-        String systemPath = getExternalCacheDir().getPath();
+//        String systemPath;
         String dirname;
-        if (systemPath == null){
-            dirname = "/storage/emulated/0/Android/data/com.example.asasfans/cache/pic";
-        }else {
+        try {
+//            systemPath = getExternalCacheDir().getPath();
             dirname = getExternalCacheDir().getPath() + "/pic";
+        }catch (Exception e){
+            e.printStackTrace();
+            dirname = "/storage/emulated/0/Android/data/com.example.asasfans/cache/pic";
         }
 
         // 现在创建目录
@@ -399,58 +567,11 @@ public class TestActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * @description 根据存储的CheckBox状态初始化底部栏，与ToolsAdapter耦合性很高，修改时要注意
-     * @param
-     * @return
-     * @author akari
-     * @time 2022/3/5 15:02
-     */
-//    private void initTab() {
-//        //这里初始化TabLayout
-////        Log.i("initTab", String.valueOf((getSharedPreferences("ToolsData", MODE_PRIVATE)).contains(ToolsAdapter.iconUrl.get(0))));
-//        //判断是否为第一次加载
-//        if (!((getSharedPreferences("ToolsData", MODE_PRIVATE)).contains(ToolsAdapter.iconUrl.get(0)))) {
-//            userInfo = getSharedPreferences("ToolsData", MODE_PRIVATE);
-//            editor = userInfo.edit();
-//            for (int i = 0; i < ToolsAdapter.iconUrl.size(); i++) {
-//                editor.putBoolean(ToolsAdapter.iconUrl.get(i), false);
-//                editor.commit();
-//            }
-//        }
-//        mFragmentList.add(new TabData("视频", MainFragment.newInstance()));
-//        if (getSharedPreferences("ToolsData", MODE_PRIVATE) != null){
-//            userInfo = getSharedPreferences("ToolsData", MODE_PRIVATE);
-//            tmp = userInfo.getAll();
-//            if (tmp.size() < ToolsAdapter.iconUrl.size()){
-//                editor = userInfo.edit();
-//                for (int i = tmp.size(); i < ToolsAdapter.iconUrl.size(); i++) {
-//                    editor.putBoolean(ToolsAdapter.iconUrl.get(i), false);
-//                    editor.commit();
-//                }
-//            }
-//            Log.i("initTab", tmp.toString());
-//            for (int i = 0 ; i < tmp.size() ; i++){
-//                if (userInfo.getBoolean(ToolsAdapter.iconUrl.get(i), false)) {
-//                    switch (i){
-//                        case 0:
-//                            mFragmentList.add(new TabData("二创图片", ImageFanArtFragment.newInstance()));
-//                            break;
-//                        default:
-//                            mFragmentList.add(new TabData(ToolsAdapter.name.get(i), WebFragment.newInstance(ToolsAdapter.iconUrl.get(i))));
-//                            break;
-//                    }
-//                }
-//            }
-//        }
-//        mFragmentList.add(new TabData("工具", ToolsFragment.newInstance()));
-//    }
 
-//    public static void updateTabs(List<TabData> FragmentList){
-//        mFragmentList.addAll(1, FragmentList);
-//        if (viewPager.getAdapter() instanceof BottomPagerAdapter)
-//            ((BottomPagerAdapter)viewPager.getAdapter()).updateFragmentList(mFragmentList);
-//    }
+    private void initVideoDownloader(){
+
+
+    }
 
     public static int getVersionCode(Context mContext) {
         int versionCode = 0;
@@ -552,15 +673,15 @@ public class TestActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         floatHelper.release();
+        musicService.closeNotification();
+        stopService(serviceIntent);
+        wl.release();
+        wifiLock.release();
         Log.i("TestActivity", "onDestroy: ");
     }
-    public static void launchActivity(Activity act) {
-        try {
-            Intent intent = new Intent(act, TestActivity.class);
-            act.startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    //实现暂停音乐
+
+
+
 }
 

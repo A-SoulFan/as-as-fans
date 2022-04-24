@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.DOWNLOAD_SERVICE;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -40,9 +41,25 @@ import androidx.fragment.app.Fragment;
 
 import com.example.asasfans.AsApplication;
 import com.example.asasfans.R;
+import com.example.asasfans.TestActivity;
+import com.example.asasfans.service.MusicService;
+import com.example.asasfans.ui.main.VideoProxyManager;
+import com.example.asasfans.util.SystemUtils;
 
+
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 /**
@@ -61,8 +78,13 @@ public class WebFragment extends Fragment {
     private ValueCallback<Uri[]> mUploadCallbackForHighApi;
 
     private Boolean inBottom = true;
+    private String songName = "";
+    private String singerName = "";
+    private String currentSongTime = "";
 
-
+    private WebResourceResponse webResourceResponse = null;
+    private String proxyUrl;
+    private InputStream is;
     public static WebFragment newInstance(String url, Boolean inBottom) {
         WebFragment fragment = new WebFragment();
         Bundle args = new Bundle();
@@ -205,37 +227,84 @@ public class WebFragment extends Fragment {
                 return super.shouldOverrideKeyEvent(view, event);
             }
 
+            @SuppressLint("ResourceType")
             @Nullable
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 Log.i("shouldInterceptRequest:getUrl", request.getUrl().toString());
-                if (request.getUrl().toString().startsWith("https://asbbs-static-01.kzmidc.workers.dev/?file=/uploads/files/1/banner_1646556711136.mp4")){
-                    Log.i("banner_1646556711136.mp4", "shouldInterceptRequest: ");
-                    InputStream is = null;
-                    // 步骤2:创建一个输入流
-                    try {
-                        is =getActivity().getApplicationContext().getAssets().open("images/abc.png");
-                        // 步骤3:获得需要替换的资源(存放在assets文件夹里)
-                        // a. 先在app/src/main下创建一个assets文件夹
-                        // b. 在assets文件夹里再创建一个images文件夹
-                        // c. 在images文件夹放上需要替换的资源（此处替换的是abc.png图片）
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    // 步骤4:替换资源
-                    WebResourceResponse response = new WebResourceResponse("image/png", "utf-8", is);
-                    // 参数1：http请求里该图片的Content-Type,此处图片为image/png
-                    // 参数2：编码类型
-                    // 参数3：存放着替换资源的输入流（上面创建的那个）
-                    return response;
+                if (request.getUrl().toString().startsWith("https://jsxm.sharepoint.cn/sites/as-archive-cn-01/") ||
+                        request.getUrl().toString().startsWith("https://as-archive-cn-01.a-soul.fans") ||
+                        request.getUrl().toString().startsWith("https://as-archive-load-balance.kzmidc.workers.dev") ||
+                        request.getUrl().toString().startsWith("https://cn.as-archive.studio.asf.ink/AZCN-Sharepoint")
+                        || request.getUrl().toString().startsWith("https://as-archive-azcn-0001.asf.ink/AZCN-Sharepoint")){
+
+                    webView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateName();
+                        }
+                    });
                 }
+                if (request.getUrl().toString().startsWith("https://asbbs-static-01.kzmidc.workers.dev/?file=/uploads/files/1/banner_1646556711136.mp4") ||
+                        request.getUrl().toString().startsWith("https://as-archive-cn-01.a-soul.fans/") ||
+                        request.getUrl().toString().startsWith("https://as-archive-load-balance.kzmidc.workers.dev") ||
+                        request.getUrl().toString().startsWith("https://cn.as-archive.studio.asf.ink/AZCN-Sharepoint")
+                        || request.getUrl().toString().startsWith("https://as-archive-azcn-0001.asf.ink/AZCN-Sharepoint")){
+                    webResourceResponse = null;
+                    proxyUrl = VideoProxyManager.getInstance().getProxyUrl(request.getUrl().toString());
+//                    String proxyUrl = ProxyCacheUtils.getProxyUrl(uri.toString(), null, null);
+                    Log.i("proxyUrl", proxyUrl);
+//                    SystemUtils.inputStreamByUrl(proxyUrl);
+                    is = null;
+                    if (proxyUrl.startsWith("file://")){
+                        try {
+                            is = SystemUtils.inputStreamByUrl(proxyUrl.replaceFirst("file://",""));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            webResourceResponse = null;
+                        }
+                        webResourceResponse = new WebResourceResponse("video/mp4", "utf-8", is);
+                    }else {
+
+                        String[] tmp = proxyUrl.split("/");
+//                            is = SystemUtils.inputStreamByUrl(proxyUrl);
+
+                        //模拟音乐播放器放歌以触发videocache的缓存
+                        //1.1创建okHttpClient
+                        OkHttpClient okHttpClient = new OkHttpClient();
+
+                        //1.2创建Request对象
+                        Request okRequest = new Request.Builder().url(proxyUrl).build();
+
+                        //2.把Request对象封装成call对象
+                        Call call = okHttpClient.newCall(okRequest);
+
+                        //3.发起异步请求
+                        call.enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                e.printStackTrace();
+                            }
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                InputStream inputStream = response.body().byteStream();
+                                webResourceResponse = new WebResourceResponse("video/mp4", "utf-8", inputStream);
+                            }
+                        });
+                    }
+//                    is = null;
+                    return webResourceResponse;
+                }
+//                else if (request.getUrl().toString().startsWith("https://jsxm.sharepoint.cn/sites/as-archive-cn-01")){
+//                    return new WebResourceResponse("video/mp4", "utf-8", is);
+//                }
                 return super.shouldInterceptRequest(view, request);
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                Log.i("WebResourceRequest:getUrl", request.getUrl().toString());
-                Log.i("WebResourceRequest:getMethod", request.getMethod());
+//                Log.i("WebResourceRequest:getUrl", request.getUrl().toString());
+//                Log.i("WebResourceRequest:getMethod", request.getMethod());
                 if (request.getUrl().toString().startsWith("http")) {
                     return super.shouldOverrideUrlLoading(view, request);
                 }else {
@@ -261,6 +330,10 @@ public class WebFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 progressBar.setVisibility(View.GONE);
+                if (inBottom){
+//                    MusicService.updateNotificationShow(0);
+                    updateName();
+                }
             }
 
             @Override
@@ -374,14 +447,70 @@ public class WebFragment extends Fragment {
 //        return remoteView;
 //    }
 //
-//    public static void clickPreviousSong(){
-//        if (webView == null){
-//            Log.i("clickPreviousSong", "clickPreviousSong: ");
-//        }else {
-//            webView.loadUrl("javascript:document.getElementsByClassName(\"prevButton playButtons\").click();");
-//        }
-//
-//    }
+    public void clickPreviousSong(){
+        if (webView == null){
+            Toast.makeText(getActivity(), "还没有初始化成功", Toast.LENGTH_SHORT).show();
+        }else {
+            webView.loadUrl("javascript:document.getElementsByClassName(\"prevButton playButtons\")[0].click();");
+        }
+    }
+    public void clickOtherInfoButton(){
+        if (webView == null){
+            Toast.makeText(getActivity(), "还没有初始化成功", Toast.LENGTH_SHORT).show();
+        }else {
+            webView.loadUrl("javascript:document.getElementsByClassName(\"detailsButton otherButtons\")[0].click();");
+        }
+    }
+    public void clickPlaySong(){
+        if (webView == null){
+            Toast.makeText(getActivity(), "还没有初始化成功", Toast.LENGTH_SHORT).show();
+        }else {
+            webView.loadUrl("javascript:document.getElementsByClassName(\"playButton playButtons\")[0].click();");
+        }
+    }
+    public void clickNextSong(){
+        if (webView == null){
+            Toast.makeText(getActivity(), "还没有初始化成功", Toast.LENGTH_SHORT).show();
+        }else {
+            webView.loadUrl("javascript:document.getElementsByClassName(\"nextButton playButtons\")[0].click();");
+//            webView.loadUrl("javascript:document.getElementByXPath(\"//*[@id=\"player\"]/div[1]/div[2]/div[1]/div[2]/div[3]\").click();");
+        }
+    }
+
+    public String getCurrentSongTime(){
+        webView.evaluateJavascript("document.getElementsByClassName(\"currentTime\")[0].innerHTML;"
+                , new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+//                        Log.i(SystemUtils.trimFirstAndLastChar(value, (char) 34), "getCurrentSongTime: ");
+//                        singerName = SystemUtils.trimFirstAndLastChar(value, (char) 34);
+//                        MusicService.updateNotificationShowName(songName, singerName);
+                        currentSongTime = value;
+                    }
+                });
+        return currentSongTime;
+    }
+
+    public void updateName(){
+        webView.evaluateJavascript("document.getElementsByClassName(\"singer\")[0].innerHTML;"
+                , new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i(SystemUtils.trimFirstAndLastChar(value, (char) 34), "getSingerNameOnReceiveValue: ");
+                        singerName = SystemUtils.trimFirstAndLastChar(value, (char) 34);
+                        MusicService.updateNotificationShowName(songName, singerName);
+                    }
+                });
+        webView.evaluateJavascript("document.getElementsByClassName(\"songName\")[0].childNodes[0].innerHTML;"
+                , new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i(SystemUtils.trimFirstAndLastChar(value, (char) 34), "getSingerNameOnReceiveValue: ");
+                        songName = SystemUtils.trimFirstAndLastChar(value, (char) 34);
+                        MusicService.updateNotificationShowName(songName, singerName);
+                    }
+                });
+    }
 
     public void onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {

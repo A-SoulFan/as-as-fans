@@ -66,7 +66,7 @@ public class NewToolsFragment extends Fragment {
             "ASDB:能在线查看ASOUL所有录播的时间轴，五人的服饰，出场的场景；有字幕库，能在线搜索AS成员在直播中说过的每一句话，以及出自于哪场录播的几分几秒；内置切片工具，能精准的只下载一整场录播需要的那一小部分",
             "录音棚:收录A-SOUL几乎全部Solo以及合唱歌曲，并可在线播放并缓存，有搜索及标签筛选功能，手机端电脑端皆可使用",
             "AU都在溜:A-SOUL相关投稿播放排行，展示了B站ASOUL相关视频在线观看人数前百的稿件",
-            "二创搜图:A-SOUL二创图片原动态出处搜索",
+//            "二创搜图:A-SOUL二创图片原动态出处搜索",
             "tips:性能问题，有些web第一次加载会很慢，出现ERR_TIMED_OUT请尝试刷新或右上角浏览器打开哦",
             "直播搜图:能根据一张图片，在线搜索到这张图片是出自于哪场录播的几分几秒",
             "枝网查重:提供ASoul评论区小作文查重、检索功能。还有其他小工具：粉丝编号释义(对应的小行星编号)，枝网年度报告，阿草的太极教室(模拟和羊驼私信)等。枝网，用了都说好！另外还为开发者提供查重和OAuth接口。",
@@ -236,7 +236,7 @@ public class NewToolsFragment extends Fragment {
         webInfos.add(new WebInfo("http://asoulfan.xyz/", "icon_asf_bak", "羊驼打过的太极/QA查询", "查QA"));
         webInfos.add(new WebInfo("https://jiaranjintianchishen.me/", "icon_eat_what", "今天吃什么捏", "吃什么"));
         webInfos.add(new WebInfo("https://bili-url-1251468786.cos-website.ap-shanghai.myqcloud.com/", "icon_url_cos", "黄嘉琪诈骗链接制作工具", "诈骗链接"));
-        webInfos.add(new WebInfo("https://pic.asoulfan.com/", "icon_asf_bak", "搜图姬-二创图片搜索", "二创搜图"));
+//        webInfos.add(new WebInfo("https://pic.asoulfan.com/", "icon_asf_bak", "搜图姬-二创图片搜索", "二创搜图"));
         webInfos.add(new WebInfo("https://vtbkeyboard.moe/672328094", "icon_diana_keyboard", "Keyboard 嘉然", "嘉然音声"));
         webInfos.add(new WebInfo("https://vtbkeyboard.moe/672346917", "icon_ava_keyboard", "Keyboard 向晚", "向晚音声"));
         webInfos.add(new WebInfo("https://asoul.video/#/", "icon_asoul", "A-SOUL 抖音视频 All in one!", "AS抖音"));
