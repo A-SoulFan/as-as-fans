@@ -102,6 +102,7 @@ dependencies {
 //    implementation 'com.alonsol:floatserver:1.0.0'
     //修改了这个悬浮球的源码，本地导入的
     compile(name:'floatserver-debug', ext:'aar')
+//    compile(name:'tbs_sdk_thirdapp_v4.3.0.281_44181_sharewithdownloadwithfile_withoutGame_obfs_20220407_152305', ext:'jar')
 
     implementation 'com.kyleduo.switchbutton:library:2.1.0'
 

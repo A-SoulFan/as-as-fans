@@ -21,16 +21,18 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.DownloadListener;
+
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
+import com.tencent.smtt.sdk.DownloadListener;
 import android.webkit.URLUtil;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebChromeClient;
 import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+
+import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -185,13 +187,9 @@ public class WebFragment extends Fragment {
         webSettings.setDomStorageEnabled(true);//开启本地DOM存储
         webSettings.setLoadsImagesAutomatically(true); // 加载图片
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+//        webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+//        webSettings.setMixedContentMode(WebSettings.);
 
-
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
 
         //第一次加载时间会很长，添加加载动画
         webView.setWebChromeClient(new WebChromeClient(){
@@ -227,10 +225,8 @@ public class WebFragment extends Fragment {
                 return super.shouldOverrideKeyEvent(view, event);
             }
 
-            @SuppressLint("ResourceType")
-            @Nullable
             @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            public WebResourceResponse shouldInterceptRequest(WebView view, com.tencent.smtt.export.external.interfaces.WebResourceRequest request) {
                 Log.i("shouldInterceptRequest:getUrl", request.getUrl().toString());
                 if (request.getUrl().toString().startsWith("https://jsxm.sharepoint.cn/sites/as-archive-cn-01/") ||
                         request.getUrl().toString().startsWith("https://as-archive-cn-01.a-soul.fans") ||
@@ -302,7 +298,7 @@ public class WebFragment extends Fragment {
             }
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            public boolean shouldOverrideUrlLoading(WebView view, com.tencent.smtt.export.external.interfaces.WebResourceRequest request) {
 //                Log.i("WebResourceRequest:getUrl", request.getUrl().toString());
 //                Log.i("WebResourceRequest:getMethod", request.getMethod());
                 if (request.getUrl().toString().startsWith("http")) {
@@ -337,7 +333,7 @@ public class WebFragment extends Fragment {
             }
 
             @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            public void onReceivedError(WebView view, com.tencent.smtt.export.external.interfaces.WebResourceRequest request, com.tencent.smtt.export.external.interfaces.WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     return;

@@ -14,7 +14,7 @@
         android:progress="50"
         android:visibility="gone" />
 
-    <WebView
+    <com.tencent.smtt.sdk.WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/webView"/>

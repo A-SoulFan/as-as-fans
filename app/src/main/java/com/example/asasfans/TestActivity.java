@@ -70,6 +70,8 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
+import com.tencent.smtt.export.external.TbsCoreSettings;
+import com.tencent.smtt.sdk.QbSdk;
 import com.yy.floatserver.FloatClient;
 import com.yy.floatserver.FloatHelper;
 import com.yy.floatserver.IFloatPermissionCallback;
@@ -77,6 +79,7 @@ import com.yy.floatserver.IFloatPermissionCallback;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -198,6 +201,7 @@ public class TestActivity extends AppCompatActivity {
         contextTestActivity = TestActivity.this;
         initImageLoader();
         checkPermission();
+
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "POWER_MANAGER_TAG");
         wl.acquire();
@@ -446,6 +450,30 @@ public class TestActivity extends AppCompatActivity {
         dialogView = dialog.getHolderView();
     }
 
+    private void initX5(){
+//        QbSdk.setDownloadWithoutWifi(true);
+        QbSdk.initX5Environment(contextTestActivity, new QbSdk.PreInitCallback() {
+            @Override
+            public void onCoreInitFinished() {
+                // 内核初始化完成，可能为系统内核，也可能为系统内核
+            }
+
+            /**
+             * 预初始化结束
+             * 由于X5内核体积较大，需要依赖网络动态下发，所以当内核不存在的时候，默认会回调false，此时将会使用系统内核代替
+             * @param isX5 是否使用X5内核
+             */
+            @Override
+            public void onViewInitFinished(boolean isX5) {
+
+            }
+        });
+        HashMap map = new HashMap();
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
+        QbSdk.initTbsSettings(map);
+    }
+
 
     private void initImageLoader(){
 //        Log.i("APATH", getApplicationContext().getFilesDir().getAbsolutePath());
@@ -652,6 +680,7 @@ public class TestActivity extends AppCompatActivity {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
         }
+        initX5();
     }
 
     @Override
