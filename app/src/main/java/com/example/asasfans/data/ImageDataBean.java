@@ -18,7 +18,7 @@ public class ImageDataBean {
      */
 
     private String dy_id;
-    private int uid;
+    private long uid;
     private String name;
     private String face;
     private List<PicUrlBean> pic_url;
@@ -31,11 +31,11 @@ public class ImageDataBean {
         this.dy_id = dy_id;
     }
 
-    public int getUid() {
+    public long getUid() {
         return uid;
     }
 
-    public void setUid(int uid) {
+    public void setUid(long uid) {
         this.uid = uid;
     }
 
